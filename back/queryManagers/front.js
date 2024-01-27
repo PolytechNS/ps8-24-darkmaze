@@ -1,9 +1,13 @@
 // url will be used to parse the url (captain obvious at your service).
 const url = require('url');
+const http = require('http');
+
 // fs stands for FileSystem, it's the module to use to manipulate files on the disk.
 const fs = require('fs');
 // path is used only for its parse method, which creates an object containing useful information about the path.
 const path = require('path');
+const socketIo = require('socket.io');
+const jwt = require('jsonwebtoken');
 
 // We will limit the search of files in the front folder (../../front from here).
 // Note that fs methods consider the current folder to be the one where the app is run, that's why we don't need the "../.." before front.
@@ -31,6 +35,7 @@ const mimeTypes = {
     '.md': 'text/plain',
     'default': 'application/octet-stream'
 };
+
 
 // Main method, exported at the end of the file. It's the one that will be called when a file is requested.
 function manageRequest(request, response) {
@@ -76,4 +81,59 @@ function send404(path, response) {
     response.end(`File ${path} not found!`);
 }
 
-exports.manage = manageRequest;
+const server = http.createServer(function (request, response) {
+    manageRequest(request, response);
+});
+
+const io = socketIo(server);
+
+io.use((socket, next) => {
+    // Middleware pour gérer l'authentification via JWT
+    const token = socket.handshake.auth.token;
+
+    if (!token) {
+        return next(new Error('Authentication error'));
+    }
+
+    jwt.verify(token, secretKey, (err, decoded) => {
+        if (err) {
+            return next(new Error('Authentication error'));
+        }
+
+        // Ajouter les informations d'authentification à l'objet socket pour une utilisation ultérieure
+        socket.user = decoded;
+        next();
+    });
+});
+
+io.on('connection', function (socket) {
+    console.log(`Client connected: ${socket.id}, User: ${socket.user.username}`);
+
+    // Gérer l'événement 'setup' pour démarrer une partie
+    socket.on('setup', function (data) {
+        console.log('Received setup:', data);
+
+        // Implémenter la logique de configuration de la partie ici
+        // ...
+        // Émettre un événement 'updatedBoard' vers le client
+        io.emit('updatedBoard', { state: 'newState' });
+    });
+
+    // Gérer l'événement 'newMove' pour traiter un nouveau mouvement du joueur
+    socket.on('newMove', function (data) {
+        console.log('Received newMove:', data);
+        // Implémenter la logique de traitement du nouveau mouvement ici
+        // ...
+        // Émettre un événement 'updatedBoard' vers tous les clients
+        io.emit('updatedBoard', { state: 'newState' });
+    });
+
+    // Gérer la déconnexion d'un client
+    socket.on('disconnect', function () {
+        console.log(`Client disconnected: ${socket.id}, User: ${socket.user.username}`);
+    });
+});
+
+server.listen(8000, function () {
+    console.log('Server is running on port 8000');
+});
