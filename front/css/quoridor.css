@@ -1,0 +1,88 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+#quoridor-board,
+canvas {
+    position: absolute;
+
+}
+#quoridor-board {
+    opacity: 0%;
+    display: grid;
+    grid-template-columns: repeat(8, 8vh 2vh) 8vh;
+    grid-template-rows: repeat(8, 8vh 2vh) 8vh;
+
+    gap: 0px;
+    background-color: #ffffff;
+    border: 0px solid #333;
+}
+#quoridor-board>div:hover{
+    background-color: brown;
+}
+.cell {
+
+
+    background-color: #fff;
+    border: 0px solid #ccc;
+}
+.piece{
+    background-color: rgb(0, 255, 60);
+}
+.wall{
+    background-color: #ffffff;
+}
+canvas {
+    width: 88vh;
+    height: 88vh;
+    padding: 5px;
+    border: 2px solid #333; /* Ajoutez une bordure pour mieux visualiser le cadre du canvas */
+}
+/* Style for clicked cell */
+.cell.clicked {
+    background-color: red;
+}
+.vertical{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+.horizontal{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+/* Style for player positions, walls, etc. can be added as needed */
+.player1Cell {
+
+
+    background-color: #0a21ee;
+    border: 0px solid #ccc;
+}
+.player2Cell {
+
+
+    background-color: #ec1616;
+    border: 0px solid #ccc;
+}
+.playerChoice{
+    
+    background-color: #16ece5;
+}
+
+.hidedCell{
+    background-color: #000000;
+}
+
+body{
+    background: url('http://localhost:8000/assets/fond.png') no-repeat center center fixed;
+    /* 'no-repeat' évite de répéter l'image, 'center center' la centre, et 'fixed' la fixe en place */
+    background-size: cover; /* Ajuste la taille de l'image pour couvrir la section entière */
+}
