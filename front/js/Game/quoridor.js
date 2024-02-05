@@ -19,14 +19,47 @@ for (let i = 0; i < rows; i++) {
     }
   }
 }
+
+var urlParams = new URLSearchParams(window.location.search);
+var playAgainstAIParam = urlParams.get("playAgainstAI");
+var aiFirstParam = urlParams.get("aiFirst");
+
+console.log(playAgainstAIParam, aiFirstParam);
 const gameNamespace = io("/api/game");
-console.log("ajsdcasd");
-gameNamespace.emit("setup");
+gameNamespace.emit("setup", playAgainstAIParam, aiFirstParam);
 gameNamespace.on(
   "updatedBoard",
   (id, board, playerPostion, wallsPositions, newGame) => {
-    TestGame = new GameState(id, board, playerPostion, wallsPositions);
-    if (newGame) drawBoard();
+
+
+    if (newGame){
+      TestGame = new GameState(id, board, playerPostion, wallsPositions);
+      drawBoard();
+    } 
+    else {
+
+      let OldRow = TestGame.playersPosition[playerNumber][0];
+      let OldCol = TestGame.playersPosition[playerNumber][1];
+      let Opponent = playerNumber == 1 ? 0 : 1;
+      let OldOpponentRow = TestGame.playersPosition[Opponent][0];
+      let OldOpponentCol = TestGame.playersPosition[Opponent][1];
+      TestGame = new GameState(id, board, playerPostion, wallsPositions);
+      let PlayerRow = TestGame.playersPosition[playerNumber][0];
+      let PlayerCol = TestGame.playersPosition[playerNumber][1];
+      console.log("inside play cond");
+      // iTestGame.is_Win(playerNumber)
+      // console.log("player " + playerNumber + " wins");
+      
+      playerNumber ? (playerNumber = 0) : (playerNumber = 1);
+      
+      //this code should be on the update
+      UpdatePiecePositionOnBoard(playerNumber, OldRow, OldCol, PlayerRow,  PlayerCol);
+      addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
+      removeMoveChoices(OldRow, OldCol);
+      changeVisibility(playerNumber); 
+      drawGrid();
+      console.log("finished playing");
+    }
   }
 );
 
@@ -705,26 +738,8 @@ function animateImage(image, startX, startY, endX, endY, duration) {
 function handleClick(row, col) {
   //console.log("Clicked on cell:", row, col);
 
-  var oldRow = TestGame.playersPosition[playerNumber][0];
-  var oldCol = TestGame.playersPosition[playerNumber][1];
-  var oponent = playerNumber == 1 ? 0 : 1;
-  var oldOponentRow = TestGame.playersPosition[oponent][0];
-  var oldOponentCol = TestGame.playersPosition[oponent][1];
-
   //we should check if the move is possible or not
   gameNamespace.emit("newMove", TestGame.id, playerNumber, row, col);
-  console.log("inside play cond");
-  // iTestGame.is_Win(playerNumber)
-  // console.log("player " + playerNumber + " wins");
-  playerNumber ? (playerNumber = 0) : (playerNumber = 1);
-
-  //this code should be on the update
-  UpdatePiecePositionOnBoard(playerNumber, oldRow, oldCol, row, col);
-  removeMoveChoices(oldRow, oldCol);
-  addMoveChoices(row, col, oldOponentRow, oldOponentCol);
-  changeVisibility(playerNumber);
-  drawGrid();
-  console.log("finished playing");
 
   // Add your logic for handling the click event
 }
@@ -806,7 +821,7 @@ function handleClickWall(event) {
     // Convert grid position to canvas position
     const xPos = 160 * col;
     const yPos = 8 * 16 + 160 * row;
-
+    //how to change this to test if the move is possible or not
     if (TestGame.placeWalls("horizontal", row, col, playerNumber)) {
       if (playerNumber == 0) {
         ctx.fillStyle = "#fa861f";

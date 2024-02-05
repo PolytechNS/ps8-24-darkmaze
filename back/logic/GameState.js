@@ -2,6 +2,8 @@ const uuid = require('uuid');
 
 class GameState {
   constructor() {
+    this.id=uuid.v4();
+    this.GameType = {}
     this.board = this.#createMatrix();
     this.playersPosition = [];
     this.wallsPositions = []; // ADD BY SARRA TO STORE THE WALLS POSITIONS

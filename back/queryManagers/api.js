@@ -5,77 +5,76 @@ const GameStateModel = require("../models/GameStateModel");
 const user = require("../models/UserModel");
 const GameState = require("../logic/GameState");
 const querystring = require("querystring");
-const socket = require("../config/socket.io");
-const { devNull } = require("os");
+const aiPlayer = require("../logic/ai")
 let io;
-
+let GamesTable = [];
 function setIo(ioInstance) {
   io = ioInstance;
-    
-    //io.emit('updatedBoard',1);
-    io.of("/api/game").on("connection", (socket) => {
-      console.log("connected");
-      socket.on("setup", async () => {
-        console.log("joined api/game");
-        const gameState = new GameState();
-        // Create an instance of GameState
-        const gameStateInstance = new GameStateModel(gameState);
-   
-       // // Save the instance to the database 
-        await gameStateInstance
-          .save() 
-          .then((savedGame) => {
-            console.log("GameState saved to the database _id",savedGame._id);
-            socket.emit('updatedBoard',savedGame._id,savedGame.board,savedGame.playersPosition,savedGame.wallsPositions,true);
-          })
-         .catch((error) => {
-          console.log("GameState saved to the database");
-  
-         });
 
-      });
-      socket.on("newMove",async(id,playerNumber,row,col)=>{
-        var gameStateToBeModified = null ;
-        await GameStateModel.findOne({ _id: id }).then( (gameState) => {
-          if (gameState) {
-            // The game state was found
-            // Create a copy of the game state
-            gameStateToBeModified = new GameState();
-            gameStateToBeModified.board = gameState.board;
-            gameStateToBeModified.playersPosition = gameState.playersPosition;
-            gameStateToBeModified.wallsPositions =  gameState.wallsPositions ;
-            gameStateToBeModified.play(playerNumber, row, col);
-            //should return in case of error or not authorized movement
-            // Update the game state in the database
-          } else {
-            // No game state found with the specified ID
-            console.log('Game state not found');
-          }
-        }).catch((error) => {
-          console.log("Error while finding game state:", error);
-        });
-        if(gameStateToBeModified ){    
-            let updatedFields = {  
-              board: gameStateToBeModified.board,
-              playersPosition: gameStateToBeModified.playersPosition, // Fix the typo here (changed playersPostion to playersPosition)
-              wallsPositions: gameStateToBeModified.wallsPosition
-            }
-          // Find the GameState instance by its id and update the specified fields
-          await GameStateModel.updateOne({ _id: id }, { $set: updatedFields })          
-          .then(() => {
-            socket.emit('updatedBoard',id,gameStateToBeModified.board,gameStateToBeModified.playersPosition,gameStateToBeModified.wallsPosition,false);
-          })
-         .catch((error) => {
-          console.log("GameState saved to the database");
-  
-         });;
+  //io.emit('updatedBoard',1);
+  io.of("/api/game").on("connection", (socket) => {
+    console.log("connected");
+    socket.on("setup", async (playAgainstAI,aiFirst) => {
+      console.log("joined api/game");
+      const gameState = new GameState();
+      gameState.GameType["playAgainstAI"]=playAgainstAI;
+      gameState.GameType["aiPlayer"]=aiFirst;
+      GamesTable.push(gameState);
+      // Create an instance of GameState
+      // // Save the instance to the database
+      socket.emit(
+        "updatedBoard",
+        gameState.id, 
+        gameState.board,
+        gameState.playersPosition,
+        gameState.wallsPositions,
+        true
+      );
+      if(playAgainstAI=="true" && aiFirst==0){
+        const move = aiPlayer(gameState,0);
+        console.log("ai is playing : ",move);
+        gameState.play(0, move[0], move[1]);
+        socket.emit( 
+          "updatedBoard",
+          gameState.id,  
+          gameState.board,
+          gameState.playersPosition,
+          gameState.wallsPositions,
+          false
+        );
+      }
 
-      } 
-   
     });
-  })
+    socket.on("newMove", async (id, playerNumber, row, col) => {
+      var gameStateToBeModified = GamesTable.find((game) => game.id === id);
+      if (gameStateToBeModified) {
+        console.log(gameStateToBeModified.playersPosition);
+        gameStateToBeModified.play(playerNumber, row, col); 
+        socket.emit(
+          "updatedBoard",
+          id,
+          gameStateToBeModified.board,
+          gameStateToBeModified.playersPosition,
+          gameStateToBeModified.wallsPosition,
+          false
+        );
+        if(gameStateToBeModified.GameType["playAgainstAI"]=="true"){
+          const move = aiPlayer(gameStateToBeModified,0);
+          console.log("ai is playing : ",move);
+          gameStateToBeModified.play(gameStateToBeModified.GameType["aiPlayer"], move[0], move[1]);
+          socket.emit(
+            "updatedBoard",
+            id,
+            gameStateToBeModified.board,
+            gameStateToBeModified.playersPosition,
+            gameStateToBeModified.wallsPosition,
+            false
+          );
+        }
 
-  
+      }
+    });
+  });
 }
 
 async function manageRequest(request, response) {
@@ -97,7 +96,7 @@ async function manageRequest(request, response) {
       const data = {
         username: postData.username,
         password: postData.password,
-        email:postData.email,
+        email: postData.email,
       };
       console.log("Data from /api/login POST request:", data);
       if (data["password"].length < 6) {
@@ -195,9 +194,7 @@ async function manageRequest(request, response) {
         }
       }
     });
-  
-  
-  } 
+  }
 }
 
 /* This method is a helper in case you stumble upon CORS problems. It shouldn't be used as-is:

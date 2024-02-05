@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 // Define the schema for the GameState
 const gameStateSchema = new mongoose.Schema({
+    id:{
+        type:Array,
+        required:true
+    },
     board: {
         // You may want to specify the schema for the board array elements
         type: Array,
