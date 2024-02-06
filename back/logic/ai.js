@@ -1,6 +1,5 @@
 // This function doesn't handle walls.
 function computeMove(gameState,playerNumber) {
-    console.log("gameState ai : ",gameState);
     let pos = gameState.playersPosition[playerNumber];
     let possibleMoves = [];
     // Check if moving left is possible.

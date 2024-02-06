@@ -5,63 +5,57 @@ const GameStateModel = require("../models/GameStateModel");
 const user = require("../models/UserModel");
 const GameState = require("../logic/GameState");
 const querystring = require("querystring");
-const aiPlayer = require("../logic/ai")
+const aiPlayer = require("../logic/ai");
 let io;
 let GamesTable = [];
+
+
+
+
+
+// sets all the socket listeners 
 function setIo(ioInstance) {
   io = ioInstance;
 
   //io.emit('updatedBoard',1);
   io.of("/api/game").on("connection", (socket) => {
     console.log("connected");
-    socket.on("setup", async (playAgainstAI,aiFirst) => {
+    socket.on("setup", async (playAgainstAI, aiFirst) => {
       console.log("joined api/game");
       const gameState = new GameState();
-      gameState.GameType["playAgainstAI"]=playAgainstAI;
-      gameState.GameType["aiPlayer"]=aiFirst;
+      gameState.GameType["playAgainstAI"] = playAgainstAI;
+      gameState.GameType["aiPlayer"] = aiFirst;
       GamesTable.push(gameState);
+
       // Create an instance of GameState
       // // Save the instance to the database
       socket.emit(
         "updatedBoard",
-        gameState.id, 
+        gameState.id,
         gameState.board,
         gameState.playersPosition,
         gameState.wallsPositions,
         true
       );
-      if(playAgainstAI=="true" && aiFirst==0){
-        const move = aiPlayer(gameState,0);
-        console.log("ai is playing : ",move);
+      if (playAgainstAI == "true" && aiFirst == 0) {
+        const move = aiPlayer(gameState, 0);
+        console.log("ai is playing : ", move);
         gameState.play(0, move[0], move[1]);
-        socket.emit( 
+        socket.emit(
           "updatedBoard",
-          gameState.id,  
+          gameState.id,
           gameState.board,
           gameState.playersPosition,
           gameState.wallsPositions,
           false
         );
       }
-
     });
+
     socket.on("newMove", async (id, playerNumber, row, col) => {
       var gameStateToBeModified = GamesTable.find((game) => game.id === id);
       if (gameStateToBeModified) {
-        console.log(gameStateToBeModified.playersPosition);
-        gameStateToBeModified.play(playerNumber, row, col); 
-        socket.emit(
-          "updatedBoard",
-          id,
-          gameStateToBeModified.board,
-          gameStateToBeModified.playersPosition,
-          gameStateToBeModified.wallsPosition,
-          false
-        );
-        if(gameStateToBeModified.GameType["playAgainstAI"]=="true"){
-          const move = aiPlayer(gameStateToBeModified,0);
-          console.log("ai is playing : ",move);
-          gameStateToBeModified.play(gameStateToBeModified.GameType["aiPlayer"], move[0], move[1]);
+        if (gameStateToBeModified.play(playerNumber, row, col) == true) {
           socket.emit(
             "updatedBoard",
             id,
@@ -70,10 +64,74 @@ function setIo(ioInstance) {
             gameStateToBeModified.wallsPosition,
             false
           );
-        }
-
-      }
+          if (gameStateToBeModified.is_Win(playerNumber)) {
+            socket.emit(
+              "GameOver",
+              "GameOver Player " + playerNumber + " wins !!!"
+            );
+            GamesTable = GamesTable.filter((game) => game.id !== id);
+          }
+          if (gameStateToBeModified.GameType["playAgainstAI"] == "true") {
+            const move = aiPlayer(
+              gameStateToBeModified,
+              gameStateToBeModified.GameType["aiPlayer"]
+            );
+            gameStateToBeModified.play(
+              gameStateToBeModified.GameType["aiPlayer"],
+              move[0],
+              move[1]
+            );
+            socket.emit(
+              "updatedBoard",
+              id,
+              gameStateToBeModified.board,
+              gameStateToBeModified.playersPosition,
+              gameStateToBeModified.wallsPosition,
+              false
+            );
+            if (
+              gameStateToBeModified.is_Win(
+                gameStateToBeModified.GameType["aiPlayer"]
+              )
+            ) {
+              socket.emit("GameOver", "GameOver Player the Bot wins !!!");
+              GamesTable = GamesTable.filter((game) => game.id !== id);
+            }
+          }
+        } else socket.emit("ErrorPlaying", "Move cannot be played");
+      } else socket.emit("ErrorPlaying", "Game not found! start a new game");
     });
+    socket.on(
+      "newWall",
+      (id, direction, row, col, playerNumber) => {
+
+        var gameStateToBeModified = GamesTable.find((game) => game.id === id);
+        if (gameStateToBeModified) {
+          console.log("too risky ",direction,row,col,playerNumber,);
+          if (
+            gameStateToBeModified.placeWalls(
+              direction,
+              row,
+              col,
+              playerNumber
+            ) == true
+          )
+            socket.emit(
+              "UpdateWalls",
+              id,
+              gameStateToBeModified.board,
+              gameStateToBeModified.playersPosition,
+              gameStateToBeModified.wallsPositions,
+              direction,
+              row,
+              col
+            );
+          else socket.emit("ErrorPlaying", "Wall cannot be placed");
+        }
+        else
+          socket.emit("ErrorPlaying", "Game not found! start a new game");
+      }
+    );
   });
 }
 

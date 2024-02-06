@@ -24,20 +24,18 @@ var urlParams = new URLSearchParams(window.location.search);
 var playAgainstAIParam = urlParams.get("playAgainstAI");
 var aiFirstParam = urlParams.get("aiFirst");
 
-console.log(playAgainstAIParam, aiFirstParam);
+//socket communications
 const gameNamespace = io("/api/game");
 gameNamespace.emit("setup", playAgainstAIParam, aiFirstParam);
+gameNamespace.on("ErrorPlaying", (msg) => window.alert(msg));
+gameNamespace.on("GameOver", (msg) => window.alert(msg));
 gameNamespace.on(
   "updatedBoard",
   (id, board, playerPostion, wallsPositions, newGame) => {
-
-
-    if (newGame){
+    if (newGame) {
       TestGame = new GameState(id, board, playerPostion, wallsPositions);
       drawBoard();
-    } 
-    else {
-
+    } else {
       let OldRow = TestGame.playersPosition[playerNumber][0];
       let OldCol = TestGame.playersPosition[playerNumber][1];
       let Opponent = playerNumber == 1 ? 0 : 1;
@@ -46,23 +44,39 @@ gameNamespace.on(
       TestGame = new GameState(id, board, playerPostion, wallsPositions);
       let PlayerRow = TestGame.playersPosition[playerNumber][0];
       let PlayerCol = TestGame.playersPosition[playerNumber][1];
-      console.log("inside play cond");
-      // iTestGame.is_Win(playerNumber)
-      // console.log("player " + playerNumber + " wins");
-      
+
       playerNumber ? (playerNumber = 0) : (playerNumber = 1);
-      
+
       //this code should be on the update
-      UpdatePiecePositionOnBoard(playerNumber, OldRow, OldCol, PlayerRow,  PlayerCol);
+      UpdatePiecePositionOnBoard(
+        playerNumber,
+        OldRow,
+        OldCol,
+        PlayerRow,
+        PlayerCol
+      );
       addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
       removeMoveChoices(OldRow, OldCol);
-      changeVisibility(playerNumber); 
+      changeVisibility(playerNumber);
       drawGrid();
-      console.log("finished playing");
+    }
+  }
+);
+gameNamespace.on(
+  "UpdateWalls",
+  (id, board, playerPostion, wallsPositions, direction, row, col) => {
+    TestGame = new GameState(id, board, playerPostion, wallsPositions);
+    updateGame(playerNumber, row, col);
+    playerNumber = playerNumber === 1 ? 0 : 1;
+    if (direction == "vertical")
+      grid[row + 1][col] = "P" + (playerNumber + 1) + "v";
+    else if (direction == "horizontal") {
+      grid[row][col + 1] = "P" + (playerNumber + 1) + "h";
     }
   }
 );
 
+// functions
 function UpdatePiecePositionOnBoard(
   NumberOfPlayer,
   oldRow,
@@ -181,7 +195,7 @@ function changeVisibility(playerNumber) {
   }
 }
 
-function drawBoard(socket) {
+function drawBoard() {
   const quoridorBoard = document.getElementById("quoridor-board");
   //pour l'animation :
   window.lastpiece = null;
@@ -246,24 +260,10 @@ function drawBoard(socket) {
 
   //----------------------------GRID MANIPULATION--------------------------
   document.querySelectorAll(".vertical").forEach((item) => {
-    const cell1 = document.createElement("div");
-    cell1.classList.add("inWall");
-    cell1.classList.add("up");
-    const cell2 = document.createElement("div");
-    cell2.classList.add("inWall");
-    cell2.classList.add("down");
-    item.appendChild(cell1);
-    item.appendChild(cell2);
+    item.classList.add("inWall");
   });
   document.querySelectorAll(".horizontal").forEach((item) => {
-    const cell1 = document.createElement("div");
-    cell1.classList.add("inWall");
-    cell1.classList.add("left");
-    const cell2 = document.createElement("div");
-    cell2.classList.add("inWall");
-    cell2.classList.add("right");
-    item.appendChild(cell1);
-    item.appendChild(cell2);
+    item.classList.add("inWall");
   });
 
   //-------------------------------CANVA DRAW------------------------------
@@ -438,8 +438,8 @@ function highlightWall(event) {
   if (!target.classList.contains("dot")) {
     drawGrid();
   }
-  if (target.classList.contains("down")) {
-    const verticals = document.querySelectorAll(".down");
+  if (target.classList.contains("vertical")) {
+    const verticals = document.querySelectorAll(".vertical");
 
     // Find the index of the target wall
     var index;
@@ -483,8 +483,8 @@ function highlightWall(event) {
     }
 
     lastpiece = nextLastPiece;
-  } else if (target.classList.contains("right")) {
-    const horizontals = document.querySelectorAll(".right");
+  } else if (target.classList.contains("horizontal")) {
+    const horizontals = document.querySelectorAll(".horizontal");
 
     // Find the index of the target wall
     var index;
@@ -526,96 +526,6 @@ function highlightWall(event) {
       ctx.fillStyle = "red";
       ctx.fillRect(xPos, yPos, wallLong, wallShort);
     }
-
-    lastpiece = nextLastPiece;
-  } else if (target.classList.contains("up")) {
-    const verticals = document.querySelectorAll(".up");
-
-    // Find the index of the target wall
-    var index;
-    for (let i = 0; i < verticals.length; i++) {
-      if (verticals[i] == target) {
-        index = i;
-        break;
-      }
-    }
-
-    // Determine the x and y position of the wall on the canvas
-    var col = index % 8;
-    var row = Math.floor(index / 8) - 1;
-    if (row < 0) {
-      row++;
-    }
-
-    // Convert grid position to canvas position
-    const xPos = 8 * 16 + 160 * col;
-    const yPos = 160 * row;
-
-    // Draw a rectangle on the canvas at the position of the wall
-    var nextLastPiece = [xPos + wallShort / 2, yPos + wallLong / 2, 90];
-
-    if (lastpiece != null) {
-      animateRectangle(
-        ctx,
-        lastpiece[0],
-        lastpiece[1],
-        nextLastPiece[0],
-        nextLastPiece[1],
-        lastpiece[2],
-        nextLastPiece[2],
-        100,
-        wallLong,
-        wallShort
-      );
-    } else {
-      ctx.fillStyle = "red";
-      ctx.fillRect(xPos, yPos, wallLong, wallShort);
-    }
-
-    lastpiece = nextLastPiece;
-  } else if (target.classList.contains("left")) {
-    const horizontals = document.querySelectorAll(".left");
-
-    // Find the index of the target wall
-    var index;
-    for (let i = 0; i < horizontals.length; i++) {
-      if (horizontals[i] == target) {
-        index = i;
-        break;
-      }
-    }
-
-    // Determine the x and y position of the wall on the canvas
-    var col = (index % 9) - 1;
-    var row = Math.floor(index / 9);
-    if (col < 0) {
-      col++;
-    }
-
-    // Convert grid position to canvas position
-    const xPos = 160 * col;
-    const yPos = 8 * 16 + 160 * row;
-
-    // Draw a rectangle on the canvas at the position of the wall
-    ctx.fillStyle = "red";
-    var nextLastPiece = [xPos + wallLong / 2, yPos + wallShort / 2, 0];
-
-    if (lastpiece != null) {
-      animateRectangle(
-        ctx,
-        lastpiece[0],
-        lastpiece[1],
-        nextLastPiece[0],
-        nextLastPiece[1],
-        lastpiece[2],
-        nextLastPiece[2],
-        100,
-        wallLong,
-        wallShort
-      );
-    }
-
-    ctx.fillRect(xPos, yPos, wallLong, wallShort);
 
     lastpiece = nextLastPiece;
   }
@@ -744,11 +654,31 @@ function handleClick(row, col) {
   // Add your logic for handling the click event
 }
 
+function updateGame(playerNumber, row, col) {
+  var oldRow = TestGame.playersPosition[playerNumber][0];
+  var oldCol = TestGame.playersPosition[playerNumber][1];
+  var opponent = playerNumber === 1 ? 0 : 1;
+  var oldOpponentRow = TestGame.playersPosition[opponent][0];
+  var oldOpponentCol = TestGame.playersPosition[opponent][1];
+
+  playerNumber = playerNumber === 1 ? 0 : 1;
+
+  // Assuming removeMoveChoices, addMoveChoices, changeVisibility functions are defined elsewhere
+  removeMoveChoices(oldRow, oldCol);
+  addMoveChoices(row, col, oldOpponentRow, oldOpponentCol);
+
+  // Assuming changeVisibility function takes a playerNumber as an argument
+  changeVisibility(playerNumber);
+  changeVisibility(playerNumber);
+}
+
 function handleClickWall(event) {
   const target = event.target;
-  if (target.classList.contains("down")) {
-    const verticals = document.querySelectorAll(".down");
+  ctx.fillStyle = playerNumber === 0 ? "#fa861f" : "#07f9fa";
 
+  if (target.classList.contains("vertical")) {
+    console.log("test");
+    const verticals = document.querySelectorAll(".vertical");
     // Find the index of the target wall
     var index;
     for (let i = 0; i < verticals.length; i++) {
@@ -757,7 +687,6 @@ function handleClickWall(event) {
         break;
       }
     }
-
     // Determine the x and y position of the wall on the canvas
     var col = index % 8;
     var row = Math.floor(index / 8);
@@ -767,37 +696,17 @@ function handleClickWall(event) {
     }
     col = 1 + 2 * col;
     row = 2 * row;
-
     // Convert grid position to canvas position
-    const xPos = 8 * 16 + 160 * col;
-    const yPos = 160 * row;
-
-    if (TestGame.placeWalls("vertical", row, col, playerNumber)) {
-      if (playerNumber === 0) {
-        ctx.fillStyle = "#fa861f";
-      } else {
-        ctx.fillStyle = "#07f9fa";
-      }
-      let Co = (col - 1) / 2;
-      let Ro = row / 2;
-      //go to next turn
-      var oldRow = TestGame.playersPosition[playerNumber][0];
-      var oldCol = TestGame.playersPosition[playerNumber][1];
-      var oponent = playerNumber == 1 ? 0 : 1;
-      var oldOponentRow = TestGame.playersPosition[oponent][0];
-      var oldOponentCol = TestGame.playersPosition[oponent][1];
-      playerNumber ? (playerNumber = 0) : (playerNumber = 1);
-      removeMoveChoices(oldRow, oldCol);
-      addMoveChoices(row, col, oldOponentRow, oldOponentCol);
-      changeVisibility(playerNumber);
-      changeVisibility(playerNumber);
-      grid[row + 1][col] = "P" + (playerNumber + 1) + "v";
-    } else {
-      console.log("Vertical wall unplaceable at this position1");
-    }
-  } else if (target.classList.contains("right")) {
-    const horizontals = document.querySelectorAll(".right");
-
+    gameNamespace.emit(
+      "newWall",
+      TestGame.id,
+      "vertical",
+      row,
+      col,
+      playerNumber
+    );
+  } else if (target.classList.contains("horizontal")) {
+    const horizontals = document.querySelectorAll(".horizontal");
     // Find the index of the target wall
     var index;
     for (let i = 0; i < horizontals.length; i++) {
@@ -818,141 +727,15 @@ function handleClickWall(event) {
     col = 2 * col;
     row = 1 + 2 * row;
 
-    // Convert grid position to canvas position
-    const xPos = 160 * col;
-    const yPos = 8 * 16 + 160 * row;
-    //how to change this to test if the move is possible or not
-    if (TestGame.placeWalls("horizontal", row, col, playerNumber)) {
-      if (playerNumber == 0) {
-        ctx.fillStyle = "#fa861f";
-      } else {
-        ctx.fillStyle = "#07f9fa";
-      }
-      let Co = col / 2;
-      let Ro = (row - 1) / 2;
-      ctx.fillRect(xPos, yPos, wallLong, wallShort);
-      //go to next turn
-      var oldRow = TestGame.playersPosition[playerNumber][0];
-      var oldCol = TestGame.playersPosition[playerNumber][1];
-      var oponent = playerNumber == 1 ? 0 : 1;
-      var oldOponentRow = TestGame.playersPosition[oponent][0];
-      var oldOponentCol = TestGame.playersPosition[oponent][1];
-      playerNumber ? (playerNumber = 0) : (playerNumber = 1);
-      removeMoveChoices(oldRow, oldCol);
-      addMoveChoices(row, col, oldOponentRow, oldOponentCol);
-      changeVisibility(playerNumber);
-      changeVisibility(playerNumber);
-      grid[row][col + 1] = "P" + (playerNumber + 1) + "h";
-    } else {
-      console.log("Horizontal wall unplaceable at this position1");
-    }
-  } else if (target.classList.contains("up")) {
-    const verticals = document.querySelectorAll(".up");
+    // Convert grid position to canvas
 
-    // Find the index of the target wall
-    var index;
-    for (let i = 0; i < verticals.length; i++) {
-      if (verticals[i] == target) {
-        index = i;
-        break;
-      }
-    }
-
-    // Determine the x and y position of the wall on the canvas
-    var col = index % 8;
-
-    var row = Math.floor(index / 8) - 1;
-
-    if (row < 0) {
-      row++;
-    }
-    col = 1 + 2 * col;
-    row = 2 * row;
-
-    // Convert grid position to canvas position
-    const xPos = 8 * 16 + 160 * col;
-    const yPos = 160 * row;
-
-    // Draw a rectangle on the canvas at the position of the wall
-    if (TestGame.placeWalls("vertical", row, col, playerNumber)) {
-      if (playerNumber == 0) {
-        ctx.fillStyle = "#fa861f";
-      } else {
-        ctx.fillStyle = "#07f9fa";
-      }
-      let Co = (col - 1) / 2;
-      let Ro = row / 2;
-      ctx.fillRect(
-        160 * (Co + 1) - 32,
-        160 * Ro,
-        wallShort,
-        2 * caseWidth + wallShort
-      );
-      //go to next turn
-      var oldRow = TestGame.playersPosition[playerNumber][0];
-      var oldCol = TestGame.playersPosition[playerNumber][1];
-      var oponent = playerNumber == 1 ? 0 : 1;
-      var oldOponentRow = TestGame.playersPosition[oponent][0];
-      var oldOponentCol = TestGame.playersPosition[oponent][1];
-      playerNumber ? (playerNumber = 0) : (playerNumber = 1);
-      removeMoveChoices(oldRow, oldCol);
-      addMoveChoices(row, col, oldOponentRow, oldOponentCol);
-      changeVisibility(playerNumber);
-      changeVisibility(playerNumber);
-      grid[row + 1][col] = "P" + (playerNumber + 1) + "v";
-    } else {
-      console.log("Vertical wall unplaceable at this position2");
-    }
-  } else if (target.classList.contains("left")) {
-    const horizontals = document.querySelectorAll(".left");
-
-    // Find the index of the target wall
-    var index;
-    for (let i = 0; i < horizontals.length; i++) {
-      if (horizontals[i] == target) {
-        index = i;
-        break;
-      }
-    }
-
-    // Determine the x and y position of the wall on the canvas
-    var col = (index % 9) - 1;
-
-    var row = Math.floor(index / 9);
-
-    if (col < 0) {
-      col++;
-    }
-    col = 2 * col;
-    row = 1 + 2 * row;
-
-    // Convert grid position to canvas position
-    const xPos = 160 * col;
-    const yPos = 8 * 16 + 160 * row;
-
-    if (TestGame.placeWalls("horizontal", row, col, playerNumber)) {
-      if (playerNumber == 0) {
-        ctx.fillStyle = "#fa861f";
-      } else {
-        ctx.fillStyle = "#07f9fa";
-      }
-      let Co = col / 2;
-      let Ro = (row - 1) / 2;
-      ctx.fillRect(xPos, yPos, wallLong, wallShort);
-      //go to next turn
-      var oldRow = TestGame.playersPosition[playerNumber][0];
-      var oldCol = TestGame.playersPosition[playerNumber][1];
-      var oponent = playerNumber == 1 ? 0 : 1;
-      var oldOponentRow = TestGame.playersPosition[oponent][0];
-      var oldOponentCol = TestGame.playersPosition[oponent][1];
-      playerNumber ? (playerNumber = 0) : (playerNumber = 1);
-      removeMoveChoices(oldRow, oldCol);
-      addMoveChoices(row, col, oldOponentRow, oldOponentCol);
-      changeVisibility(playerNumber);
-      changeVisibility(playerNumber);
-      grid[row][col + 1] = "P" + (playerNumber + 1) + "h";
-    } else {
-      console.log("Horizontal wall unplaceable at this position2");
-    }
+    gameNamespace.emit(
+      "newWall",
+      TestGame.id,
+      "horizontal",
+      row,
+      col,
+      playerNumber
+    );
   }
 }

@@ -204,8 +204,6 @@ class GameState {
         { wallRow: wallRow + 1, wallCol: wallCol },
         { wallRow: wallRow + 2, wallCol: wallCol }
       );
-      console.log("place walls ", newWalls, newWalls.length);
-      console.log(this.wallsPositions, this.placeWalls.length);
       if (
         this.isWallPositionOccuped("vertical", wallRow, wallCol) == null &&
         this.isMaxWallPlayerPlaced(player) &&
@@ -235,6 +233,9 @@ class GameState {
         { wallRow: wallRow, wallCol: wallCol + 1 },
         { wallRow: wallRow, wallCol: wallCol + 2 }
       );
+      console.log(        this.isWallPositionOccuped("horizontal", wallRow, wallCol) == null ,
+      this.isMaxWallPlayerPlaced(player) ,
+      this.hasPathDFS(newWalls));
       if (
         this.isWallPositionOccuped("horizontal", wallRow, wallCol) == null &&
         this.isMaxWallPlayerPlaced(player) &&
