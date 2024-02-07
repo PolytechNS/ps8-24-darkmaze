@@ -6,20 +6,18 @@ const user = require("../models/UserModel");
 const GameState = require("../logic/GameState");
 const querystring = require("querystring");
 const aiPlayer = require("../logic/ai");
+const authMW = require("../middlewear/authMW");
 let io;
 let GamesTable = [];
 
-
-
-
-
-// sets all the socket listeners 
+// sets all the socket listeners
 function setIo(ioInstance) {
   io = ioInstance;
 
-  //io.emit('updatedBoard',1);
   io.of("/api/game").on("connection", (socket) => {
     console.log("connected");
+
+
     socket.on("setup", async (playAgainstAI, aiFirst) => {
       console.log("joined api/game");
       const gameState = new GameState();
@@ -101,37 +99,27 @@ function setIo(ioInstance) {
         } else socket.emit("ErrorPlaying", "Move cannot be played");
       } else socket.emit("ErrorPlaying", "Game not found! start a new game");
     });
-    socket.on(
-      "newWall",
-      (id, direction, row, col, playerNumber) => {
-
-        var gameStateToBeModified = GamesTable.find((game) => game.id === id);
-        if (gameStateToBeModified) {
-          console.log("too risky ",direction,row,col,playerNumber,);
-          if (
-            gameStateToBeModified.placeWalls(
-              direction,
-              row,
-              col,
-              playerNumber
-            ) == true
-          )
-            socket.emit(
-              "UpdateWalls",
-              id,
-              gameStateToBeModified.board,
-              gameStateToBeModified.playersPosition,
-              gameStateToBeModified.wallsPositions,
-              direction,
-              row,
-              col
-            );
-          else socket.emit("ErrorPlaying", "Wall cannot be placed");
-        }
-        else
-          socket.emit("ErrorPlaying", "Game not found! start a new game");
-      }
-    );
+    socket.on("newWall", (id, direction, row, col, playerNumber) => {
+      var gameStateToBeModified = GamesTable.find((game) => game.id === id);
+      if (gameStateToBeModified) {
+        console.log("too risky ", direction, row, col, playerNumber);
+        if (
+          gameStateToBeModified.placeWalls(direction, row, col, playerNumber) ==
+          true
+        )
+          socket.emit(
+            "UpdateWalls",
+            id,
+            gameStateToBeModified.board,
+            gameStateToBeModified.playersPosition,
+            gameStateToBeModified.wallsPositions,
+            direction,
+            row,
+            col
+          );
+        else socket.emit("ErrorPlaying", "Wall cannot be placed");
+      } else socket.emit("ErrorPlaying", "Game not found! start a new game");
+    });
   });
 }
 
@@ -156,7 +144,6 @@ async function manageRequest(request, response) {
         password: postData.password,
         email: postData.email,
       };
-      console.log("Data from /api/login POST request:", data);
       if (data["password"].length < 6) {
         response.statusCode = 400;
         return response.end(
@@ -229,10 +216,7 @@ async function manageRequest(request, response) {
             { expiresIn: max_age }
           );
           //,maxAge:max_age*1000
-          response.setHeader("Set-Cookie", [
-            `jwt=${token}; HttpOnly`,
-            "connected=true",
-          ]);
+          response.setHeader("Set-Cookie", [`jwt=${token}; HttpOnly; Secure; Path=/; Max-Age=${max_age}`]);
 
           response.statusCode = 200;
           return response.end(
@@ -252,6 +236,11 @@ async function manageRequest(request, response) {
         }
       }
     });
+  } else if (request.method === "GET" && filePath[2] === "game") {
+    authMW(request, response, (req, res) => {
+      res.writeHead(302, { 'Location': 'http://localhost:8000/html/GameSetup.html' }); 
+      return res.end();
+  });
   }
 }
 

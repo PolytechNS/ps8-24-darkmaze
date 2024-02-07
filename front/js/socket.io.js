@@ -1877,7 +1877,7 @@
       _this.opts = _extends({
         path: "/engine.io",
         agent: false,
-        withCredentials: false,
+        withCredentials: true,
         upgrade: true,
         timestampParam: "t",
         rememberUpgrade: false,
