@@ -1,15 +1,19 @@
 const jwt = require('jsonwebtoken');
-const cookie = require('cookie-parser');
-
+const parseCookies = require("../config/CookieParser");
 require('dotenv').config(); // Load environment variables from .env file
 
 function authMiddleware(req, res, next) {
     // Get the token from the request headers
-
-
-    
-    const cookies = parseCookies(req.headers.cookie);
-    const token = cookies.jwt;
+    let token;
+    if (req.headers.cookie) {
+      const cookies = parseCookies(req.headers.cookie);
+      token = cookies.jwt;
+    } else {
+      res.writeHead(302, {
+        Location: "http://localhost:8000/html/Auth/Login.html",
+      });
+      return res.end();
+    }
 
     if (!token) {
         // Redirect to the login page if token is missing
@@ -34,20 +38,5 @@ function authMiddleware(req, res, next) {
         return res.end();
     }
 }
-function parseCookies(cookieHeader) {
-    const cookies = {};
-  
-    // Split the cookie header by semicolons
-    cookieHeader.split(';').forEach(cookie => {
-      // Split each cookie by the equal sign to get key-value pair
-      const parts = cookie.split('=');
-      const key = parts.shift().trim();
-      const value = decodeURI(parts.join('=').trim()); // Decode URI encoded characters
-  
-      // Assign key-value pair to cookies object
-      cookies[key] = value;
-    });
-  
-    return cookies;
-  }
+
 module.exports = authMiddleware;

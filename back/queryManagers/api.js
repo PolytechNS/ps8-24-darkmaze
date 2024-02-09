@@ -6,6 +6,7 @@ const user = require("../models/UserModel");
 const GameState = require("../logic/GameState");
 const querystring = require("querystring");
 const aiPlayer = require("../logic/ai");
+const gameController = require("../controller/gameController");
 const authMW = require("../middlewear/authMW");
 let io;
 let GamesTable = [];
@@ -17,7 +18,32 @@ function setIo(ioInstance) {
   io.of("/api/game").on("connection", (socket) => {
     console.log("connected");
 
-
+    socket.on("loadGame", async (id) => {
+      console.log("loading game");
+      var game = GamesTable.find((game) => game.id === id);
+      if (game) {
+        socket.emit(
+          "updatedBoard",
+          game.id,
+          game.board,
+          game.playersPosition,
+          game.wallsPositions,
+          true,          
+          game.playerNumber
+        );
+        socket.emit(
+          "UpdateWalls",
+          id,
+          game.board,
+          game.playersPosition,
+          game.wallsPositions,
+          null,
+          null,
+          null
+        );
+      }
+      else socket.emit("ErrorPlaying", "Game not found! start a new game");
+    });
     socket.on("setup", async (playAgainstAI, aiFirst) => {
       console.log("joined api/game");
       const gameState = new GameState();
@@ -236,12 +262,10 @@ async function manageRequest(request, response) {
         }
       }
     });
-  } else if (request.method === "GET" && filePath[2] === "game") {
-    authMW(request, response, (req, res) => {
-      res.writeHead(302, { 'Location': 'http://localhost:8000/html/GameSetup.html' }); 
-      return res.end();
+  } 
+  authMW(request, response, (request, response) => {
+    gameController(request, response,GamesTable);
   });
-  }
 }
 
 /* This method is a helper in case you stumble upon CORS problems. It shouldn't be used as-is:

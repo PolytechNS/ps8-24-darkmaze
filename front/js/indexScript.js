@@ -10,4 +10,9 @@
 //     socket.emit('setup');
     
 // });
- 
+ let lista =[];
+ function setup(lista){
+    lista.push(1);
+ }
+ setup(lista);
+    console.log(lista);

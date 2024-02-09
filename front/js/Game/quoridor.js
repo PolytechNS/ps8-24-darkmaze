@@ -1,11 +1,11 @@
 var TestGame; // Correct the reference to GameState
-var playerNumber = 0;
 const rows = 17;
 const cols = 17;
 const grid = [];
 var ContinuePlaying = true;
 var Row, Col;
 const fogGrid = [];
+var playerNumber=0;
 for (let i = 0; i < rows; i++) {
   grid[i] = [];
   fogGrid[i] = [];
@@ -23,15 +23,21 @@ for (let i = 0; i < rows; i++) {
 var urlParams = new URLSearchParams(window.location.search);
 var playAgainstAIParam = urlParams.get("playAgainstAI");
 var aiFirstParam = urlParams.get("aiFirst");
+var gameId = urlParams.get("gameId");
 
 //socket communications
 const gameNamespace = io("/api/game");
-gameNamespace.emit("setup", playAgainstAIParam, aiFirstParam);
+if (gameId) {
+  gameNamespace.emit("loadGame", gameId);
+} else {
+  gameNamespace.emit("setup", playAgainstAIParam, aiFirstParam);
+}
 gameNamespace.on("ErrorPlaying", (msg) => window.alert(msg));
 gameNamespace.on("GameOver", (msg) => window.alert(msg));
 gameNamespace.on(
   "updatedBoard",
-  (id, board, playerPostion, wallsPositions, newGame) => {
+  (id, board, playerPostion, wallsPositions, newGame,LoadedGameplayerNumber) => {
+    if(LoadedGameplayerNumber) playerNumber=LoadedGameplayerNumber;
     if (newGame) {
       TestGame = new GameState(id, board, playerPostion, wallsPositions);
       drawBoard();
@@ -62,8 +68,7 @@ gameNamespace.on(
     }
   }
 );
-gameNamespace.on(
-  "UpdateWalls",
+gameNamespace.on("UpdateWalls",
   (id, board, playerPostion, wallsPositions, direction, row, col) => {
     TestGame = new GameState(id, board, playerPostion, wallsPositions);
     updateGame(playerNumber, row, col);
@@ -655,6 +660,7 @@ function handleClick(row, col) {
 }
 
 function updateGame(playerNumber, row, col) {
+  console.log(TestGame.playersPosition);
   var oldRow = TestGame.playersPosition[playerNumber][0];
   var oldCol = TestGame.playersPosition[playerNumber][1];
   var opponent = playerNumber === 1 ? 0 : 1;
