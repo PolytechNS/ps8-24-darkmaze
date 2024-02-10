@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Setup</title>
+</head>
+<body>
+
+  <h1>Welcome to the Game!</h1>
+
+  <form id="setupForm">
+    <label for="playAgainstAI">Do you want to play against AI?</label>
+    <select id="playAgainstAI" name="playAgainstAI">
+      <option value="true">Yes</option>
+      <option value="false" selected>No</option>
+    </select>
+
+    <div id="aiOptions" style="display: none;">
+      <label for="aiFirst">Should AI play first?</label>
+      <select id="aiFirst" name="aiFirst">
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+    </div>
+
+    <button type="button" onclick="launchGame()">Launch Game</button>
+  </form>
+
+  <script>
+    function launchGame() {
+      var playAgainstAI = document.getElementById('playAgainstAI').value === 'true';
+      if(playAgainstAI)
+        var aiFirst =  document.getElementById('aiFirst').value === 'true'?0 :1 ;
+      else 
+        var aiFirst = false;
+      // Redirect to localhost:8000/html/index.html with query parameters
+      var url = `http://localhost:8000/html/index.html?playAgainstAI=${playAgainstAI}&aiFirst=${aiFirst}`;
+      window.location.href = url;
+    }
+
+    // Show/hide AI options based on user's choice
+    document.getElementById('playAgainstAI').addEventListener('change', function() {
+      var aiOptions = document.getElementById('aiOptions');
+      aiOptions.style.display = this.value === 'true' ? 'block' : 'none';
+    });
+  </script>
+
+</body>
+</html>
