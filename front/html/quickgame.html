@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a; /* Fond sombre pour l'ambiance */
+            color: #fff;
+            font-family: 'Creepster', cursive;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1); /* Conteneur semi-transparent */
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            max-width: 300px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        .input-field {
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: #fff;
+            margin-bottom: 10px;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 5px;
+        }
+
+        .button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            width: 100%;
+            font-size: 1.2em;
+            cursor: pointer;
+            box-shadow: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #444;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quick Game</h1>
+        <input type="text" id="playAgainstAI" class="input-field" placeholder="Play against AI? (true/false)">
+        <input type="text" id="aiFirst" class="input-field" placeholder="AI goes first? (true/false)">
+        
+        <button type="button" onclick="launchGame()">Launch Game</button>
+    </div>
+
+    <script>
+        function launchGame() {
+            var playAgainstAI = document.getElementById('playAgainstAI').value === 'true';
+            var aiFirst = document.getElementById('aiFirst').value === 'true';
+            var url = `http://localhost:8000/html/index.html?playAgainstAI=${playAgainstAI}&aiFirst=${aiFirst}`;
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html>

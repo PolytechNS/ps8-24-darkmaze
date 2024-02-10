@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarkMaze Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+
+        body, html {
+            height: 100%; /* Ajouté pour s'assurer que le body prend toute la hauteur */
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Creepster', cursive;
+            background: url('../images/unnamed.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+        }
+
+        header {
+            padding: 2em 0;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        h1 {
+            font-size: 5em;
+            text-shadow: 2px 2px 10px #000;
+        }
+
+        main {
+            display: flex; /* Utilisez flexbox pour centrer le contenu */
+            justify-content: center; /* Centrage horizontal */
+            align-items: center; /* Centrage vertical */
+            height: 100%; /* Prend la hauteur restante */
+        }
+
+        .button {
+    background: linear-gradient(to bottom, #555, #333); /* Gradient de couleur pour un effet 3D */
+    color: #fff;
+    border: none; /* Retirer la bordure pour un look moderne */
+    border-radius: 5px; /* Coins arrondis */
+    padding: 1em 2em;
+    font-size: 1.2em;
+    display: inline-block;
+    margin: 1em;
+    transition: all 0.3s ease;
+    text-shadow: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* Ombre externe pour la profondeur */
+    cursor: pointer; /* Change le curseur pour indiquer que c'est cliquable */
+}
+
+.button:hover {
+    background: linear-gradient(to bottom, #777, #555); /* Éclaircit le bouton au survol */
+    box-shadow: 0 0 15px 0 rgba(255, 255, 255, 0.6); /* Ombre externe plus lumineuse au survol */
+    transform: translateY(-2px); /* Déplace légèrement le bouton vers le haut pour simuler un bouton pressé */
+}
+
+        /* Add other styles and media queries as needed */
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to DarkMaze</h1>
+    </header>
+    <main>
+        <section class="game-setup">
+            <button class="button" id="quickGameButton">Quick Game</button>
+            <button class="button">Log In</button>
+        </section>
+    </main>
+    <footer>
+        <!-- Footer content here -->
+    </footer>
+    <script>
+        // Obtenez une référence au bouton Quick Game
+        var quickGameButton = document.getElementById('quickGameButton');
+
+        // Ajoutez un écouteur d'événements pour rediriger vers la page du formulaire
+        quickGameButton.addEventListener('click', function() {
+            window.location.href = './quickgame.html'; // Remplacez par le chemin correct
+        });
+    </script>
+</body>
+</html>
