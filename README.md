@@ -1,6 +1,6 @@
 # PS8
 
-## How to launch project 
+## How to launch DarkMaze 
   - execute : docker compose up
   - open a browser and enter : http://localhost:8000/html/Auth/Login.html
 -----------------------------------------------------------------------------------
