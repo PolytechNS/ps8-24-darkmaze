@@ -1,6 +1,9 @@
 # PS8
 
-##How to launch project - execute : docker compose up - open a browser and enter : http://localhost:8000/html/Auth/Login.html
+## How to launch project 
+  - execute : docker compose up
+  - open a browser and enter : http://localhost:8000/html/Auth/Login.html
+-----------------------------------------------------------------------------------
 The code of this repo is split in 2 folders:
 
 - api/ manages the server. It contains a server which differentiate REST requests from HTTP file requests, and so
