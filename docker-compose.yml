@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  db:
+    image: mongo
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - "27017:27017"
+  app:
+    build: .
+    image: ps8back:v0.1
+    ports:
+      - "8000:8000"
+    environment:
+      MONGODB_URL: mongodb://db:27017/DarkMaze
+      jwt_secret: asdcn@#dc#ãc#~r99d83$!ac9536"·$d9d5d9"·46a8c962"·4sdl23!·1@#dc23@#3f85s
+    volumes:
+      - .:/app
+    depends_on:
+      - db

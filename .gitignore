@@ -1,6 +1,7 @@
 #Webstorm
 .idea
-
+#Data
+/data/
 # Logs
 logs
 *.log

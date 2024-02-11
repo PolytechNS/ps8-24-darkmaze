@@ -28,7 +28,7 @@ function setIo(ioInstance) {
           game.board,
           game.playersPosition,
           game.wallsPositions,
-          true,          
+          true,
           game.playerNumber
         );
         socket.emit(
@@ -41,8 +41,7 @@ function setIo(ioInstance) {
           null,
           null
         );
-      }
-      else socket.emit("ErrorPlaying", "Game not found! start a new game");
+      } else socket.emit("ErrorPlaying", "Game not found! start a new game");
     });
     socket.on("setup", async (playAgainstAI, aiFirst) => {
       console.log("joined api/game");
@@ -196,8 +195,12 @@ async function manageRequest(request, response) {
 
       try {
         console.log(await user.create(data));
-        response.statusCode = 201;
-        return response.end("saved successfully ...");
+        response.statusCode = 200;
+        response.writeHead(302, {
+          Location: "/api/game",
+        });
+
+        return response.end();
       } catch (error) {
         console.log(error);
         response.statusCode = 400;
@@ -242,15 +245,16 @@ async function manageRequest(request, response) {
             { expiresIn: max_age }
           );
           //,maxAge:max_age*1000
-          response.setHeader("Set-Cookie", [`jwt=${token}; HttpOnly; Secure; Path=/; Max-Age=${max_age}`]);
+          response.setHeader("Set-Cookie", [
+            `jwt=${token}; HttpOnly; Secure; Path=/; Max-Age=${max_age}`,
+          ]);
 
           response.statusCode = 200;
-          return response.end(
-            JSON.stringify({
-              status: "OK",
-              message: "Loged in successfully ..",
-            })
-          );
+          response.writeHead(302, {
+            Location: "/api/game",
+          });
+
+          return response.end();
         } else {
           response.statusCode = 400;
           return response.end(
@@ -262,10 +266,11 @@ async function manageRequest(request, response) {
         }
       }
     });
-  } 
-  authMW(request, response, (request, response) => {
-    gameController(request, response,GamesTable);
-  });
+  } else {
+    authMW(request, response, (request, response) => {
+      gameController(request, response, GamesTable);
+    });
+  }
 }
 
 /* This method is a helper in case you stumble upon CORS problems. It shouldn't be used as-is:
