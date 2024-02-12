@@ -31,10 +31,12 @@ function computeMove2(gameState,playerNumber) {
     if (pos[0] >0) possibleMoves.push([pos[0]-2,pos[1]]);
 
     if(playerNumber=0){
-        const path =astar(gameState.getBoard(),new Node(pos),new Node(16,16))
+        const path =astar(gameState.getBoard(),new Node(pos),new Node(16,16));
+        return path[0]
     }
     if(playerNumber=1){
-        const path = astar(gameState.getBoard(),new Node(pos),new Node(0,0))
+        const path = astar(gameState.getBoard(),new Node(pos),new Node(0,0));
+        return path[0]
     }
-    return path[0];
+    return possibleMoves[moveIndex];
 }
