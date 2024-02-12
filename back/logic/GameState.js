@@ -29,6 +29,10 @@ class GameState {
     return matrix;
   }
 
+  getBoard(){
+    return this.board
+  }
+
   CreateWallsPlacement() {
     for (let i = 0; i < 17; i++)
       for (let j = 0; j < 17; j++)
