@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Welcome to DarkMaze!</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        /* Custom CSS */
+        body {
+            background-color: #343a40; /* Couleur de fond sombre */
+            color: #fff; /* Couleur du texte */
+        }
+        .home-container {
+            text-align: center;
+            padding: 20px;
+        }
+        .home-container .btn-option {
+            margin-bottom: 10px;
+            background-color: #6c757d; /* Couleur de fond des boutons */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 15px 30px;
+            font-size: 18px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre douce */
+        }
+        .home-container .btn-option:hover {
+            background-color: #495057; /* Couleur de fond des boutons au survol */
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée au survol */
+        }
+        .home-container .btn-option .fa {
+            margin-right: 10px;
+        }
+        .home-container .btn-option:last-child {
+            margin-bottom: 0; /* Supprimer la marge inférieure pour le dernier bouton */
+        }
+    </style>
+</head>
+<body class="img js-fullheight" style="background-image: url('/assets/images/ph1.png'); height: 716px;">
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center mb-5">
+                <h2 class="heading-section">WELCOME TO DarkMaze !</h2>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="home-container">
+                    <h3 class="heading-section mb-4">Choose an Option</h3>
+                    <div class="d-flex justify-content-center flex-wrap">
+                        <a href="/quick-game" class="btn btn-option"><i class="fa fa-gamepad"></i>Quick Game</a>
+                        <a href="/login" class="btn btn-option"><i class="fa fa-sign-in"></i>Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/popper.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/main.js"></script>
+</body>
+</html>
