@@ -29,7 +29,7 @@ function setIo(ioInstance) {
           game.board,
           game.playersPosition,
           game.wallsPositions,
-          true,
+          false,
           game.playerNumber
         );
         socket.emit(
