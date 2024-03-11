@@ -78,8 +78,8 @@ gameNamespace.on(
         PlayerRow,
         PlayerCol
       );
-      addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
       removeMoveChoices(OldRow, OldCol);
+      addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
       changeVisibility(playerNumber);
 
     }
@@ -131,32 +131,33 @@ function UpdatePiecePositionOnBoard(
   grid[newRow][newCol] = NumberOfPlayer === 0 ? "P2" : "P1";
 }
 function addMoveChoices(opponentRow, opponentCol, row, col) {
-  if (row + 2 <= 16 && (row + 2 !== opponentRow || col !== opponentCol)) {
-    //console.log("Adding playerChoice to cell-" + (row + 2) + "-" + col);
+  console.log("ADD MOVE CHOICE"+row+"-"+col);
+  if (row + 2 <= 16 && (row + 2 !== opponentRow || col !== opponentCol)&&(!(grid[row+1][Math.abs((col+1)%17)].endsWith('h'))&&!(grid[row+1][Math.abs((col-1)%17)].endsWith('h')))) {
+    console.log("Adding playerChoice to cell-" + (row + 2) + "-" + col);
     document
       .getElementById("cell-" + (row + 2) + "-" + col)
       .classList.add("playerChoice");
     grid[row + 2][col] = "PChoice";
   }
 
-  if (row - 2 >= 0 && (row - 2 !== opponentRow || col !== opponentCol)) {
-    //console.log("Adding playerChoice to cell-" + (row - 2) + "-" + col);
+  if (row - 2 >= 0 && (row - 2 !== opponentRow || col !== opponentCol)&&(!(grid[row-1][Math.abs((col-1)%17)].endsWith('h'))&&!(grid[row-1][Math.abs((col+1)%17)].endsWith('h')))) {
+    console.log("Adding playerChoice to cell-" + (row - 2) + "-" + col);
     document
       .getElementById("cell-" + (row - 2) + "-" + col)
       .classList.add("playerChoice");
     grid[row - 2][col] = "PChoice";
   }
 
-  if (col + 2 <= 16 && (row !== opponentRow || col + 2 !== opponentCol)) {
-    //console.log("Adding playerChoice to cell-" + row + "-" + (col + 2));
+  if (col + 2 <= 16 && (row !== opponentRow || col + 2 !== opponentCol)&&(!(grid[Math.abs((row+1)%17)][col+1].endsWith('v'))&&!(grid[Math.abs((row-1)%17)][col+1].endsWith('v')))) {
+    console.log("Adding playerChoice to cell-" + row + "-" + (col + 2));
     document
       .getElementById("cell-" + row + "-" + (col + 2))
       .classList.add("playerChoice");
     grid[row][col + 2] = "PChoice";
   }
 
-  if (col - 2 >= 0 && (row !== opponentRow || col - 2 !== opponentCol)) {
-    //console.log("Adding playerChoice to cell-" + row + "-" + (col - 2));
+  if (col - 2 >= 0 && (row !== opponentRow || col - 2 !== opponentCol)&&(!(grid[Math.abs((row-1)%17)][col-1].endsWith('v'))&&!(grid[Math.abs((row+1)%17)][col-1].endsWith('v')))) {
+    console.log("Adding playerChoice to cell-" + row + "-" + (col - 2));
     document
       .getElementById("cell-" + row + "-" + (col - 2))
       .classList.add("playerChoice");
@@ -685,6 +686,7 @@ function handleClick(row, col) {
 
   //we should check if the move is possible or not
   gameNamespace.emit("newMove", TestGame.id, playerNumber, row, col);
+  console.log(grid)
 
   // Add your logic for handling the click event
 }
