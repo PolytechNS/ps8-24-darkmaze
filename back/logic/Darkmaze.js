@@ -1,15 +1,17 @@
 // yourTeam.js
 
-var ownPlayer;
-var opponentPlayer;
+var ownPlayer = 1;
+var opponentPlayer = 2;
+var turn ;
+let chosenDepth=3;
 // Function to set up the AI
 exports.setup = function setup(AIplay) {
   return new Promise((resolve, reject) => {
     // Replace the following setTimeout with your AI setup logic
-    ownPlayer = AIplay;
-    opponentPlayer = AIplay === 1 ? 2 : 1;
+    turn = AIplay;
     let col = getRandomNumber();
     let row = AIplay == 1 ? 1 : 9;
+
     let position = col.toString() + row.toString();
     resolve(position);
   });
@@ -17,44 +19,111 @@ exports.setup = function setup(AIplay) {
 
 // Function to determine the next move of the AI
 exports.nextMove = function nextMove(gameState) {
-  printCompactBoard(gameState);
   return new Promise((resolve, reject) => {
     let OwnPosition = getPlayerPosition(gameState, ownPlayer);
     let OpponentPostion = getPlayerPosition(gameState, opponentPlayer);
-    if (OpponentPostion[0] == -1 && OpponentPostion[1] == -1) {
-      //Applying Astar to find the shortest path to the goal because we can't find the opponent
-      try{const moveNode =
-        ownPlayer === 1
-          ? astar(new Node(OwnPosition[0], OwnPosition[1]), 8, gameState).move
-          : astar(new Node(OwnPosition[0], OwnPosition[1]), 0, gameState).move;
-
+    
+    const timeoutID = setTimeout(()=>{
+      try{let moveNode =
+        turn === 1
+          ? astar(new Node(OwnPosition[0], OwnPosition[1]), 8, gameState)
+          : astar(new Node(OwnPosition[0], OwnPosition[1]), 0, gameState);
+        
+        clearTimeout(timeoutID);
+        if(moveNode==undefined || moveNode == null ){
+          resolve({ action: "idle" });
+        }
+        moveNode = moveNode.move;
         resolve({
           action: "move",
           value: (moveNode.col + 1).toString() + (moveNode.row + 1).toString(),
         });}
         catch(e){
-            resolve({ action: "idle" });
+          clearTimeout(timeoutID);
+
+          resolve({ action: "idle" });
 
         }
-    } else {
+    }, 180);
+
+    if(OwnPosition[0]==-1){
+      
+      clearTimeout(timeoutID);
+      resolve({ action: "idle" });
+    }
+
+      if (OpponentPostion[0] == -1 && OpponentPostion[1] == -1) {
+        //Applying Astar to find the shortest path to the goal because we can't find the opponent
+        try{let moveNode =
+          turn === 1
+            ? astar(new Node(OwnPosition[0], OwnPosition[1]), 8, gameState)
+            : astar(new Node(OwnPosition[0], OwnPosition[1]), 0, gameState);
+          
+          clearTimeout(timeoutID);
+          if(moveNode==undefined || moveNode == null ){
+            resolve({ action: "idle" });
+          }
+          moveNode = moveNode.move;
+          resolve({
+            action: "move",
+            value: (moveNode.col + 1).toString() + (moveNode.row + 1).toString(),
+          });}
+          catch(e){
+            clearTimeout(timeoutID);
+  
+            resolve({ action: "idle" });
+  
+          }
+      } 
+    
+    else {
       //Applying Minimax to find the best move
-      const move = PlayMinimax(gameState);
-      if (move != null) {
+      
+      const move = PlayAlphaBeta(gameState);
+      
+      if (move != null && move!= undefined) {
         if (move.changedAttribute == "playerPosition") {
           let MoveCoordinations = move.newValue;
+          clearTimeout(timeoutID);  
           resolve({
             action: "move",
             value:
               (MoveCoordinations[0] + 1).toString() +
               (MoveCoordinations[1] + 1).toString(),
+              
           });
         } else if (
           move.changedAttribute == "ownWalls" ||
           move.changedAttribute == "opponentWalls"
         ) {
+          clearTimeout(timeoutID);
           resolve({ action: "wall", value: move.newValue });
         }
+        else{
+          try{let moveNode =
+            turn === 1
+              ? astar(new Node(OwnPosition[0], OwnPosition[1]), 8, gameState)
+              : astar(new Node(OwnPosition[0], OwnPosition[1]), 0, gameState);
+            
+            clearTimeout(timeoutID);
+            if(moveNode==undefined || moveNode == null ){
+              resolve({ action: "idle" });
+            }
+            moveNode = moveNode.move;
+            resolve({
+              action: "move",
+              value: (moveNode.col + 1).toString() + (moveNode.row + 1).toString(),
+            });}
+            catch(e){
+              clearTimeout(timeoutID);
+    
+              resolve({ action: "idle" });
+    
+            }
+        }
+
       } else {
+        clearTimeout(timeoutID);
         resolve({ action: "idle" });
       }
     }
@@ -70,15 +139,15 @@ exports.correction = function correction(rightMove) {
 };
 exports.updateBoard = function updateBoard(gameState) {
   return new Promise((resolve, reject) => {
-    setTimeout(() => {
+
       //Ineed to compare the move i did with the new gameState
       resolve(true);
-    }, 50);
+
   });
 };
 
 function getRandomNumber() {
-  const numbers = [4, 5, 6];
+  const numbers = [4,5,6];
   const randomIndex = Math.floor(Math.random() * numbers.length);
   return numbers[randomIndex];
 }
@@ -242,44 +311,13 @@ function parsePositionString(position) {
   return [col, row];
 }
 
-// Example usage:
-// let gameState = {
-//     opponentWalls: [],
-//     ownWalls: [['22',0],['32',1]], // Example wall placement
-//     board: [
-//         [0,0,0,0,0,0,0,0,0],
-//         [0,0,0,0,0,0,0,0,0],
-//         [0,0,0,0,0,0,0,0,0],
-//         [0,0,0,0,0,0,0,0,0],
-//         [0,0,0,0,0,0,0,0,0],
-//         [0,0,0,0,0,0,0,0,0],
-//         [0,0,0,0,0,0,0,0,0],
-//         [0,0,0,0,0,0,0,0,0],
-//         [0,0,0,0,0,0,0,0,0],
-//     ]
-// };
-
-// let startNode = new Node(2, 0);
-// let path = astar(startNode, 8, gameState);
-// if (path) {
-//     console.log("next move ",path);
-
-// } else {
-//     console.log("No path found.");
-// }
-//console.log("is valid moooove ",isValidMove(2,1,3,1,gameState));
-// Example test cases
-
 //################### MiniMax written by Bilal ############################
 
 function minimax(state, depth, maximizingPlayer) {
   if (depth === 0 || gameIsOver(state) == true) {
-    if (gameIsOver(state) == true) {
-      printCompactBoard(state);
-    }
-    return evaluatePosition(state, ownPlayer);
+    let oppTurn = turn ==1?2:1;
+    return evaluatePosition(state, maximizingPlayer ? turn : oppTurn);
   }
-
   if (maximizingPlayer) {
     let maxEval = -Infinity;
     for (let successorState of generateSuccessorStates(
@@ -289,7 +327,6 @@ function minimax(state, depth, maximizingPlayer) {
       let eval = minimax(successorState, depth - 1, false);
       maxEval = Math.max(maxEval, eval);
     }
-    if (maxEval == -Infinity) return Infinity;
     return maxEval;
   } else {
     let minEval = Infinity;
@@ -300,10 +337,42 @@ function minimax(state, depth, maximizingPlayer) {
       let eval = minimax(successorState, depth - 1, true);
       minEval = Math.min(minEval, eval);
     }
-    if (minEval == Infinity) return -Infinity;
     return minEval;
   }
 }
+
+function alphaBeta(state, depth, alpha, beta, maximizingPlayer) {
+  if (depth == 0 || gameIsOver(state)) {
+    let oppTurn = turn == 1 ? 2 : 1;
+    return evaluatePosition(state, maximizingPlayer ? turn : oppTurn);
+  }
+  if (maximizingPlayer) {
+    let maxEval = -Infinity;
+    for (let successorState of generateSuccessorStates(
+      state,
+      maximizingPlayer ? ownPlayer : opponentPlayer
+    )) {
+      let eval = alphaBeta(successorState, depth - 1, alpha, beta, false);
+      maxEval = Math.max(maxEval, eval);
+      alpha = Math.max(alpha, eval);
+      if (beta <= alpha) break; // Beta cut-off
+    }
+    return maxEval;
+  } else {
+    let minEval = Infinity;
+    for (let successorState of generateSuccessorStates(
+      state,
+      maximizingPlayer ? ownPlayer : opponentPlayer
+    )) {
+      let eval = alphaBeta(successorState, depth - 1, alpha, beta, true);
+      minEval = Math.min(minEval, eval);
+      beta = Math.min(beta, eval);
+      if (beta <= alpha) break; // Alpha cut-off
+    }
+    return minEval;
+  }
+}
+
 
 //PosX,PosY are my poistion on the board, gameState is the current state of the game
 //Goal Coresspond to the Goal
@@ -315,8 +384,8 @@ function generateSuccessorStates(gameState, player) {
   let successors = [];
   // Generate successors for moving the pawn
   let playerPosition = getPlayerPosition(gameState, player);
-  if (player == 1 && playerPosition[1] == 8) return successors;
-  if (player == 2 && playerPosition[1] == 0) return successors;
+  if (turn == 1 && playerPosition[1] == 8) return successors;
+  if (turn == 2 && playerPosition[1] == 0) return successors;
   const possibleMoves = getPossibleMoves(gameState, player);
   possibleMoves.forEach((move) => {
     let newGameState = deepCopy(gameState); // Deep copy of gameState
@@ -326,9 +395,9 @@ function generateSuccessorStates(gameState, player) {
   let opponent = player === 1 ? 2 : 1;
   let [opCol, opRow] = getPlayerPosition(gameState, opponent);
 
-  opponent == 1 && opRow++;
-  let columns = [-1, 0, 0];
-  let direction = [1, 1, 0];
+  turn == 2 && opRow++;
+  let columns = [0,-1,-1, 0];
+  let direction = [0,0,1, 1];
   for (let _ColIndex = 0; _ColIndex < columns.length; _ColIndex++) {
     let newColIndex = opCol + columns[_ColIndex];
     let newWallDirection = direction[_ColIndex];
@@ -347,16 +416,7 @@ function generateSuccessorStates(gameState, player) {
       successors.push(newGameState);
     }
   }
-  // Generate successors for placing walls
-  // for (let i = 0; i < gameState.board.length; i++) {
-  //     for (let j = 0; j < gameState.board[0].length; j++) {
-  //         if (isValidWallPlacement(i, j, direction, gameState)) {
-  //             let newGameState = gameState.clone(); // Assuming a clone method to create a deep copy of gameState
-  //             newGameState.ownWalls.push([i, j]); // Assume horizontal wall placement
-  //             successors.push(newGameState);
-  //         }
-  //     }
-  // }
+
 
   return successors;
 }
@@ -408,11 +468,14 @@ function isValidWallPlacement(col, row, direction, gameState) {
   // All checks passed, wall placement is valid
   return true;
 }
-function gameIsOver(state, player) {
+function gameIsOver(state) {
   // Check if the game is over
-  getPlayerPosition(state, player);
-  if (player == 1 && playerPosition[1] == 8) return true;
-  if (player == 2 && playerPosition[1] == 0) return true;
+  let player1Position = getPlayerPosition(state, 1);
+  let player2Position = getPlayerPosition(state, 2);
+  if (turn==1&&player1Position[1] == 8) return true;
+  if (turn==1&&player2Position[1] == 0) return true;
+  if (turn==2&&player1Position[1] == 0) return true;
+  if (turn==2&&player2Position[1] == 8) return true;
   return false;
 }
 
@@ -424,18 +487,19 @@ function evaluatePosition(gameState, player) {
   const WEIGHT_WALL_ADVANTAGE = 1;
 
   // Retrieve game state information
-  const ownPosition = getPlayerPosition(gameState, player);
-  const opponentPosition = getPlayerPosition(gameState, player === 1 ? 2 : 1);
+
+  const ownPosition = getPlayerPosition(gameState, ownPlayer);
+  const opponentPosition = getPlayerPosition(gameState, opponentPlayer);
+
   const ownWalls = 10 - gameState.ownWalls.length;
   const opponentWalls = 10 - gameState.opponentWalls.length;
-  // console.log("ownPosition ",ownPosition,"opo pos", opponentPosition,"own walls", ownWalls,"op walls", opponentWalls);
 
   // Calculate distances to goals
 
   let ownGoalDistance;
   try {
     ownGoalDistance =
-      player === 1
+      turn === 1
         ? astar(new Node(ownPosition[0], ownPosition[1]), 8, gameState).length
         : astar(new Node(ownPosition[0], ownPosition[1]), 0, gameState).length;
   } catch (error) {
@@ -445,7 +509,7 @@ function evaluatePosition(gameState, player) {
   var opponentGoalDistance;
   try {
     opponentGoalDistance =
-      player === 1
+      turn === 1
         ? astar(
             new Node(opponentPosition[0], opponentPosition[1]),
             0,
@@ -459,23 +523,20 @@ function evaluatePosition(gameState, player) {
   } catch (error) {
     opponentGoalDistance = Infinity;
   }
-
-  // console.log("ownGoalDistance", ownGoalDistance);
-  // console.log("opponentGoalDistance", opponentGoalDistance);
   // Evaluate position based on various factors
   let score = 0;
   const centerDistance = Math.abs(4 - ownPosition[0]);
-  if (player == ownPlayer) {
-    score += WEIGHT_CENTER_CONTROL * (5 - centerDistance);
-    score += WEIGHT_DISTANCE_TO_GOAL * (8 - ownGoalDistance);
-    score -= WEIGHT_OPPONENT_DISTANCE_TO_GOAL * (8 - opponentGoalDistance);
-    score += WEIGHT_WALL_ADVANTAGE * (ownWalls - opponentWalls);
-  } else {
-    score -= WEIGHT_CENTER_CONTROL * (5 - centerDistance);
-    score -= WEIGHT_DISTANCE_TO_GOAL * (8 - ownGoalDistance);
-    score += WEIGHT_OPPONENT_DISTANCE_TO_GOAL * (8 - opponentGoalDistance);
+
+  score += WEIGHT_CENTER_CONTROL * (5 - centerDistance);
+  score += WEIGHT_DISTANCE_TO_GOAL * (8 - ownGoalDistance);
+  score -= WEIGHT_OPPONENT_DISTANCE_TO_GOAL * (8 - opponentGoalDistance);
+  if(opponentGoalDistance<=ownGoalDistance)
     score -= WEIGHT_WALL_ADVANTAGE * (ownWalls - opponentWalls);
-  }
+  else if(opponentGoalDistance>ownGoalDistance)
+    score -= WEIGHT_WALL_ADVANTAGE * (ownWalls - opponentWalls);
+
+
+
 
   return score;
 }
@@ -554,12 +615,7 @@ function getPlayerPosition(gameState, player) {
 //   ],
 // };
 
-function printCompactBoard(gameState) {
-  console.log("\n-------------------------\n");
-  console.log(gameState.ownWalls, gameState.opponentWalls);
-  gameState.board.forEach((row) => console.log(row.join(" ")));
-  console.log("\n-------------------------\n");
-}
+
 
 function getMove(origGameState, modGameState, player) {
   //if not possible just return a random move so that 
@@ -574,7 +630,6 @@ function getMove(origGameState, modGameState, player) {
   } else if (
     origGameState.opponentWalls.length != modGameState.opponentWalls.length
   ) {
-    console.log(origGameState.opponentWalls, modGameState.opponentWalls);
     return {
       changedAttribute: "opponentWalls",
       newValue:
@@ -609,5 +664,29 @@ function PlayMinimax(gamestate) {
 
   return getMove(gamestate, children[maxIndex], ownPlayer);
 }
+function PlayAlphaBeta(gamestate) {
+  let scores = [];
+  let children = generateSuccessorStates(gamestate, ownPlayer);
+  let childIndex = 0;
+  for (let child of children) {
+    scores[childIndex] = alphaBeta(child, chosenDepth, -Infinity, Infinity, false); // Call alphaBeta instead of minimax
+    childIndex++;
+  }
+
+  let maxScore = -Infinity;
+  let maxIndex = -1;
+
+  for (let i = 0; i < scores.length; i++) {
+    if (scores[i] > maxScore) {
+      maxScore = scores[i];
+      maxIndex = i;
+    }
+  }
+
+  return getMove(gamestate, children[maxIndex], ownPlayer);
+}
+
+///////////////////////////////////////////////////////
+
 
 

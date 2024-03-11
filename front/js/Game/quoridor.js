@@ -26,7 +26,7 @@ var aiFirstParam = urlParams.get("aiFirst");
 var gameId = urlParams.get("gameId");
 
 //socket communications
-const gameNamespace = io("/api/game");
+const gameNamespace = io("/api/game"); 
 if (gameId) {
   gameNamespace.emit("loadGame", gameId);
 } else {
