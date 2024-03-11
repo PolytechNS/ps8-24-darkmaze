@@ -26,7 +26,7 @@ var aiFirstParam = urlParams.get("aiFirst");
 var gameId = urlParams.get("gameId");
 
 //socket communications
-const gameNamespace = io("/api/game");
+const gameNamespace = io("/api/game"); 
 if (gameId) {
   gameNamespace.emit("loadGame", gameId);
 } else {
@@ -37,8 +37,25 @@ gameNamespace.on("GameOver", (msg) => window.alert(msg));
 gameNamespace.on(
   "updatedBoard",
   (id, board, playerPostion, wallsPositions, newGame,LoadedGameplayerNumber) => {
-    if(LoadedGameplayerNumber) playerNumber=LoadedGameplayerNumber;
-    if (newGame) {
+    if(LoadedGameplayerNumber!=null){
+      playerNumber=LoadedGameplayerNumber;
+      console.log("Looooooooading");
+      let OldRow = playerPostion[playerNumber][0];
+      let OldCol = playerPostion[playerNumber][1];
+      let Opponent = playerNumber == 1 ? 0 : 1;
+      let OldOpponentRow = playerPostion[Opponent][0];
+      let OldOpponentCol = playerPostion[Opponent][1];
+      TestGame = new GameState(id, board, playerPostion, wallsPositions);
+
+
+      //this code should be on the update
+      drawBoard();
+      addMoveChoices(OldOpponentRow, OldOpponentCol, OldRow, OldCol);
+      removeMoveChoices(OldOpponentRow, OldOpponentCol);
+      changeVisibility(playerNumber);
+    } 
+      
+    else if (newGame) {
       TestGame = new GameState(id, board, playerPostion, wallsPositions);
       drawBoard();
     } else {
@@ -64,19 +81,32 @@ gameNamespace.on(
       removeMoveChoices(OldRow, OldCol);
       addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
       changeVisibility(playerNumber);
-      drawGrid();
+
     }
   }
 );
 gameNamespace.on("UpdateWalls",
   (id, board, playerPostion, wallsPositions, direction, row, col) => {
     TestGame = new GameState(id, board, playerPostion, wallsPositions);
-    updateGame(playerNumber, row, col);
-    playerNumber = playerNumber === 1 ? 0 : 1;
-    if (direction == "vertical")
+    if (row!=null && col!=null && direction != null) {
+      updateGame(playerNumber, row, col);
+      if (direction == "vertical")
       grid[row + 1][col] = "P" + (playerNumber + 1) + "v";
     else if (direction == "horizontal") {
       grid[row][col + 1] = "P" + (playerNumber + 1) + "h";
+    }
+    playerNumber = playerNumber === 1 ? 0 : 1;
+      
+    } else {
+      wallsPositions.forEach(wall => {
+        if(wall.wallIndex==1){
+          if (wall.direction == "vertical")
+          grid[wall.wallRow + 1][wall.wallCol] = "P" + (wall.numplayer + 1) + "v";
+          else if (wall.direction == "horizontal") {
+            grid[wall.wallRow][wall.wallCol + 1] = "P" + (wall.numplayer  + 1) + "h";
+          }
+        }
+      });
     }
   }
 );

@@ -1,5 +1,4 @@
 const uuid = require('uuid');
-
 class GameState {
   constructor() {
     this.id=uuid.v4();
@@ -12,6 +11,75 @@ class GameState {
     this.change_Visib_Piece(0, "increase");
     this.change_Visib_Piece(1, "increase");
   }
+
+  convertGameState(){
+    let playerToPlay = this.GameType['aiPlayer'];
+    let newMatrix = new Array(9);
+    for (let i = 0; i < newMatrix.length; i++) {
+        newMatrix[i] = []; 
+    }
+
+    for (let i = 0; i < 17; i += 2) {
+        let newMatIndex = 0;
+        for (let j = 0; j < 17; j += 2, newMatIndex++) {
+          if(this.board[i][j]<0 && playerToPlay == 0)
+            newMatrix[newMatIndex].unshift(-1);
+          else if (this.board[i][j] >=0 && playerToPlay == 0)
+            newMatrix[newMatIndex].unshift(0);
+          else if(this.board[i][j]<0 && playerToPlay == 1)
+            newMatrix[newMatIndex].unshift(0);
+          else
+            newMatrix[newMatIndex].unshift(-1);
+        }
+    }
+    console.log(this.playersPosition);
+
+    let opponent = playerToPlay==0?1:0;
+    let MyplayerPosition = [...this.playersPosition[playerToPlay]] ;
+    let opponentPosition = [...this.playersPosition[opponent]];
+    //removing walls 
+    MyplayerPosition[0] -= MyplayerPosition[0]/2;
+    MyplayerPosition[1] -= MyplayerPosition[1]/2;
+    opponentPosition[0] -= opponentPosition[0]/2;
+    opponentPosition[1] -= opponentPosition[1]/2;
+
+    if(playerToPlay == 0){
+
+      newMatrix[MyplayerPosition[1]][MyplayerPosition[0]]=1;
+      if(newMatrix[opponentPosition[1]][opponentPosition[0]]>=0)
+        newMatrix[opponentPosition[1]][opponentPosition[0]]=2        
+    }else {
+
+      newMatrix[MyplayerPosition[1]][MyplayerPosition[0]]=2;
+      if(newMatrix[opponentPosition[1]][opponentPosition[0]]<=0)
+        newMatrix[opponentPosition[1]][opponentPosition[0]]=1   
+    }
+    let ownWalls = [];
+    let opponentWalls = [];
+    let addedWalls = [];
+    this.wallsPositions.forEach(wall => {
+      if(wall.wallIndex == 1 && !addedWalls.includes(wall.globalWallNumber)){
+        if(wall.direction == 'vertical'){
+          let row = wall.wallRow -  wall.wallRow / 2;
+          let col = (wall.wallCol-1) - (wall.wallCol-1)/2;
+          wall.numplayer == playerToPlay ? ownWalls.push([(col+1).toString()+(row+1).toString(),1]) : opponentWalls.push([(col+1).toString()+(row+1).toString(),1]);
+        }else{
+          let row = (wall.wallRow+1) -  (wall.wallRow+1) / 2;
+          let col = (wall.wallCol) - (wall.wallCol)/2;
+          wall.numplayer == playerToPlay ? ownWalls.push([(col+1).toString()+(row+1).toString(),0]) : opponentWalls.push([(col+1).toString()+(row+1).toString(),0]);
+
+        }
+      }
+    
+    });
+
+    console.log('----------------');
+    console.log('ownWalls ',ownWalls);
+    console.log('opponent walls ',opponentWalls);
+    newMatrix.forEach((row) => console.log(row.join(" ")));
+    return {ownWalls:ownWalls,opponentWalls:opponentWalls,board:newMatrix};
+}
+
 
 
   #createMatrix() {
@@ -187,9 +255,9 @@ class GameState {
     }
   }
 
-  addWall(wallRow, wallCol, numplayer) {
+  addWall(wallRow, wallCol, numplayer, globalWallNumber,wallIndex,direction) {
     // ADD A WALL TO THE TABLE OF THE WALLS
-    var newWall = { wallRow: wallRow, wallCol: wallCol, numplayer: numplayer };
+    var newWall = { wallRow: wallRow, wallCol: wallCol, numplayer: numplayer, globalWallNumber:globalWallNumber,wallIndex:wallIndex,direction:direction};
     this.wallsPositions.push(newWall);
   }
 
@@ -211,9 +279,10 @@ class GameState {
       ) {
         console.log("in ver");
         // Fonction pour ajouter un mur vertical de deux cellules
-        this.addWall(wallRow, wallCol, player);
-        this.addWall(wallRow + 1, wallCol, player);
-        this.addWall(wallRow + 2, wallCol, player);
+        let GlobalwallNumber = this.wallsPositions.length/3;
+        this.addWall(wallRow, wallCol, player,GlobalwallNumber,1,wallDirection);
+        this.addWall(wallRow + 1, wallCol, player,GlobalwallNumber,2,wallDirection);
+        this.addWall(wallRow + 2, wallCol, player,GlobalwallNumber,3,wallDirection);
         this.ChangeVisiblityForWall(player, wallRow, wallCol, wallDirection);
         return true;
       } else {
@@ -233,19 +302,16 @@ class GameState {
         { wallRow: wallRow, wallCol: wallCol + 1 },
         { wallRow: wallRow, wallCol: wallCol + 2 }
       );
-      console.log(        this.isWallPositionOccuped("horizontal", wallRow, wallCol) == null ,
-      this.isMaxWallPlayerPlaced(player) ,
-      this.hasPathDFS(newWalls));
       if (
         this.isWallPositionOccuped("horizontal", wallRow, wallCol) == null &&
         this.isMaxWallPlayerPlaced(player) &&
         this.hasPathDFS(newWalls)
       ) {
-        console.log("in hor");
         // Fonction pour ajouter un mur horizontal de deux cellules
-        this.addWall(wallRow, wallCol, player);
-        this.addWall(wallRow, wallCol + 1, player);
-        this.addWall(wallRow, wallCol + 2, player);
+        let GlobalwallNumber = this.wallsPositions.length/3;
+        this.addWall(wallRow, wallCol, player,GlobalwallNumber,1,wallDirection);
+        this.addWall(wallRow, wallCol + 1, player,GlobalwallNumber,2,wallDirection);
+        this.addWall(wallRow, wallCol + 2, player,GlobalwallNumber,3,wallDirection);
         this.ChangeVisiblityForWall(player, wallRow, wallCol, wallDirection);
         return true;
       } else {
@@ -416,36 +482,30 @@ class Player {
   static Player_Number_2 = 1;
 }
 
-//const gameState = new GameState();
-//gameState.printGameState();
-// console.log("dec ",gameState.hasPathDFS(0));
-// gameState.addWall(0,7, 1);
-// console.log("dec ",gameState.hasPathDFS(0));
-// gameState.addWall(0,9, 1);
-// console.log("dec ",gameState.hasPathDFS(0));
-//gameState.addWall(1, 8, 1);
-// console.log(gameState.IsThereWall(gameState.playersPosition[0][0],gameState.playersPosition[0][1],0,10));
-// console.log(gameState.IsThereWall(gameState.playersPosition[0][0],gameState.playersPosition[0][1],gameState.playersPosition[0][0],gameState.playersPosition[0][1]-2));
-// console.log(gameState.IsThereWall(gameState.playersPosition[0][0],gameState.playersPosition[0][1],gameState.playersPosition[0][0]+2,gameState.playersPosition[0][1]));
-// console.log(gameState.GetNeighbors(gameState.playersPosition[0][0],gameState.playersPosition[0][1]));
-// console.log("dec ",gameState.hasPathDFS(0));
-// console.log("player Position :",gameState.playersPosition);
-// gameState.play(0,"move",0,10)
-// console.log("-------------------------------------------\n");
-// gameState.printGameState();
 
-// console.log("player Position :",gameState.playersPosition);
+let gs = new GameState();
 
-// console.log("player Position :",gameState.playersPosition);
+// gs.placeWalls('horizontal',3,2,0);
+// gs.placeWalls('horizontal',5,2,1);
+// gs.placeWalls('horizontal',7,2,0);
+// gs.placeWalls('vertical',8,3,0);
+// gs.placeWalls('vertical',8,5,0);
 
-// gameState.ChangeVisiblityForWall(0,2,5,"vertical");
-// console.log("\n---------------------------------------\n");
 
-// gameState.printGameState();
-// gameState.ChangeVisiblityForWall(0,15,2,"horizontal");
-// console.log("\n---------------------------------------\n");
-// gameState.ChangeVisiblityForWall(0,2,5,"vertical");
-// gameState.printGameState();
 
-//console.log(gameState.wallsPositions);
+// console.log(gs.wallsPositions);
+// gs.convertGameState(1);
+
+// let Myplayer = 0 ;
+// let opp = 1 ;
+// darkMaze.setup(1).then((pos)=>{
+//   const digits = Array.from(pos, Number);
+  
+//   gs.play(Myplayer,digits[1]-1,digits[0]-1);
+//   console.log('ñplayers position : ',gs.playersPosition);
+//   darkMaze.nextMove(gs.convertGameState(0)).then((move)=>{console.log(move);})
+
+
+// })
+ 
 module.exports = GameState;

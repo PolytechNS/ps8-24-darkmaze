@@ -10,16 +10,17 @@ const querystring = require("querystring");
 const aiPlayer = require("../logic/ai");
 const gameController = require("../controller/gameController");
 const authMW = require("../middlewear/authMW");
+const darkMazeAi = require('../logic/Darkmaze')
 let io;
 let GamesTable = [];
 
 // sets all the socket listeners
+
 function setIo(ioInstance) {
   io = ioInstance;
 
   io.of("/api/game").on("connection", (socket) => {
     console.log("connected");
-
     socket.on("loadGame", async (id) => {
       console.log("loading game");
       var game = GamesTable.find((game) => game.id === id);
@@ -30,7 +31,7 @@ function setIo(ioInstance) {
           game.board,
           game.playersPosition,
           game.wallsPositions,
-          true,
+          false,
           game.playerNumber
         );
         socket.emit(
@@ -52,7 +53,7 @@ function setIo(ioInstance) {
       gameState.GameType["aiPlayer"] = aiFirst;
       GamesTable.push(gameState);
 
-      // Create an instance of GameState
+      // Create an instance of GameState 
       // // Save the instance to the database
       socket.emit(
         "updatedBoard",
@@ -62,18 +63,26 @@ function setIo(ioInstance) {
         gameState.wallsPositions,
         true
       );
-      if (playAgainstAI == "true" && aiFirst == 0) {
-        const move = aiPlayer(gameState, 0);
-        console.log("ai is playing : ", move);
-        gameState.play(0, move[0], move[1]);
-        socket.emit(
-          "updatedBoard",
-          gameState.id,
-          gameState.board,
-          gameState.playersPosition,
-          gameState.wallsPositions,
-          false
-        );
+      if (playAgainstAI == "true" && gameState.GameType["aiPlayer"] == 0) {
+        darkMazeAi.setup(1).then((pos)=>{
+          const digits = Array.from(pos, Number);
+          console.log('digits : ',digits);
+          gameState.play(0,(digits[1]-1)*2,(digits[0]-1)*2);
+          gameState.convertGameState();
+          
+          socket.emit(
+            "updatedBoard",
+            gameState.id,
+            gameState.board,
+            gameState.playersPosition,
+            gameState.wallsPositions,
+            false
+          );
+          
+        }).catch((error)=>{
+          socket.emit("ErrorPlaying", "cannot play move "+error);
+        })
+
       }
     });
 
@@ -96,33 +105,10 @@ function setIo(ioInstance) {
             );
             GamesTable = GamesTable.filter((game) => game.id !== id);
           }
-          if (gameStateToBeModified.GameType["playAgainstAI"] == "true") {
-            const move = aiPlayer(
-              gameStateToBeModified,
-              gameStateToBeModified.GameType["aiPlayer"]
-            );
-            gameStateToBeModified.play(
-              gameStateToBeModified.GameType["aiPlayer"],
-              move[0],
-              move[1]
-            );
-            socket.emit(
-              "updatedBoard",
-              id,
-              gameStateToBeModified.board,
-              gameStateToBeModified.playersPosition,
-              gameStateToBeModified.wallsPosition,
-              false
-            );
-            if (
-              gameStateToBeModified.is_Win(
-                gameStateToBeModified.GameType["aiPlayer"]
-              )
-            ) {
-              socket.emit("GameOver", "GameOver Player the Bot wins !!!");
-              GamesTable = GamesTable.filter((game) => game.id !== id);
-            }
-          }
+          if (gameStateToBeModified.GameType["playAgainstAI"] == "true") 
+            aiPlayer(gameStateToBeModified,socket,id);
+
+          
         } else socket.emit("ErrorPlaying", "Move cannot be played");
       } else socket.emit("ErrorPlaying", "Game not found! start a new game");
     });
@@ -133,7 +119,7 @@ function setIo(ioInstance) {
         if (
           gameStateToBeModified.placeWalls(direction, row, col, playerNumber) ==
           true
-        )
+        ){
           socket.emit(
             "UpdateWalls",
             id,
@@ -144,6 +130,10 @@ function setIo(ioInstance) {
             row,
             col
           );
+          if (gameStateToBeModified.GameType["playAgainstAI"] == "true") 
+            aiPlayer(gameStateToBeModified,socket,id);
+            
+        }
         else socket.emit("ErrorPlaying", "Wall cannot be placed");
       } else socket.emit("ErrorPlaying", "Game not found! start a new game");
     });
