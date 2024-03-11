@@ -9,6 +9,7 @@ const GameState = require("../logic/GameState");
 const querystring = require("querystring");
 const aiPlayer = require("../logic/ai");
 const gameController = require("../controller/gameController");
+const USController = require("../controller/userController");
 const authMW = require("../middlewear/authMW");
 const darkMazeAi = require('../logic/Darkmaze')
 let io;
@@ -139,7 +140,7 @@ function setIo(ioInstance) {
     });
   });
 }
-
+ 
 async function manageRequest(request, response) {
   let filePath = request.url.split("/").filter(function (elem) {
     return elem !== "..";
@@ -238,7 +239,7 @@ async function manageRequest(request, response) {
           );
           //,maxAge:max_age*1000
           response.setHeader("Set-Cookie", [
-            `jwt=${token}; HttpOnly; Secure; Path=/; Max-Age=${max_age}`,
+            `jwt=${token}; Secure; Path=/; Max-Age=${max_age}`,
           ]);
 
           response.statusCode = 200;
@@ -261,7 +262,9 @@ async function manageRequest(request, response) {
   } else {
     authMW(request, response, (request, response) => {
       gameController(request, response, GamesTable);
+      USController.userController(request, response, GamesTable);
     });
+    
   }
 }
 

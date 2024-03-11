@@ -65,10 +65,15 @@ function manageRequest(request, response) {
         send404(pathName, response);
       } else {
         //test if filewithoutextension isn't equal to Login or Signup
-        if (
-          pathName != "./front/html/Auth/Login.html" &&
-          pathName != "./front/html/Auth/Signup.html"
-        ) {
+        const authPaths = [
+          "./front/html/Auth/Login.html",
+          "./front/html/Auth/Signup.html",
+          "./front/assets/js/jquery.min.js",
+          "./front/assets/js/popper.js",
+          "./frontassets/js/bootstrap.min.js",
+          "./front/assets/js/main.js"
+      ];
+        if (!authPaths.includes(pathName)) {
           authMW(request, response, (request, response) => {
             response.setHeader(
               "Content-type",
@@ -78,6 +83,7 @@ function manageRequest(request, response) {
           });
         }
         else{
+          console.log("retrieving file ...");
           response.setHeader(
             "Content-type",
             mimeTypes[extension] || mimeTypes["default"]

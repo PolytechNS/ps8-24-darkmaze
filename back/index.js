@@ -3,6 +3,7 @@ const http = require('http')
 // Let's import our logic.
 const fileQuery = require('./queryManagers/front.js')
 const apiQuery = require('./queryManagers/api.js')
+const USController = require("./controller/userController.js")
 const mongoose = require('./config/DbConnection.js')
 const { Server } = require("socket.io");
 
@@ -36,7 +37,15 @@ const server = http.createServer(function (request, response) {
 // For the server to be listening to request, it needs a port, which is set thanks to the listen function.
 }) ;
 
-const io = new Server(server);
+const io = new Server(server ,{
+    // Adding the cors option to allow cross-origin requests
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"],
+      allowedHeaders: ["content-type"],
+    }
+  });
 apiQuery.setIo(io);
+USController.setIo(io);
 
 server.listen(8000);

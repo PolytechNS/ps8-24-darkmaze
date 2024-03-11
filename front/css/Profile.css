@@ -1,0 +1,51 @@
+/* Styles for Profile Page */
+
+.profile-container {
+    text-align: center;
+}
+
+.profile-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+.full-name {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.add-friend-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-friend-button:hover {
+    background-color: #0056b3;
+}
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(18, 204, 58, 0.616);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.popup .user-list {
+    max-height: 300px; /* Example height, adjust as needed */
+    overflow-y: auto;
+}
+
+.popup button {
+    margin-top: 10px;
+}

@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 
-// Define the schema for the GameState
-const gameStateSchema = new mongoose.Schema({
+// Define the schema for the User
+const userSchema = new mongoose.Schema({
     username: {
-        // You may want to specify the schema for the board array elements
         type: String,
         required: true,
     },
@@ -15,11 +14,11 @@ const gameStateSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
-// Define methods or statics for the GameState model if needed
+// Create the User model
+const UserModel = mongoose.model('User', userSchema);
 
-// Create the GameState model
-const GameStateModel = mongoose.model('user', gameStateSchema);
-
-module.exports = GameStateModel;
+module.exports = UserModel;
