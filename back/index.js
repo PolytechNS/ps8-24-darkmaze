@@ -6,6 +6,7 @@ const apiQuery = require('./queryManagers/api.js')
 const USController = require("./controller/userController.js")
 const mongoose = require('./config/DbConnection.js')
 const { Server } = require("socket.io");
+const MSGController = require('./controller/messageController.js')
 
 /* The http module contains a createServer function, which takes one argument, which is the function that
 ** will be called whenever a new request arrives to the server.
@@ -47,5 +48,6 @@ const io = new Server(server ,{
   });
 apiQuery.setIo(io);
 USController.setIo(io);
+MSGController.setIo(io); 
 
 server.listen(8000);

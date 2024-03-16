@@ -49,7 +49,7 @@ async function userController(request, response, gamesTable) {
   
   console.log("userController");
   console.log("decoded ", decoded);
-  console.log("filePath ", filePath); 
+  console.log("filePath ", filePath);
 
 
 
@@ -149,7 +149,48 @@ else if (
     response.writeHead(500, { "Content-Type": "application/json" });
     response.end(JSON.stringify({ error: "Internal Server Error" }));
   }
-}else if (
+}// Assuming this code is within an HTTP server setup
+
+else if (
+  request.method === "GET" &&
+  filePath[2] === "user" &&
+  filePath[3] === "friends" // Check if the request is for getting friends
+) {
+  try {
+    // Find the user's information from the decoded token
+    const decoded = jwt.verify(token, process.env.jwt_secret);
+
+    // Find the user's information
+    const userInfo = await user.findOne({ username: decoded.username });
+
+    if (!userInfo) {
+      // If the user does not exist, handle the error
+      response.writeHead(404, { "Content-Type": "application/json" });
+      response.end(JSON.stringify({ error: "User not found" }));
+      return;
+    }
+
+    // Retrieve the user's friends
+    const friends = await user.find({ _id: { $in: userInfo.friends } });
+
+    // Extract relevant friend information
+    const friendList = friends.map(friend => ({
+      id: friend._id,
+      username: friend.username
+    }));
+
+    console.log("friendList ",userInfo,userInfo.friends ,friends,friendList);
+    // Send the list of friends as a response
+    response.writeHead(200, { "Content-Type": "application/json" });
+    response.end(JSON.stringify(friendList));
+  } catch (error) {
+    // Handle any errors
+    console.error("Error while fetching friends:", error);
+    response.writeHead(500, { "Content-Type": "application/json" });
+    response.end(JSON.stringify({ error: "Internal Server Error" }));
+  }
+}
+else if (
   request.method === "GET" &&
   filePath[2] === "user" &&
   filePath[3] === "friend_Requests" && // Check if the request is for friend requests // Check if requestId is provided

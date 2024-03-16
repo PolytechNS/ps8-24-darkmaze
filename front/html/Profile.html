@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <link rel="stylesheet" type="text/css" href="../css/Profile.css">
-    <script src="http://localhost:8000/js/socket.io.js"></script>
-    <script src="http://localhost:8000/js/userNotif.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/Messages.css">
 </head>
 <body>
     <div class="profile-container">
@@ -15,8 +14,22 @@
         <input type="text" id="friendUsername" placeholder="Enter friend's username">
         <button class="add-friend-button" onclick="searchUser()">Add Friend</button>
         <button class="add-friend-button" onclick="listFriendRequests()">Friend Requests</button>
+        <button class="messages-button">Messages</button> <!-- New Messages Button -->
     </div>
-    <script src="../js/Profile.js"></script>
+
+    <!-- Messages Modal -->
+    <div class="modal-container">
+        <div class="modal">
+            <div class="modal-content">
+                <!-- Content will be dynamically generated here -->
+            </div>
+            <button class="modal-close">Close</button>
+        </div>
+    </div>
+
+    <script src="../js/Profile.js" defer></script>
+    <script src="../js/Chat.js" defer></script>
+    <script src="../js/socket.io.js"></script>
+    <script src="../js/userNotif.js" defer></script>
 </body>
 </html>
-    

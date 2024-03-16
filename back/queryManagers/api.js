@@ -12,6 +12,8 @@ const gameController = require("../controller/gameController");
 const USController = require("../controller/userController");
 const authMW = require("../middlewear/authMW");
 const darkMazeAi = require('../logic/Darkmaze')
+const MSGController = require('../controller/messageController')
+
 let io;
 let GamesTable = [];
 
@@ -263,6 +265,8 @@ async function manageRequest(request, response) {
     authMW(request, response, (request, response) => {
       gameController(request, response, GamesTable);
       USController.userController(request, response, GamesTable);
+      MSGController.messageController(request, response);
+
     });
     
   }
