@@ -5,11 +5,11 @@ const mongoose = require('./config/DbConnection.js');
 const { Server } = require("socket.io");
 
 // Importez la fonction de validation
-<<<<<<< HEAD
+
 const { validateMove } = require('./GameState.js');
-=======
 //const { validateMove } = require('./gamestate.js');
->>>>>>> 2ea0b4d72e2525b52673ffea55cb6483612f6d50
+
+//const { validateMove } = require('./gamestate.js');
 
 const server = http.createServer(function (request, response) {
     let filePath = request.url.split("/").filter(function(elem) {
