@@ -73,6 +73,9 @@
                         <div class="form-group">
                             <button type="button" class="form-control btn btn-primary submit px-3" onclick="launchGame()">Launch Game</button>
                         </div>
+                        <div class="form-group">
+                          <button id="startOnlineGame" type="button" class="form-control btn btn-primary submit px-3" >Online Game </button>
+                      </div>
                     </form>
                 </div>
             </div>
@@ -83,6 +86,15 @@
 <script src="/assets/js/popper.js"></script>
 <script src="/assets/js/bootstrap.min.js"></script>
 <script src="/assets/js/main.js"></script>
+
+<!-- JavaScript code to handle button click and show the waiting screen -->
+<script>
+  // When the user clicks on the button to start an online game
+  document.getElementById('startOnlineGame').addEventListener('click', function() {
+      // Show the waiting screen by redirecting to the waiting HTML file
+      window.location.href = '/html/Auth/WaitingScreen.html'; // Update the path if necessary
+  });
+</script>
 
 </body>
 </html>

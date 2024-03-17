@@ -13,6 +13,29 @@ class GameState {
     this.change_Visib_Piece(1, "increase");
   }
 
+  // Fonction pour vérifier périodiquement l'état de la file d'attente
+checkMatchmakingStatus() {
+  setInterval(() => {
+      // Envoyer une requête GET au serveur pour vérifier l'état de la file d'attente
+      fetch('/matchmaking')
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json();
+          })
+          .then(data => {
+              // Traiter la réponse du serveur
+              console.log('Matchmaking status:', data);
+              // Vous pouvez mettre à jour l'interface utilisateur en fonction de l'état de la file d'attente ici
+          })
+          .catch(error => {
+              console.error('Error checking matchmaking status:', error);
+              // Gérer les erreurs éventuelles ici
+          });
+  }, 5000); // Vérifier toutes les 5 secondes (ajustez selon vos besoins)
+}
+
 
   #createMatrix() {
     const matrix = [];
@@ -406,6 +429,13 @@ class GameState {
     }
     return false;
   }
+
+
+
+
+
+
+
 }
 class BoardPieceStatus {
   static FREE_WALL = 6;
@@ -415,6 +445,8 @@ class Player {
   static Player_Number_1 = 0;
   static Player_Number_2 = 1;
 }
+
+
 
 //const gameState = new GameState();
 //gameState.printGameState();

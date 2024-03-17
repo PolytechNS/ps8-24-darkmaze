@@ -33,6 +33,10 @@ function setIo(ioInstance) {
           true,
           game.playerNumber
         );
+
+    
+
+
         socket.emit(
           "UpdateWalls",
           id,
