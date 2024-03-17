@@ -5,7 +5,11 @@ const mongoose = require('./config/DbConnection.js');
 const { Server } = require("socket.io");
 
 // Importez la fonction de validation
+<<<<<<< HEAD
 const { validateMove } = require('./GameState.js');
+=======
+//const { validateMove } = require('./gamestate.js');
+>>>>>>> 2ea0b4d72e2525b52673ffea55cb6483612f6d50
 
 const server = http.createServer(function (request, response) {
     let filePath = request.url.split("/").filter(function(elem) {
@@ -82,7 +86,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Importez le modèle de données de la partie si nécessaire
-const Game = require('./models/Game');
+//const Game = require('./models/Game');
 
 // Déclarez un gestionnaire d'événements pour la fin de la partie
 function handleGameEnd(data) {
