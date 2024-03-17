@@ -13,9 +13,6 @@ class GameState {
   }
 
 
-
-
-
   convertGameState(){
     let playerToPlay = this.GameType['aiPlayer'];
     let newMatrix = new Array(9);
@@ -85,7 +82,6 @@ class GameState {
 }
 
 
->>>>>>> c604083dab2b8b7096bd622970b145a8bf0251f5
 
   #createMatrix() {
     const matrix = [];
@@ -494,7 +490,6 @@ class Player {
   static Player_Number_2 = 1;
 }
 
-<<<<<<< HEAD
 
 
 //const gameState = new GameState();
@@ -514,8 +509,6 @@ class Player {
 // gameState.play(0,"move",0,10)
 // console.log("-------------------------------------------\n");
 // gameState.printGameState();
-=======
->>>>>>> c604083dab2b8b7096bd622970b145a8bf0251f5
 
 let gs = new GameState();
 
