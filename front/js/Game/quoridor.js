@@ -26,7 +26,7 @@ var aiFirstParam = urlParams.get("aiFirst");
 var gameId = urlParams.get("gameId");
 
 //socket communications
-const gameNamespace = io("/api/game");
+const gameNamespace = io("/api/game"); 
 if (gameId) {
   gameNamespace.emit("loadGame", gameId);
 } else {
@@ -37,8 +37,25 @@ gameNamespace.on("GameOver", (msg) => window.alert(msg));
 gameNamespace.on(
   "updatedBoard",
   (id, board, playerPostion, wallsPositions, newGame,LoadedGameplayerNumber) => {
-    if(LoadedGameplayerNumber) playerNumber=LoadedGameplayerNumber;
-    if (newGame) {
+    if(LoadedGameplayerNumber!=null){
+      playerNumber=LoadedGameplayerNumber;
+      console.log("Looooooooading");
+      let OldRow = playerPostion[playerNumber][0];
+      let OldCol = playerPostion[playerNumber][1];
+      let Opponent = playerNumber == 1 ? 0 : 1;
+      let OldOpponentRow = playerPostion[Opponent][0];
+      let OldOpponentCol = playerPostion[Opponent][1];
+      TestGame = new GameState(id, board, playerPostion, wallsPositions);
+
+
+      //this code should be on the update
+      drawBoard();
+      addMoveChoices(OldOpponentRow, OldOpponentCol, OldRow, OldCol);
+      removeMoveChoices(OldOpponentRow, OldOpponentCol);
+      changeVisibility(playerNumber);
+    } 
+      
+    else if (newGame) {
       TestGame = new GameState(id, board, playerPostion, wallsPositions);
       drawBoard();
     } else {
@@ -61,22 +78,35 @@ gameNamespace.on(
         PlayerRow,
         PlayerCol
       );
-      addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
       removeMoveChoices(OldRow, OldCol);
+      addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
       changeVisibility(playerNumber);
-      drawGrid();
+
     }
   }
 );
 gameNamespace.on("UpdateWalls",
   (id, board, playerPostion, wallsPositions, direction, row, col) => {
     TestGame = new GameState(id, board, playerPostion, wallsPositions);
-    updateGame(playerNumber, row, col);
-    playerNumber = playerNumber === 1 ? 0 : 1;
-    if (direction == "vertical")
+    if (row!=null && col!=null && direction != null) {
+      updateGame(playerNumber, row, col);
+      if (direction == "vertical")
       grid[row + 1][col] = "P" + (playerNumber + 1) + "v";
     else if (direction == "horizontal") {
       grid[row][col + 1] = "P" + (playerNumber + 1) + "h";
+    }
+    playerNumber = playerNumber === 1 ? 0 : 1;
+      
+    } else {
+      wallsPositions.forEach(wall => {
+        if(wall.wallIndex==1){
+          if (wall.direction == "vertical")
+          grid[wall.wallRow + 1][wall.wallCol] = "P" + (wall.numplayer + 1) + "v";
+          else if (wall.direction == "horizontal") {
+            grid[wall.wallRow][wall.wallCol + 1] = "P" + (wall.numplayer  + 1) + "h";
+          }
+        }
+      });
     }
   }
 );
@@ -101,32 +131,33 @@ function UpdatePiecePositionOnBoard(
   grid[newRow][newCol] = NumberOfPlayer === 0 ? "P2" : "P1";
 }
 function addMoveChoices(opponentRow, opponentCol, row, col) {
-  if (row + 2 <= 16 && (row + 2 !== opponentRow || col !== opponentCol)) {
-    //console.log("Adding playerChoice to cell-" + (row + 2) + "-" + col);
+  console.log("ADD MOVE CHOICE"+row+"-"+col);
+  if (row + 2 <= 16 && (row + 2 !== opponentRow || col !== opponentCol)&&(!(grid[row+1][Math.abs((col+1)%17)].endsWith('h'))&&!(grid[row+1][Math.abs((col-1)%17)].endsWith('h')))) {
+    console.log("Adding playerChoice to cell-" + (row + 2) + "-" + col);
     document
       .getElementById("cell-" + (row + 2) + "-" + col)
       .classList.add("playerChoice");
     grid[row + 2][col] = "PChoice";
   }
 
-  if (row - 2 >= 0 && (row - 2 !== opponentRow || col !== opponentCol)) {
-    //console.log("Adding playerChoice to cell-" + (row - 2) + "-" + col);
+  if (row - 2 >= 0 && (row - 2 !== opponentRow || col !== opponentCol)&&(!(grid[row-1][Math.abs((col-1)%17)].endsWith('h'))&&!(grid[row-1][Math.abs((col+1)%17)].endsWith('h')))) {
+    console.log("Adding playerChoice to cell-" + (row - 2) + "-" + col);
     document
       .getElementById("cell-" + (row - 2) + "-" + col)
       .classList.add("playerChoice");
     grid[row - 2][col] = "PChoice";
   }
 
-  if (col + 2 <= 16 && (row !== opponentRow || col + 2 !== opponentCol)) {
-    //console.log("Adding playerChoice to cell-" + row + "-" + (col + 2));
+  if (col + 2 <= 16 && (row !== opponentRow || col + 2 !== opponentCol)&&(!(grid[Math.abs((row+1)%17)][col+1].endsWith('v'))&&!(grid[Math.abs((row-1)%17)][col+1].endsWith('v')))) {
+    console.log("Adding playerChoice to cell-" + row + "-" + (col + 2));
     document
       .getElementById("cell-" + row + "-" + (col + 2))
       .classList.add("playerChoice");
     grid[row][col + 2] = "PChoice";
   }
 
-  if (col - 2 >= 0 && (row !== opponentRow || col - 2 !== opponentCol)) {
-    //console.log("Adding playerChoice to cell-" + row + "-" + (col - 2));
+  if (col - 2 >= 0 && (row !== opponentRow || col - 2 !== opponentCol)&&(!(grid[Math.abs((row-1)%17)][col-1].endsWith('v'))&&!(grid[Math.abs((row+1)%17)][col-1].endsWith('v')))) {
+    console.log("Adding playerChoice to cell-" + row + "-" + (col - 2));
     document
       .getElementById("cell-" + row + "-" + (col - 2))
       .classList.add("playerChoice");
@@ -655,6 +686,7 @@ function handleClick(row, col) {
 
   //we should check if the move is possible or not
   gameNamespace.emit("newMove", TestGame.id, playerNumber, row, col);
+  console.log(grid)
 
   // Add your logic for handling the click event
 }
