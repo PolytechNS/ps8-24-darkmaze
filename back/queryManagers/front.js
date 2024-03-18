@@ -33,6 +33,7 @@ const mimeTypes = {
   default: "application/octet-stream",
 };
 
+
 // Main method, exported at the end of the file. It's the one that will be called when a file is requested.
 function manageRequest(request, response) {
   // First let's parse the URL, extract the path, and parse it into an easy-to-use object.

@@ -35,6 +35,7 @@ async function gameController(request, response, gamesTable) {
       console.log(body);
 
       let gameToSave = gamesTable.find((game) => game.id == body.gameId);
+
       gameToSave && (gameToSave.playerNumber = body.playerNumber);
       const existingGameState = await GameStateModel.findOne({
         id: gameToSave.id,
