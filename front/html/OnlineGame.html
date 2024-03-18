@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="http://localhost:8000/css/quoridor.css">
+    <link rel="stylesheet" href="../css/OnlineGameStyles.css">
+    <title>Online Quoridor Game</title>
+</head>
+<body>
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <h2>Loading...</h2>
+    </div>
+    <div id="invisible-overlay">
+        <div id="overlay-content">
+            <p>Waiting for other player's turn...</p>
+            <p id="timer">1:30</p>
+        </div>
+    </div> <!-- Add the invisible overlay -->
+    <canvas id="myCanvas" width="1408" height="1408"></canvas>
+    <div id="quoridor-board"></div>
+    <script src="../js/socket.io.js"></script>
+    <script src="../js/Game/OnlineGameJS.js"></script>
+    <script src="../js/Game/GameState.js"></script>
+    <script src="../js/Game/Onlinequoridor.js"></script>
+
+</body>
+</html>
