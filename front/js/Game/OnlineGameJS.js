@@ -32,9 +32,26 @@ const gameNamespace = io("/api/OnlineGame", {
 // Function to show the overlay
 function switchOverlay() {
     console.log("-------> switching");
-    if(invisibleOverlay.style.display == 'block')
-        invisibleOverlay.style.display = 'none';
-    else
-    invisibleOverlay.style.display = 'block'
+    if(invisibleOverlay.style.display == 'block'){
+      invisibleOverlay.style.display = 'none';
+      document.getElementById('timer').textContent="1:30"
+
+    }
+    else{
+      invisibleOverlay.style.display = 'block'
+      var timerElement = document.getElementById('timer');
+        var totalTime = 90; // 1 minute 30 seconds in seconds
+        var interval = setInterval(function() {
+            var minutes = Math.floor(totalTime / 60);
+            var seconds = totalTime % 60;
+            timerElement.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+            if (totalTime <= 0) {
+                clearInterval(interval);
+                // Timer reaches zero, do something here if needed
+            } else {
+                totalTime--;
+            }
+        }, 1000); // Update every second
+    }
 }
 

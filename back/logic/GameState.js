@@ -1,6 +1,7 @@
 const uuid = require('uuid');
 class GameState {
   constructor() {
+    this.playTurn = 1;
     this.id=uuid.v4();
     this.GameType = {}
     this.board = this.#createMatrix();
