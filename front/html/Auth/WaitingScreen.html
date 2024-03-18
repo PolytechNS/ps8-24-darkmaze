@@ -65,5 +65,24 @@
 <script src="/assets/js/popper.js"></script>
 <script src="/assets/js/bootstrap.min.js"></script>
 <script src="/assets/js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const socket = io('/api/game'); // Connect to the server
+
+        // Event handler for when the game is matched with an opponent
+        socket.on('gameMatched', (game) => {
+            // Redirect to the game page with the game ID
+            window.location.href = `/game/${game.id}`;
+        });
+
+        // Event handler for when the server emits a 'disconnect' event
+        socket.on('disconnect', () => {
+            // Handle disconnect event (e.g., display a message to the user)
+            console.log('Disconnected from server');
+        });
+    });
+</script>
+
 </body>
 </html>

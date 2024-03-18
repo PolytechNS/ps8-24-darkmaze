@@ -13,7 +13,7 @@ const authMW = require("../middlewear/authMW");
 const darkMazeAi = require('../logic/Darkmaze')
 let io;
 let GamesTable = [];
-
+let waitingPlayers = [];
 // sets all the socket listeners
 
 function setIo(ioInstance) {
@@ -24,6 +24,7 @@ function setIo(ioInstance) {
     socket.on("loadGame", async (id) => {
       console.log("loading game");
       var game = GamesTable.find((game) => game.id === id);
+      io.emit('updatePlayers', waitingPlayers)
       if (game) {
         socket.emit(
           "updatedBoard",
@@ -33,7 +34,28 @@ function setIo(ioInstance) {
           game.wallsPositions,
           false,
           game.playerNumber
+
+
+
         );
+
+        
+      
+// Event handler for when a player is searching for a game
+socket.on("searchGame", (playerId) => {
+  waitingPlayers.push({ id: socket.id, playerId });
+  tryMatch();
+});
+
+
+      // Event handler for when a player creates a game
+      socket.on("createGame", (playerId) => {
+       const game = new GameState();
+       game.players.push(playerId);
+       games.push(game);
+       socket.join(game.id);
+       io.to(game.id).emit("gameCreated", game);
+      });
 
     
 
@@ -90,6 +112,13 @@ function setIo(ioInstance) {
       }
     });
 
+      // Event handler for when a player disconnects
+      socket.on("disconnect", () => {
+        console.log("Disconnected:", socket.id);
+        removePlayer(socket.id);
+      });
+  
+
     socket.on("newMove", async (id, playerNumber, row, col) => {
       var gameStateToBeModified = GamesTable.find((game) => game.id === id);
       if (gameStateToBeModified) {
@@ -142,6 +171,48 @@ function setIo(ioInstance) {
       } else socket.emit("ErrorPlaying", "Game not found! start a new game");
     });
   });
+}
+
+
+
+
+function removePlayer(socketId) {
+  waitingPlayers = waitingPlayers.filter(player => player.id !== socketId);
+}
+
+// Function to attempt to match waiting players
+function tryMatch() {
+  if (waitingPlayers.length >= 2) {
+    const player1 = waitingPlayers.shift();
+    const player2 = findOpponent(player1, waitingPlayers);
+    if (player2) {
+      // Match found, notify both players and remove them from waiting list
+      notifyMatch(player1, player2);
+      waitingPlayers.splice(waitingPlayers.indexOf(player2), 1);
+    } else {
+      // No suitable opponent found, continue waiting
+      waitingPlayers.unshift(player1);
+    }
+  }
+}
+
+// Define a function to find a suitable opponent for a player
+function findOpponent(player, playersPool) {
+  // Implement your matchmaking criteria here
+  // For example, you can match players based on playAgainstAI preference
+  for (let opponent of playersPool) {
+    if (opponent.id !== player.id && opponent.playAgainstAI !== player.playAgainstAI) {
+      return opponent;
+    }
+  }
+  return null; // No suitable opponent found
+}
+
+// Function to notify matched players and start the game
+function notifyMatch(player1, player2) {
+  // Code to notify players and start the game
+  // For example:
+  io.to(player1.id).to(player2.id).emit("gameMatched");
 }
 
 async function manageRequest(request, response) {
