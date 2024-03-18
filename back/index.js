@@ -6,7 +6,7 @@ const { Server } = require("socket.io");
 
 // Importez la fonction de validation
 
-const { validateMove } = require('./GameState.js');
+//const { validateMove } = require('./GameState.js');
 //const { validateMove } = require('./gamestate.js');
 
 //const { validateMove } = require('./gamestate.js');
