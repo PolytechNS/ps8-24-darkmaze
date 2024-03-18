@@ -5,8 +5,213 @@ const GameStateModel = require("../models/GameStateModel");
 const user = require("../models/UserModel");
 const querystring = require("querystring");
 const GameState = require("../logic/GameState");
+const { set } = require("mongoose");
 
 require("dotenv").config();
+const GamesTable = [];
+const RoomsQueue = [];
+const onlineGames = {};
+const userSockets = {};
+function setIo(io){
+  NotifIo = io;
+  io.of('/api/OnlineGame').on("connection", (socket) => {
+    // Accessing cookies from the handshake query 
+    const cookies = socket.handshake.query.cookies;
+    
+    // Parsing cookies to retrieve username
+    const cookiesList = parseCookies(cookies);
+    const token = cookiesList.jwt;
+    console.log(token);
+    const decoded = jwt.verify(token, process.env.jwt_secret);
+
+    if(RoomsQueue.length == 0){
+      RoomsQueue.push(decoded.username);
+      socket.join((decoded.username).toString());
+      console.log(decoded.username," joined and created a new game");
+      onlineGames[decoded.username]=decoded.username;
+
+    }
+    else{
+      const roomToJoin = RoomsQueue.pop();
+      socket.join(roomToJoin.toString());
+      console.log(decoded.username," joined an existing game ",roomToJoin.toString());
+      onlineGames[decoded.username]=roomToJoin;
+      io.of('/api/OnlineGame').to(roomToJoin.toString()).emit("playerFound");
+
+    }
+    userSockets[decoded.username] = socket.id;
+    socket.on("setup", async () => {
+      console.log("joined api/OnlineGame");
+      const gameState = new GameState();
+      GamesTable.push(gameState);
+
+      // Create an instance of GameState 
+      // // Save the instance to the database
+      socket.emit(
+        "updatedBoard",
+        gameState.id,
+        gameState.board,
+        gameState.playersPosition,
+        gameState.wallsPositions,
+        true,
+        true
+      );
+      if(onlineGames[decoded.username]!=decoded.username){
+        console.log("second player");
+        socket.emit(
+          "player2Setup",
+          gameState.id,
+          gameState.board,
+          gameState.playersPosition,
+          gameState.wallsPositions
+        );
+      }
+
+      });
+          
+
+
+
+
+    socket.on("newMove", async (id, playerNumber, row, col) => {
+      console.log("newMove --- ",playerNumber,row,col);
+      var gameStateToBeModified = GamesTable.find((game) => game.id === id);
+      const oldpostions = gameStateToBeModified.playersPosition[playerNumber];
+      if (gameStateToBeModified) {
+        if (gameStateToBeModified.play(playerNumber, row, col) == true) {
+          socket.emit(
+            "updatedBoard",
+            id,
+            gameStateToBeModified.board,
+            gameStateToBeModified.playersPosition,
+            gameStateToBeModified.wallsPosition,
+            false,
+            true
+
+          );
+          socket.emit(
+            "updatedBoard",
+            id,
+            gameStateToBeModified.board,
+            gameStateToBeModified.playersPosition,
+            gameStateToBeModified.wallsPosition,
+            false,
+            false
+
+          );
+          console.log("##### Opponent Uername : ",getOpponentUserName(decoded.username));
+          io.of('/api/OnlineGame')
+            .to(userSockets[getOpponentUserName(decoded.username)])
+              .emit(
+                "updatedBoard",
+                id,
+                gameStateToBeModified.board,
+                gameStateToBeModified.playersPosition,
+                gameStateToBeModified.wallsPosition,
+                false,
+                true
+
+              );  
+          io.of('/api/OnlineGame')
+            .to(userSockets[getOpponentUserName(decoded.username)])
+              .emit(
+                "specialUpdatedBoard",
+                id,
+                gameStateToBeModified.board,
+                gameStateToBeModified.playersPosition,
+                gameStateToBeModified.wallsPosition,
+                oldpostions[0],
+                oldpostions[1],
+                false,
+
+              );
+
+
+          if (gameStateToBeModified.is_Win(playerNumber)) {
+            socket.emit(
+              "GameOver",
+              "YOU WIN !!!"
+            );
+            io.of('/api/OnlineGame')
+            .to(userSockets[getOpponentUserName(decoded.username)])
+            .emit(
+              "GameOver",
+              "YOU LOST !!!"
+            );
+            GamesTable = GamesTable.filter((game) => game.id !== id);
+          }
+
+
+          
+        } else {
+          socket.emit("ErrorPlaying", "Move cannot be played");
+          }
+      } else {
+        socket.emit("ErrorPlaying", "Game not found! start a new game")
+        io.of('/api/OnlineGame')
+        .to(userSockets[getOpponentUserName(decoded.username)])
+        .emit("ErrorPlaying", "Game not found! start a new game");
+      };
+    });
+
+
+
+    socket.on("newWall", (id, direction, row, col, playerNumber) => {
+      var gameStateToBeModified = GamesTable.find((game) => game.id === id);
+      if (gameStateToBeModified) {
+        if (
+          gameStateToBeModified.placeWalls(direction, row, col, playerNumber) ==
+          true
+        ){
+          io.of('/api/OnlineGame').to(onlineGames[decoded.username].toString()).emit(
+            "UpdateWalls",
+            id,
+            gameStateToBeModified.board,
+            gameStateToBeModified.playersPosition,
+            gameStateToBeModified.wallsPositions,
+            direction,
+            row,
+            col,
+            true
+          );
+          io.of('/api/OnlineGame').to(onlineGames[decoded.username].toString()).emit(
+            "UpdateWalls",
+            id,
+            gameStateToBeModified.board,
+            gameStateToBeModified.playersPosition,
+            gameStateToBeModified.wallsPositions,
+            direction,
+            row,
+            col,
+            false
+          );
+            
+        }
+        else socket.emit("ErrorPlaying", "Wall cannot be placed");
+      } else io.of('/api/OnlineGame').to(onlineGames[decoded.username].toString()).emit("ErrorPlaying", "Game not found! start a new game");
+    });
+
+    
+    console.log(`User ${decoded.username} connected.`);
+
+
+    socket.on('disconnect', () => {
+      //delete userSockets[decoded.username]; // Remove the user's socket ID when they disconnect
+      console.log("disconnected");
+  });
+  });
+  
+}  
+function getOpponentUserName(playerUserName){
+  const room = onlineGames[playerUserName];
+
+  for(let username in onlineGames ){
+    if(onlineGames[username]==room && room==playerUserName && username != room)
+      return username;
+    if(onlineGames[username]==room && room!=playerUserName && username == room)
+      return username;
+  }
+}
 async function gameController(request, response, gamesTable) {
   let filePath = request.url.split("/").filter(function (elem) {
     return elem !== "..";
@@ -149,4 +354,5 @@ async function gameController(request, response, gamesTable) {
     return response.end();
   }
 }
-module.exports = gameController;
+exports.setIo = setIo;
+exports.gameController = gameController;

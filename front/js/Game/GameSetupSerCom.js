@@ -17,6 +17,13 @@ function launchGame() {
         aiOptions.style.display = this.value === 'true' ? 'block' : 'none';
       });
   }
+  function launchGame() {
+
+    // Redirect to localhost:8000/html/index.html with query parameters
+    var url = `http://localhost:8000/html/`;
+    window.location.href = url;
+
+  }
   
 
   async function fetchSavedGames() {

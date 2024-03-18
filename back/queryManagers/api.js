@@ -8,7 +8,7 @@ const user = require("../models/UserModel");
 const GameState = require("../logic/GameState");
 const querystring = require("querystring");
 const aiPlayer = require("../logic/ai");
-const gameController = require("../controller/gameController");
+const GMController = require("../controller/gameController");
 const USController = require("../controller/userController");
 const authMW = require("../middlewear/authMW");
 const darkMazeAi = require('../logic/Darkmaze')
@@ -65,7 +65,7 @@ function setIo(ioInstance) {
         gameState.playersPosition,
         gameState.wallsPositions,
         true
-      );
+      ); 
       if (playAgainstAI == "true" && gameState.GameType["aiPlayer"] == 0) {
         darkMazeAi.setup(1).then((pos)=>{
           const digits = Array.from(pos, Number);
@@ -263,7 +263,7 @@ async function manageRequest(request, response) {
     });
   } else {
     authMW(request, response, (request, response) => {
-      gameController(request, response, GamesTable);
+      GMController.gameController(request, response, GamesTable);
       USController.userController(request, response, GamesTable);
       MSGController.messageController(request, response);
 
