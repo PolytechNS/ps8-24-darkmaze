@@ -186,7 +186,7 @@ else if (
   } catch (error) {
     // Handle any errors
     console.error("Error while fetching friends:", error);
-    response.writeHead(500, { "Content-Type": "application/json" });
+    response.writeHead(500, { "Content-Type": "application/json" }); 
     response.end(JSON.stringify({ error: "Internal Server Error" }));
   }
 }
@@ -213,7 +213,7 @@ else if (
       response.end(JSON.stringify({ error: "User not found" }));
       return;
     }
-
+ 
     
     // Check if the friend request exists and belongs to the user
     const friendRequest = userInfo.friendRequests.find(req => req._id.toString() === requestId);
@@ -252,12 +252,7 @@ else if (
 }
 
 
-else if (request.method === "GET" && filePath[2] === "game") {
-    response.writeHead(302, {
-      Location: "http://localhost:8000/html/GameSetup.html",
-    });
-    return response.end();
-  }
+
 }
 exports.userController = userController;
 exports.setIo = setIo; 
