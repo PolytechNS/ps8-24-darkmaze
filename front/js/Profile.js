@@ -12,6 +12,7 @@ function searchUser() {
         .catch(error => console.error('Error searching for users:', error));
 }
 
+
 // Function to display search results
 // Function to handle displaying users in a popup
 function displayUsersPopup(users, addFriendFunction) {
@@ -58,6 +59,33 @@ function displayUsersPopup(users, addFriendFunction) {
     // Append the popupDiv to the body
     document.body.appendChild(popupDiv);
 }
+function afficherNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.innerText = message;
+
+    // Ajoutez l'élément au document
+    document.body.appendChild(notification);
+
+    // Affichez la notification avec un style
+    setTimeout(() => {
+        notification.classList.add('notification-show');
+    }, 10); // Ajoutez un léger délai pour permettre au navigateur de rendre l'élément avant de le montrer
+
+    // Cachez et supprimez la notification après un certain temps
+    setTimeout(() => {
+        notification.classList.remove('notification-show');
+        notification.classList.add('notification-hide');
+    }, 5000);
+
+    // Supprimez la notification après l'animation de disparition
+    notification.addEventListener('transitionend', () => {
+        if (notification.classList.contains('notification-hide')) {
+            notification.remove();
+        }
+    });
+}
+
 
 
 function addFriend(username) {
@@ -74,13 +102,20 @@ function addFriend(username) {
         })
         .then(data => {
             // Display a message containing the result
-            alert(data.message);
+            //alert(data.message);
+            afficherNotification('Ami ajouté avec succès');
         })
         .catch(error => {
             console.error('Error adding friend:', error);
             // Display an error message
-            alert('Failed to add friend');
+            //alert('Failed to add friend');
+            afficherNotification('Échec de l\'ajout de l\'ami');
         });
+
+
+
+
+// Ajoutez des appels similaires à afficherNotification dans les autres fonctions comme acceptFriendRequest
 
     const popupDiv = document.getElementById('userPopup');
     document.body.removeChild(popupDiv); // Close the popup when "Go Back" button is clicked
