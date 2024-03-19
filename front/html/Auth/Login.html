@@ -1,62 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
+  <head>
+    <title>Login 10</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        .login-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 300px;
-            text-align: center;
-        }
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&amp;display=swap" rel="stylesheet">
 
-        .login-container h2 {
-            color: #333;
-        }
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  <link rel="stylesheet" href="/assets/css/style.css">
 
-        .login-form input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            box-sizing: border-box;
-        }
+  </head>
+  <style>
+    /* Custom CSS for Navbar */
+    .navbar {
+        background-color: rgba(0, 0, 0, 0.5); /* Couleur de fond semi-transparente */
+    }
+    .navbar-brand, .navbar-nav .nav-link {
+        color: #ffffff; /* Couleur du texte */
+    }
+    .navbar-toggler {
+        border-color: #ffffff; /* Couleur de la bordure du bouton toggle */
+    }
+    .navbar-toggler-icon {
+        background-color: #ffffff; /* Couleur de l'icône du bouton toggle */
+    }
+    .navbar-nav .nav-link {
+        padding-right: 20px; /* Espacement entre les éléments de la barre de navigation */
+    }
+</style>
+  <body class="img js-fullheight" style="background-image: url('/assets/images/ph1.png'); height: 716px;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+          <a class="navbar-brand" href="#">DarkMaze</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fa fa-bell"></i></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fa fa-envelope"></i></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fa fa-volume-up"></i></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fa fa-user"></i></a>
+              </li>
+             
+              <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fa fa-cog"></i></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    <section class="ftco-section">
+      <div class="container">
+          <div class="row justify-content-center">
+              <div class="col-md-6 text-center mb-5">
+                  <h2 class="heading-section">WELCOME TO DarkMaze !</h2>
+              </div>
+          </div>
+          <div class="row justify-content-center">
+              <div class="col-md-6 col-lg-4">
+                  <div class="login-wrap p-0">
+                <h3 class="mb-4 text-center">Have an account?</h3>
+                <form action="/api/login" class="login-form"  method="post">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="username" placeholder="Username" required>
+                    </div>
+              <div class="form-group">
+                <input type="password" name="password" class="form-control" placeholder="Password" required>
+                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+              </div>
+              <div class="form-group">
+                  <button type="submit" class="form-control btn btn-primary submit px-3">Sign In</button>
+              </div>
+            
+            </form>
+            <p class="w-100 text-center">—<a href="/html/Auth/Signup.html" style="color: #fff">— Or Sign up !</a></p>
+         
+            </div>
+              </div>
+          </div>
+      </div>
+  </section>
 
-        .login-form button {
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <div class="login-container">
-        <h2>Login</h2>
-        <form class="login-form" action="/api/login" method="post">
-            <input type="text" name="username" placeholder="Username" required>
-            <br>
-            <input type="password" name="password" placeholder="Password" required>
-            <br>
-            <button type="submit">Login</button> 
-        </form>
-        <p>Not registered yet? <a href="/html/Auth/Signup.html">Sign up</a></p>
-    </div>
-</body>
-</html>
+  <script src="/assets/js/jquery.min.js"></script>
+  <script src="/assets/js/popper.js"></script>
+  <script src="/assets/js/bootstrap.min.js"></script>
+  <script src="/assets/js/main.js"></script>
+  
+
+
+</body></html>
