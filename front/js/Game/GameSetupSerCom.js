@@ -1,12 +1,19 @@
 
 function launchGame() {
     var playAgainstAI = document.getElementById('playAgainstAI').value === 'true';
-    if(playAgainstAI)
+    if(playAgainstAI) 
       var aiFirst =  document.getElementById('aiFirst').value === 'true'?0 :1 ;
     else 
       var aiFirst = false;
     // Redirect to localhost:8000/html/index.html with query parameters
     var url = `http://localhost:8000/html/index.html?playAgainstAI=${playAgainstAI}&aiFirst=${aiFirst}`;
+    window.location.href = url;
+  }
+
+function PickFriend() {
+
+    // Redirect to localhost:8000/html/index.html with query parameters
+    var url = `http://localhost:8000/html/ChallengeAFriend.html`;
     window.location.href = url;
   }
 
@@ -17,13 +24,7 @@ function launchGame() {
         aiOptions.style.display = this.value === 'true' ? 'block' : 'none';
       });
   }
-  function launchGame() {
 
-    // Redirect to localhost:8000/html/index.html with query parameters
-    var url = `http://localhost:8000/html/`;
-    window.location.href = url;
-
-  }
   
 
   async function fetchSavedGames() {

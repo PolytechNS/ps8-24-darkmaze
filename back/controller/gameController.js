@@ -8,11 +8,11 @@ const GameState = require("../logic/GameState");
 const { set } = require("mongoose");
 const { stripVTControlCharacters } = require("util");
 
-require("dotenv").config();
-const GamesTable = [];
-const RoomsQueue = [];
-const onlineGames = {};
-const userSockets = {};
+require("dotenv").config(); 
+var GamesTable = [];
+var RoomsQueue = [];
+var onlineGames = {};
+var userSockets = {};
 function setIo(io){
   NotifIo = io;
   io.of('/api/OnlineGame').on("connection", (socket) => {
@@ -22,24 +22,58 @@ function setIo(io){
     // Parsing cookies to retrieve username
     const cookiesList = parseCookies(cookies);
     const token = cookiesList.jwt;
-    console.log(token);
+    
     const decoded = jwt.verify(token, process.env.jwt_secret);
-
-    if(RoomsQueue.length == 0){
-      RoomsQueue.push(decoded.username);
-      socket.join((decoded.username).toString());
-      console.log(decoded.username," joined and created a new game");
-      onlineGames[decoded.username]=decoded.username;
-
-    }
-    else{
-      const roomToJoin = RoomsQueue.pop();
-      socket.join(roomToJoin.toString());
-      console.log(decoded.username," joined an existing game ",roomToJoin.toString());
-      onlineGames[decoded.username]=roomToJoin;
-      io.of('/api/OnlineGame').to(roomToJoin.toString()).emit("playerFound");
-    }
     userSockets[decoded.username] = socket.id;
+
+    
+    socket.on('joinGame',(friendGame)=>{
+      console.log("joining the game",friendGame);
+      if(friendGame==null){
+        if(RoomsQueue.length == 0){
+          RoomsQueue.push(decoded.username);
+          socket.join((decoded.username).toString());
+          onlineGames[decoded.username]=decoded.username;
+    
+        }
+        else{
+          const roomToJoin = RoomsQueue.pop(); 
+          socket.join(roomToJoin.toString());
+          onlineGames[decoded.username]=roomToJoin;
+          io.of('/api/OnlineGame').to(roomToJoin.toString()).emit("playerFound");
+        }
+      }
+      else{
+        socket.join(friendGame);
+        onlineGames[decoded.username]=friendGame;        
+      }
+  
+    })
+ 
+    socket.on("ChallengeGame",(opponentUsername,callback)=>{
+
+      socket.join((decoded.username).toString());
+      onlineGames[decoded.username]=(decoded.username).toString();
+    
+      if (!(opponentUsername in userSockets)) {
+          socket.emit("userNotConnected");
+          
+          callback("failure");
+      }  
+      else{
+        io.of('/api/OnlineGame').to(userSockets[opponentUsername]).emit("challengeRecieved",(decoded.username).toString());
+        console.log("userSockets[opponentUsername]",userSockets[opponentUsername]);
+        callback("success") 
+      }
+    })
+    socket.on("challengeRejected",(challengerUsername)=>{
+      delete onlineGames[challengerUsername];
+      console.log("ONLINE GAMES inside CHALLENGE REJECTED  event ",onlineGames);
+
+      io.of('/api/OnlineGame').to(userSockets[challengerUsername]).emit("challengeNotAccepted");
+    })
+
+
 
 
     socket.on("setup", async () => {
@@ -49,8 +83,9 @@ function setIo(io){
 
       // Create an instance of GameState 
       // // Save the instance to the database
+      console.log(decoded.username,"ONLINE GAMES inside SETUP event ",onlineGames); 
       if(decoded.username==onlineGames[decoded.username])
-        startCountDown(io,socket,decoded);
+        startCountDown(io,socket,decoded,gameState.id);
       socket.emit(
         "updatedBoard",
         gameState.id,
@@ -145,7 +180,7 @@ function setIo(io){
               );
               GamesTable = GamesTable.filter((game) => game.id !== id);
             }
-            startCountDown(io,socket);
+            startCountDown(io,socket,decoded,id);
             
           } else {
             socket.emit("ErrorPlaying", "Move cannot be played");
@@ -173,7 +208,7 @@ function setIo(io){
             true
           ){
             gameStateToBeModified.playTurn = gameStateToBeModified.playTurn==1?2:1;
-            startCountDown(io,socket,decoded);
+            startCountDown(io,socket,decoded,id);
             io.of('/api/OnlineGame').to(onlineGames[decoded.username].toString()).emit(
               "UpdateWalls",
               id,
@@ -206,8 +241,11 @@ function setIo(io){
       } else io.of('/api/OnlineGame').to(onlineGames[decoded.username].toString()).emit("ErrorPlaying", "Game not found! start a new game");
     });
 
+    socket.on("sendMessage",(message)=>{
+      io.of('/api/OnlineGame').to(onlineGames[decoded.username].toString()).emit("recieveMessage", decoded.username,message);
+    })
     
-    console.log(`User ${decoded.username} connected.`);
+    
 
 
     socket.on('disconnect', () => {
@@ -227,8 +265,7 @@ function getOpponentUserName(playerUserName){
       return username;
   }
 }
-function startCountDown(io,socket,decoded){
-  
+function startCountDown(io,socket,decoded,id){
   setTimeout(()=>{
       socket.emit(
         "GameOver",
@@ -241,20 +278,17 @@ function startCountDown(io,socket,decoded){
         "YOU LOST !!!"
       );
       GamesTable = GamesTable.filter((game) => game.id !== id);
-  },185000)
+  },180000)
 }
 async function gameController(request, response, gamesTable) {
   let filePath = request.url.split("/").filter(function (elem) {
     return elem !== "..";
   });
   const cookies = parseCookies(request.headers.cookie);
-  console.log(cookies);
   const token = cookies.jwt;
   const decoded = jwt.verify(token, process.env.jwt_secret);
   
-  console.log("gameController");
-  console.log("decoded ", decoded);
-  console.log("filePath ", filePath);
+
 
   if (
     request.method === "POST" &&
@@ -269,7 +303,6 @@ async function gameController(request, response, gamesTable) {
 
     await request.on("end", async () => {
       body = JSON.parse(body);
-      console.log(body);
 
       let gameToSave = gamesTable.find((game) => game.id == body.gameId);
 
@@ -277,7 +310,6 @@ async function gameController(request, response, gamesTable) {
       const existingGameState = await GameStateModel.findOne({
         id: gameToSave.id,
       });
-      console.log("existingGameState ", existingGameState);
 
       if (existingGameState) {
         // If a game state with the same ID exists, update it

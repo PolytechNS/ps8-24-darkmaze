@@ -1,7 +1,7 @@
 // url will be used to parse the url (captain obvious at your service).
 const url = require("url");
 // fs stands for FileSystem, it's the module to use to manipulate files on the disk.
-const fs = require("fs");
+const fs = require("fs"); 
 // path is used only for its parse method, which creates an object containing useful information about the path.
 const path = require("path");
 const authMW = require("../middlewear/authMW.js");
@@ -83,7 +83,6 @@ function manageRequest(request, response) {
           });
         }
         else{
-          console.log("retrieving file ...");
           response.setHeader(
             "Content-type",
             mimeTypes[extension] || mimeTypes["default"]

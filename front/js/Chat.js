@@ -23,11 +23,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to fetch friends with messages
     function fetchFriendsWithMessages() {
         // Assuming you have an API endpoint to fetch friends with messages
+        console.log("get frieeeeeends")
         fetch('/api/user/friends')
         .then(response => response.json())
         .then(friends => {
             // Create HTML content for modal dialog
-            let htmlContent = "<h2>Friends with Messages</h2>";
+            let htmlContent = "<h2>Friends</h2>";
             htmlContent += "<ul>";
 
             // Loop through friends and create clickable list items

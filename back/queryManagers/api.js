@@ -110,7 +110,7 @@ function setIo(ioInstance) {
           }
           if (gameStateToBeModified.GameType["playAgainstAI"] == "true") 
             aiPlayer(gameStateToBeModified,socket,id);
-
+ 
           
         } else socket.emit("ErrorPlaying", "Move cannot be played");
       } else socket.emit("ErrorPlaying", "Game not found! start a new game");
