@@ -20,10 +20,22 @@ for (let i = 0; i < rows; i++) {
   }
 }
 
-
+  
 
 //socket communications
+var urlParams = new URLSearchParams(window.location.search);
+var playAgainstFriend= urlParams.get("roomID");
+if(playAgainstFriend){
+  console.log("playAgainstFriend ",playAgainstFriend);
+  gameNamespace.emit ("joinGame",playAgainstFriend);
 
+}else{
+  console.log("not a friendly game");
+  gameNamespace.emit ("joinGame",null);
+
+}
+  
+  
 
 gameNamespace.emit("setup");
 

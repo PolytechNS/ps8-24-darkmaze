@@ -19,7 +19,7 @@ function setIo(io){
     console.log(token);
     const decoded = jwt.verify(token, process.env.jwt_secret);
     
-    console.log(`User ${decoded.username} connected.`);
+    console.log(`User ${decoded.username} connected to - /api/user -`);
     userSockets[decoded.username] = socket.id;
 
 
@@ -47,9 +47,7 @@ async function userController(request, response, gamesTable) {
   const token = cookies.jwt;
   const decoded = jwt.verify(token, process.env.jwt_secret);
   
-  console.log("userController");
-  console.log("decoded ", decoded);
-  console.log("filePath ", filePath);
+
 
 
 
@@ -179,7 +177,6 @@ else if (
       username: friend.username
     }));
 
-    console.log("friendList ",userInfo,userInfo.friends ,friends,friendList);
     // Send the list of friends as a response
     response.writeHead(200, { "Content-Type": "application/json" });
     response.end(JSON.stringify(friendList));

@@ -19,12 +19,24 @@ const gameNamespace = io("/api/OnlineGame", {
   
   gameNamespace.on("disconnect", () => {
     console.log("Disconnected from the server");
-  }); 
+  });  
   
   gameNamespace.on("error", (error) => {
     console.error("Socket error:", error);
   });
-  
+  gameNamespace.on("challengeNotAccepted",()=>{
+    console.log("your challenge is rejected");
+    window.alert("challenge rejected");
+    var url = 'http://localhost:8000/html/ChallengeAFriend.html';
+    window.location.href = url;
+
+})
+  gameNamespace.on("recieveMessage",(username,message)=>{console.log(username+" : "+message)});
+  function sendMessage() {
+    var message = document.getElementById("messageInput").value;
+    gameNamespace.emit("sendMessage",message);
+    document.getElementById("messageInput").value="";
+}
   // JavaScript to control the visibility of the overlay and manage the timer
 
 

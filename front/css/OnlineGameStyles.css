@@ -59,5 +59,36 @@ body {
     text-align: center;
     color: white;
 }
+.messaging_box {
+    position: fixed; /* Ensure it stays fixed in the viewport */
+    left: 20px;
+    bottom: 20px;
+    background-color: #000000;
+    border: 1px solid #666666;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 9999; /* Set a high z-index value to ensure it appears on top of other content */
+}
 
+.messaging_box input[type="text"] {
+    width: calc(100% - 80px);
+    padding: 8px;
+    border: 1px solid #666666;
+    border-radius: 3px;
+}
+
+.messaging_box .send-button {
+    background-color: #2bff00;
+    color: #000000;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.messaging_box .send-button:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
 
