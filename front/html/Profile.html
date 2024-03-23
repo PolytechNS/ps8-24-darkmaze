@@ -11,15 +11,21 @@
 
 </head>
 <body>
-    <body class="img js-fullheight" style="background-image: url('/assets/images/ph1.png'); height: 716px;"></body>
     <div class="profile-container">
-        <img src="profile.jpg" alt="Profile Picture" class="profile-image">
-        <h2 class="full-name">John Doe</h2>
-        <input type="text" id="friendUsername" placeholder="Enter friend's username">
-        <button class="add-friend-button" onclick="searchUser()">Add Friend</button>
-        <button class="add-friend-button" onclick="listFriendRequests()">Friend Requests</button>
-        <button class="messages-button">Messages</button> <!-- New Messages Button -->
+        <div class="profile-picture">
+            <img src="C:\Users\User\Documents\GitHub\ps8-24-darkmaze\front\assets\images\profile picture.jpg" alt="Profile Picture">
+           <!--- url('/assets/images/ph1.png') </div>-->
+        <div class="user-info">
+            <h1 class="user-name">John Doe</h1>
+            <input type="text" id="friendUsername" placeholder="Enter friend's username">
+            <div class="profile-buttons">
+                <button class="button add-friend-button" onclick="searchUser()">Add Friend</button>
+                <button class="button friend-requests-button" onclick="listFriendRequests()">Friend Requests</button>
+                <button class="button messages-button">Messages</button>
+            </div>
+        </div>
     </div>
+    
 
     <!-- Messages Modal -->
     <div class="modal-container">
