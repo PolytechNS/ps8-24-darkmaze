@@ -71,9 +71,17 @@ function manageRequest(request, response) {
           "./front/assets/js/jquery.min.js",
           "./front/assets/js/popper.js",
           "./frontassets/js/bootstrap.min.js",
-          "./front/assets/js/main.js"
+          "./front/assets/js/main.js",
+          "./front/assets/css/style.css",
+          "./front/assets/css/style.css",
+          "./front/assets/js/bootstrap.min.js",
+          "./front/assets/images/ph1.png",
+
+
+
       ];
         if (!authPaths.includes(pathName)) {
+          console.log("File REQUESTED : ",pathName);
           authMW(request, response, (request, response) => {
             response.setHeader(
               "Content-type",
