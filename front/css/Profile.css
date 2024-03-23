@@ -1,51 +1,155 @@
-/* Styles for Profile Page */
+@import url('https://fonts.googleapis.com/css?family=Roboto');
 
-.profile-container {
-    text-align: center;
+body {
+    background: url('background.jpg') center center / cover no-repeat;
+    margin: 0;
+    height: 100vh;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.profile-image {
+
+
+/* Adaptez cette classe à celle de votre bouton d'ajout d'ami */
+.add-friend-button {
+    background: repeating-linear-gradient( 45deg, #ffc800, #ffc800 5px, #ffc200 5px, #ffc200 10px);
+    box-shadow: 0 6px 0 #b76113, 0 8px 1px 1px rgba(0,0,0,.3), 0 10px 0 5px #75421f, 0 12px 0 5px #8a542b, 0 15px 0 5px #593116, 0 15px 1px 6px rgba(0,0,0,.3);
+    border-bottom: 3px solid rgba(205, 102, 0, 0.5);
+    text-shadow: 2px 2px 1px #e78700, -2px 2px 1px #e78700, 2px -2px 1px #e78700, -2px -2px 1px #e78700, 0px 2px 1px #e78700, 0px -2px 1px #e78700, 0px 4px 1px #c96100, 2px 4px 1px #c96100, -2px 4px 1px  #c96100;
+  }
+  .game-button.orange:hover {
+    top:2px;
+    box-shadow: 0 4px 0 #b76113, 0 6px 1px 1px rgba(0,0,0,.3), 0 8px 0 5px #75421f, 0 10px 0 5px #8a542b, 0 13px 0 5px #593116, 0 13px 1px 6px rgba(0,0,0,.3);
+  }
+
+
+/* Adaptez cette classe à celle de votre bouton de demandes d'ami */
+.friend-requests-button {
+    /* Styles du bouton orange précédent */
+}
+
+/* Adaptez cette classe à celle de votre bouton de messages */
+.messages-button {
+    /* Styles du bouton vert précédent */
+}
+
+/* Pour votre bouton de retour, utilisez la classe appropriée */
+.go-back-button {
+    /* Styles supplémentaires pour le bouton 'Go Back' si nécessaire */
+}
+
+/* Puisque vous n’avez pas fourni les noms de classe pour vos boutons, je suppose que les noms des classes sont .add-friend-button, .friend-requests-button, .messages-button et .go-back-button. Adaptez le CSS ci-dessus pour correspondre aux classes que vous avez dans votre HTML. */
+
+/* Maintenant, appliquez les styles spécifiques de 'horreur' */
+.button {
+    /* Reprenez les propriétés communes de .game-button ici */
+}
+
+/* Ajoutez une classe pour chaque bouton pour appliquer les styles de couleur */
+.button.add-friend {
+    /* Styles de .game-button.red ici */
+}
+
+.button.friend-requests {
+    /* Styles de .game-button.green ici */
+}
+
+.button.messages {
+    /* Styles de .game-button.orange ici */
+}
+
+.profile-container {
+    width: 800px;
+    text-align: center;
+    background: rgba(231, 226, 226, 0.5); /* Semi-transparent overlay */
+    padding: 40px;
+    border-radius: 15px; /* Rounded corners for the container */
+    box-shadow: 0 0 10px 0 rgba(228, 225, 225, 0.5); /* Soft shadow for depth */
+}
+
+.profile-picture img {
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    margin-bottom: 20px;
+    border: 4px solid #fbf6f6; /* Metallic border effect */
+    margin-bottom: 20px; /* Space between profile image and buttons */
 }
 
-.full-name {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.add-friend-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #007bff;
-    color: white;
+/* Reset de base pour les boutons */
+button {
+    outline: none;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 4px; /* Coins légèrement arrondis */
+    font-weight: bold; /* Texte en gras */
 }
 
-.add-friend-button:hover {
-    background-color: #0056b3;
-}
-.popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(18, 204, 58, 0.616);
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-}
-
-.popup .user-list {
-    max-height: 300px; /* Example height, adjust as needed */
-    overflow-y: auto;
+/* Style de base pour les boutons */
+/* Base pour les boutons avec un thème d'horreur */
+.button {
+    color: #f8f8f2; /* Utilisation d'une couleur qui ressort sur des textures sombres */
+    text-shadow: 0 2px 3px rgba(241, 239, 239, 0.6);
+    font-size: 18px;
+    padding: 10px 20px;
+    border: 1px solid #efeded; /* Une bordure fine pour délimiter le bouton */
+    background: #dfdede; /* Une couleur de fond sombre */
+    box-shadow: 0 2px 3px rgba(228, 222, 222, 0.9);
+    border-radius: 3px; /* Légèrement arrondi pour un look moderne */
+    font-family: 'Creepster', cursive; /* Une police d'écriture dans le thème d'horreur */
+    transition: all 0.3s ease;
 }
 
-.popup button {
-    margin-top: 10px;
+/* Effet de survol pour les boutons */
+.button:hover {
+    background: #f4f4f4; /* Assombrir le bouton au survol */
+    box-shadow: 0 4px 5px rgb(244, 241, 241);
+    transform: translateY(-2px);
+}
+/*
+ Ajout d'une texture de rouille pour 'Add Friend' 
+.add-friend-button {
+    background: url('rust-texture.png'); /* Remplacer par le chemin d'accès à votre texture 
+    background-size: cover;
+}
+*/
+/* Ajout d'une texture de pierre tombale pour 'Friend Requests' */
+.friend-requests-button {
+    background: url('tombstone-texture.png'); /* Remplacer par le chemin d'accès à votre texture */
+    background-size: cover;
+}
+
+/* Ajout d'une texture de sang séché pour 'Messages' */
+.messages-button {
+    background: url('dried-blood-texture.png'); /* Remplacer par le chemin d'accès à votre texture */
+    background-size: cover;
+}
+
+/* Style pour le bouton 'Go Back' avec un aspect plus subtil */
+.go-back-button {
+    background-color: #e4dfdf; /* Une couleur discrète */
+    color: #f8f8f2; /* Une couleur claire pour le texte */
+}
+
+
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #2b2b2b;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3a3a3a;
 }
