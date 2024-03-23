@@ -42,18 +42,21 @@ const gameNamespace = io("/api/OnlineGame", {
 
 
 // Function to show the overlay
-function switchOverlay() {
+var interval
+function switchOverlay() { 
     console.log("-------> switching");
     if(invisibleOverlay.style.display == 'block'){
       invisibleOverlay.style.display = 'none';
       document.getElementById('timer').textContent="1:30"
+      clearInterval(interval);
 
     }
     else{
       invisibleOverlay.style.display = 'block'
       var timerElement = document.getElementById('timer');
         var totalTime = 90; // 1 minute 30 seconds in seconds
-        var interval = setInterval(function() {
+        interval = setInterval(function() {
+          console.log("total timer",totalTime);        
             var minutes = Math.floor(totalTime / 60);
             var seconds = totalTime % 60;
             timerElement.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;

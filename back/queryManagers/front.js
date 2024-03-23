@@ -81,7 +81,6 @@ function manageRequest(request, response) {
 
       ];
         if (!authPaths.includes(pathName)) {
-          console.log("File REQUESTED : ",pathName);
           authMW(request, response, (request, response) => {
             response.setHeader(
               "Content-type",

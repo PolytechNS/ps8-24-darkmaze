@@ -24,14 +24,21 @@ for (let i = 0; i < rows; i++) {
 
 //socket communications
 var urlParams = new URLSearchParams(window.location.search);
-var playAgainstFriend= urlParams.get("roomID");
-if(playAgainstFriend){
+var playAgainstFriend= urlParams.get("roomId");
+var challenge= urlParams.get("challenge");
+console.log("playAgainstFriend  ",playAgainstFriend);
+if(playAgainstFriend!=null ){
   console.log("playAgainstFriend ",playAgainstFriend);
-  gameNamespace.emit ("joinGame",playAgainstFriend);
-
-}else{
+  gameNamespace.emit ("joinGame",true,playAgainstFriend);
+  
+  
+}
+else if(challenge!=null){
+  gameNamespace.emit ("joinGame",true,null);
+}
+else{
   console.log("not a friendly game");
-  gameNamespace.emit ("joinGame",null);
+  gameNamespace.emit ("joinGame",false,null);
 
 }
   
@@ -40,7 +47,11 @@ if(playAgainstFriend){
 gameNamespace.emit("setup");
 
 gameNamespace.on("ErrorPlaying", (msg) => window.alert(msg));
-gameNamespace.on("GameOver", (msg) => window.alert(msg));
+gameNamespace.on("GameOver", (msg) => {
+  window.alert(msg);    
+  var url = 'http://localhost:8000/api/game';
+  window.location.href = url;
+});
 gameNamespace.on("player2Setup",(id, board, playerPostion, wallsPositions) => {
 
 
