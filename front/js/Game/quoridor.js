@@ -32,8 +32,9 @@ if (gameId) {
 } else {
   gameNamespace.emit("setup", playAgainstAIParam, aiFirstParam);
 }
-gameNamespace.on("ErrorPlaying", (msg) => window.alert(msg));
-gameNamespace.on("GameOver", (msg) => window.alert(msg));
+let CancelCurrentMessageId = null;
+gameNamespace.on("ErrorPlaying", (msg) => CancelCurrentMessageId = showMessage(msg,2000));
+gameNamespace.on("GameOver", (msg) => CancelCurrentMessageId = showMessage(msg, 2000));
 gameNamespace.on(
   "updatedBoard",
   (id, board, playerPostion, wallsPositions, newGame,LoadedGameplayerNumber) => {
@@ -50,8 +51,9 @@ gameNamespace.on(
 
       //this code should be on the update
       drawBoard();
-      addMoveChoices(OldOpponentRow, OldOpponentCol, OldRow, OldCol);
+      removeMoveChoices(OldRow, OldCol);
       removeMoveChoices(OldOpponentRow, OldOpponentCol);
+      addMoveChoices(OldOpponentRow, OldOpponentCol, OldRow, OldCol);
       changeVisibility(playerNumber);
     } 
       
@@ -79,6 +81,7 @@ gameNamespace.on(
         PlayerCol
       );
       removeMoveChoices(OldRow, OldCol);
+      removeMoveChoices(OldOpponentRow, OldOpponentCol);
       addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
       changeVisibility(playerNumber);
 
@@ -631,6 +634,7 @@ function animateRectangle(
   width,
   height
 ) {
+  CancelCurrentMessageId();
   var startTime = null;
 
   function animate(currentTime) {
@@ -681,6 +685,56 @@ function animateImage(image, startX, startY, endX, endY, duration) {
   animate();
 }
 
+function showMessage(message, duration) {
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+
+  ctx.font = '60px Arial';
+  ctx.textAlign = 'center';
+
+  let opacity = 1;
+
+  function drawTextWithOpacity(opacity) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGrid();
+    ctx.fillStyle = `rgba(250, 0, 0, ${opacity})`;
+    ctx.shadowColor = 'rgba(0, 0, 0, 150)';
+    ctx.shadowOffsetX = 1;
+    ctx.shadowOffsetY = 1;
+    ctx.shadowBlur = 10;
+    ctx.fillText(message, centerX, centerY);
+
+    ctx.shadowColor = 'rgba(0, 0, 0, 0)';
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.shadowBlur = 0;
+  }
+  drawTextWithOpacity(opacity);
+
+  let animationId;
+
+  function animateOpacity() {
+    opacity -= 0.0035;
+    if (opacity > 0) {
+      drawTextWithOpacity(opacity);
+      animationId = requestAnimationFrame(animateOpacity);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawGrid();
+    }
+  }
+
+
+  animationId = requestAnimationFrame(animateOpacity);
+
+
+  function cancelAnimation() {
+    cancelAnimationFrame(animationId);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGrid();
+  }
+  return cancelAnimation;
+}
 function handleClick(row, col) {
   //console.log("Clicked on cell:", row, col);
 
@@ -703,6 +757,7 @@ function updateGame(playerNumber, row, col) {
 
   // Assuming removeMoveChoices, addMoveChoices, changeVisibility functions are defined elsewhere
   removeMoveChoices(oldRow, oldCol);
+  removeMoveChoices(oldOpponentRow, oldOpponentCol);
   addMoveChoices(row, col, oldOpponentRow, oldOpponentCol);
 
   // Assuming changeVisibility function takes a playerNumber as an argument
