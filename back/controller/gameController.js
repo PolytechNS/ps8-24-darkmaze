@@ -7,6 +7,7 @@ const querystring = require("querystring");
 const GameState = require("../logic/GameState");
 const { set } = require("mongoose");
 const { stripVTControlCharacters } = require("util");
+const league = require("../models/LeagueModel");
 
 require("dotenv").config(); 
 var GamesTable = [];
@@ -83,9 +84,6 @@ function setIo(io){
 
     })
 
-
-
-
     socket.on("setup", async () => {
       console.log("joined api/OnlineGame");
       const gameState = new GameState();
@@ -124,7 +122,6 @@ function setIo(io){
 
       });
           
-
     socket.on("newMove", async (id, playerNumber, row, col) => {
       console.log("newMove --- ",playerNumber,row,col);
       var gameStateToBeModified = GamesTable.find((game) => game.id === id);
@@ -156,7 +153,6 @@ function setIo(io){
               false
   
             );
-            console.log("##### Opponent Uername : ",getOpponentUserName(decoded.username));
             io.of('/api/OnlineGame')
               .to(userSockets[getOpponentUserName(decoded.username)])
                 .emit(
@@ -184,19 +180,22 @@ function setIo(io){
                 );
   
             if (gameStateToBeModified.is_Win(playerNumber)) {
+              const gameResults = await updateUsersState(decoded.username,getOpponentUserName(decoded.username),io);
               socket.emit(
                 "GameOver",
-                "YOU WIN !!!"
+                "YOU WIN !!! your new elo is : "+gameResults.winner
               );
               io.of('/api/OnlineGame')
               .to(userSockets[getOpponentUserName(decoded.username)])
               .emit(
                 "GameOver",
-                "YOU LOST !!!"
+                "YOU LOST !!! your new elo is : "+gameResults.loser
               );
               GamesTable = GamesTable.filter((game) => game.id !== id);
+              
             }
-            startCountDown(io,decoded,id);
+            else
+              startCountDown(io,decoded,id);
             
           } else {
             socket.emit("ErrorPlaying", "Move cannot be played");
@@ -210,8 +209,6 @@ function setIo(io){
           .emit("ErrorPlaying", "Game not found! start a new game");
         };
     });
-
-
 
     socket.on("newWall", (id, direction, row, col, playerNumber) => {
       var gameStateToBeModified = GamesTable.find((game) => game.id === id);
@@ -262,9 +259,6 @@ function setIo(io){
       io.of('/api/OnlineGame').to(onlineGames[decoded.username].toString()).emit("recieveMessage", decoded.username,message);
     })
     
-    
-
-
     socket.on('disconnect', () => {
       //delete userSockets[decoded.username]; // Remove the user's socket ID when they disconnect
       console.log("disconnected");
@@ -286,27 +280,124 @@ function getOpponentUserName(playerUserName){
   }
 }
 function startCountDown(io,decoded,id){
-
-
-  onlineGamesTimers[onlineGames[decoded.username]]=setTimeout(()=>{
+  
+  
+  onlineGamesTimers[onlineGames[decoded.username]]=setTimeout(async ()=>{
+    const gameResults = await updateUsersState(decoded.username,getOpponentUserName(decoded.username),io);
     console.log("executed ",decoded.username);
     io.of('/api/OnlineGame')
     .to(userSockets[decoded.username])
     .emit(
         "GameOver",
-        winninnMsg
+        "YOU WIN !!! your new elo is : "+gameResults.winner
+
         
       );
       io.of('/api/OnlineGame')
       .to(userSockets[getOpponentUserName(decoded.username)])
       .emit(
         "GameOver",
-        losingMsg
+        "YOU LOST !!! your new elo is : "+gameResults.loser
        
       );
       GamesTable = GamesTable.filter((game) => game.id !== id);
-  },3000)
+  },180000)
 }
+function updateElo(winnerElo, loserElo) {
+  const K = 32; // Elo K-factor, you can adjust this value based on your requirements
+
+  // Calculate expected scores
+  const expectedWinnerScore = 1 / (1 + Math.pow(10, (loserElo - winnerElo) / 400));
+  const expectedLoserScore = 1 / (1 + Math.pow(10, (winnerElo - loserElo) / 400));
+
+  // Update Elo ratings
+  const newWinnerElo = winnerElo + K * (1 - expectedWinnerScore);
+  const newLoserElo = loserElo + K * (0 - expectedLoserScore);
+
+  return { winnerElo:Math.round(newWinnerElo) , loserElo: Math.round(newLoserElo) };
+}
+async function getLeagueByElo(elo) {
+  try {
+      // Fetch the league where elo falls within its range
+      console.log("elo elo",elo);
+      const userLeague = await league.findOne({$and: [ { "eloRange.0": { $lte: elo } }, { "eloRange.1": { $gte: elo } }]});
+      if (!userLeague) {
+          throw new Error("League not found for the given Elo score");
+      }
+      return userLeague._id.toString(); // Return the league ID as a string
+  } catch (error) {
+      console.error("Error fetching league by Elo:", error);
+      throw error;
+  } 
+}
+
+async function updateUsersState(winnerUsername, loserUsername,io) {
+  try {
+      // Fetch data of the winner and loser by their usernames
+      let winner = await user.findOne({ username: winnerUsername });
+      let loser = await user.findOne({ username: loserUsername });
+      
+      if (!winner || !loser) {
+          throw new Error("Player not found");
+      }
+     console.log("scoooooores"  ,winner.eloRanking, loser.eloRanking); 
+      // Assuming updateElo is defined elsewhere
+      const updatedEloValues = updateElo(winner.eloRanking, loser.eloRanking);
+      if(updatedEloValues.winnerElo>2500)updatedEloValues.winnerElo=2500;
+      if(updatedEloValues.loserElo<1000)updatedEloValues.loserElo=1000;
+      console.log("ELOOOO",updatedEloValues);
+      // Update the winner's and loser's Elo ratings in the database
+      const updatedWinner = await user.findOneAndUpdate(
+          { username: winnerUsername },
+          { eloRanking: updatedEloValues.winnerElo },
+          { new: true }
+      );
+      const updatedLoser = await user.findOneAndUpdate(
+          { username: loserUsername },
+          { eloRanking: updatedEloValues.loserElo },
+          { new: true }
+      );
+
+      // Calculate new leagues for winner and loser
+      const winnerLeagueId = await getLeagueByElo(updatedWinner.eloRanking);
+      const loserLeagueId = await getLeagueByElo(updatedLoser.eloRanking);
+      console.log("Leaaaaagues ",winnerLeagueId,loserLeagueId);
+      // Update winner's league if changed
+      if (winnerLeagueId.toString() !== winner.league.toString()) {
+          await user.findOneAndUpdate(
+              { username: winnerUsername },
+              { league: winnerLeagueId }
+          );
+          const winner_league = await league.findOne({_id:winnerLeagueId}); 
+          console.log("socketas",userSockets);
+          io.of('/api/OnlineGame')
+          .to(userSockets[winnerUsername])
+          .emit("leagueUpgrade","congratulations !! you just moved to a new league, you're now in "+winner_league.name);
+          
+      }
+
+      // Update loser's league if changed
+      if (loserLeagueId.toString() !== loser.league.toString()) {
+          await user.findOneAndUpdate(
+              { username: loserUsername },
+              { league: loserLeagueId }
+          );
+          const loser_league = await league.findOne({_id:loserLeagueId}); 
+          io.of('/api/OnlineGame')
+          .to(userSockets[loserUsername])
+          .emit("leagueDowngrade","you're to0 weak for this league! you're now in "+loser_league.name);
+      }
+
+      // Return updated player data
+      return { winner: updatedWinner['eloRanking'], loser: updatedLoser['eloRanking'] };
+  } catch (error) {
+      console.error("Error updating users state:", error);
+      throw error;
+  }
+}
+
+
+
 async function gameController(request, response, gamesTable) {
   let filePath = request.url.split("/").filter(function (elem) {
     return elem !== "..";

@@ -30,8 +30,6 @@ console.log("playAgainstFriend  ",playAgainstFriend);
 if(playAgainstFriend!=null ){
   console.log("playAgainstFriend ",playAgainstFriend);
   gameNamespace.emit ("joinGame",true,playAgainstFriend);
-  
-  
 }
 else if(challenge!=null){
   gameNamespace.emit ("joinGame",true,null);
@@ -42,7 +40,8 @@ else{
 
 }
   
-  
+gameNamespace.on("leagueUpgrade",(msg)=>{window.alert(msg)})
+gameNamespace.on("leagueDowngrade",(msg)=>{window.alert(msg)})
 
 gameNamespace.emit("setup");
 

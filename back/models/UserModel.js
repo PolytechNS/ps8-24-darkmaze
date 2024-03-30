@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Define the schema for the User
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -15,10 +14,22 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+    friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    eloRanking: {
+        type: Number,
+        default: 1000
+    },
+    league: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'League',
+        default: '66018bb709cc418bf1db83b0' 
+    },
+    trophies: [{
+        trophy: { type: mongoose.Schema.Types.ObjectId, ref: 'Trophy' },
+        achievedAt: { type: Date, default: Date.now }
+    }]
 });
 
-// Create the User model
 const UserModel = mongoose.model('User', userSchema);
 
 module.exports = UserModel;

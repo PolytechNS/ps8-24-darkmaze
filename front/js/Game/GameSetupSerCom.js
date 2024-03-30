@@ -9,7 +9,11 @@ function launchGame() {
     var url = `http://localhost:8000/html/index.html?playAgainstAI=${playAgainstAI}&aiFirst=${aiFirst}`;
     window.location.href = url;
   }
+function startOnlineGame(){
+  var url = `http://localhost:8000/html/OnlineGame.html`;
+  window.location.href = url;
 
+}
 function PickFriend() {
 
     // Redirect to localhost:8000/html/index.html with query parameters

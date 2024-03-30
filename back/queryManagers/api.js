@@ -10,6 +10,7 @@ const querystring = require("querystring");
 const aiPlayer = require("../logic/ai");
 const GMController = require("../controller/gameController");
 const USController = require("../controller/userController");
+const LGController = require("../controller/leagueController");
 const authMW = require("../middlewear/authMW");
 const darkMazeAi = require('../logic/Darkmaze')
 const MSGController = require('../controller/messageController')
@@ -266,6 +267,7 @@ async function manageRequest(request, response) {
       GMController.gameController(request, response, GamesTable);
       USController.userController(request, response, GamesTable);
       MSGController.messageController(request, response);
+      LGController.leagueController(request,response);
 
     });
     
