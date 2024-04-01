@@ -3,31 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
-    <link rel="stylesheet" type="text/css" href="../css/Profile.css">
+    <title>DarkMaze Game - Profile</title>
+    <link rel="stylesheet" href="assets/css/style_theme_1.css">
+    <link rel="icon" href="assets/images/icon.png">
+    <link href="https://fonts.googleapis.com/css?family=Denk+One" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style_theme_1.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../css/Profile.css">
     <link rel="stylesheet" type="text/css" href="../css/FriendsSideMenu.css">
     <link rel="stylesheet" type="text/css" href="../css/Messages.css">
-    <link rel="stylesheet" type="text/css" href="../css/notifications.css">
-
+    <link rel="stylesheet" type="text/css" href="../css/notifications.css"> -->
 </head>
-<body>
-    <div class="profile-container">
-        <div class="profile-picture">
-            <img src="C:\Users\User\Documents\GitHub\ps8-24-darkmaze\front\assets\images\profile picture.jpg" alt="Profile Picture">
-           <!--- url('/assets/images/ph1.png') </div>-->
-        <div class="user-info">
-            <h1 class="user-name">John Doe</h1>
-            <input type="text" id="friendUsername" placeholder="Enter friend's username">
-            <div class="profile-buttons">
-                <button class="button add-friend-button" onclick="searchUser()">Add Friend</button>
-                <button class="button friend-requests-button" onclick="listFriendRequests()">Friend Requests</button>
-                <button class="button friend-requests-button" onclick="ListLeagues()">Join League</button>
-                <button class="button messages-button">Messages</button>
-            </div>
-        </div>
-    </div>
-    
 
+<body><!-- Ici on insère le menu défini dans le fichier 'menu.html'
+    N.B: dans le fichier 'menu.html' il faut définir dans la balise 
+    <a href= .... target="_parent"> et ce pour que les liens 
+    s'ouvrent dans la fenêtre principale
+  -->
+  <div class="upper"> 
+    <object data="menu.html" width="500px"></object>
+  </div>
+  <!------------ Fin insertion menu ------------------>
+
+  <div class="box">
+    <h2>Profile</h2>
+        <div class="avatar">
+            <img src="assets/images/avatar.png" width="100px" alt="Profile Picture">
+        </div>
+        <h3>John Doe</h3>
+        <br><br><br>
+        <div class="user-info">
+            <div class="inputBox">
+                <input type="text" name="text" id="friendUsername" required onkeyup="this.setAttribute('value', this.value);" value="">
+                <label>Enter friend's username:</label>
+              </div>      
+              <button class="cybr-btn" onclick="searchUser()">
+                Add Friend<span aria-hidden> </span>
+              <span aria-hidden class="cybr-btn__glitch">add friend</span>
+              </button>
+              <button class="cybr-btn" onclick="listFriendRequests()">
+                friend requests<span aria-hidden> </span>
+              <span aria-hidden class="cybr-btn__glitch">friend requests</span>
+              </button>
+              <button class="cybr-btn">
+                messages<span aria-hidden> </span>
+              <span aria-hidden class="cybr-btn__glitch">messages</span>
+              </button>            
+              <textarea placeholder="Type your message..." rows="20" name="comment[text]" id="comment_text" cols="40" class="ui-autocomplete-input" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"></textarea> 
+        </div>
+    
     <!-- Messages Modal -->
     <div class="modal-container">
         <div class="modal">
@@ -37,7 +61,7 @@
             <button class="modal-close">Close</button>
         </div>
     </div>
-
+</div>
     <script src="../js/Profile.js" defer></script>
     <script src="../js/Chat.js" defer></script>
     <script src="../js/socket.io.js"></script>

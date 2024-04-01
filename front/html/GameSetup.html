@@ -1,96 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
 <head>
-  <title>Game Setup</title>
-  
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="/assets/css/style.css">
-  <script src="http://localhost:8000/js/Game/GameSetupSerCom.js"></script>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DarkMaze Game -  Game Setup</title>
+<link rel="icon" href="assets/images/icon.png">
+<link href="https://fonts.googleapis.com/css?family=Denk+One" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style_theme_1.css">
 </head>
+<body>
+<!-- Ici on insère le menu défini dans le fichier 'menu.html'
+  N.B: dans le fichier 'menu.html' il faut définir dans la balise 
+  <a href= .... target="_parent"> et ce pour que les liens 
+  s'ouvrent dans la fenêtre principale
+-->
+<div class="upper"> 
+  <object data="menu.html" width="500px"></object>
+</div>
+<!------------ Fin insertion menu ------------------>
 
-<body class="img js-fullheight" style="background-image: url('/assets/images/ph1.png'); height: 716px;">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="#">DarkMaze</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+<div class="box">
+    <h2>Create New game</h2>
+    <h3>start a game</h3>   
+    
+ 
+    <label>Do you want to play against AI?</label>
+    <input type="checkbox" id="playai" name="playai" value="playai"/>  
+    <br><br>
+ 
+      <form>
+        <fieldset>
+          <legend><label>Please select your choice:</label></legend>
+          <div>
+            <br>
+            <input type="radio" id="loadgame" name="game" value="loadgame" checked/>
+            <label for="loadgame">Load Game</label>
+      
+            <input type="radio" id="newgame" name="game" value="newgame" />
+            <label for="newgame">New Game</label>
+          </div>
+          <div>
+            <br>
+            <button class="cybr-btn">
+              launch<span aria-hidden> </span>
+            <span aria-hidden class="cybr-btn__glitch">launch</span>
+            </button>          </div>
+        </fieldset>
+      </form>
+      <br>
+
+        <button class="cybr-btn">
+        launch online game<span aria-hidden> </span>
+      <span aria-hidden class="cybr-btn__glitch">launch online game</span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-bell"></i></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-envelope"></i></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-volume-up"></i></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-user"></i></a>
-          </li>
-        
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-cog"></i></a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
- <section class="ftco-section">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6 text-center mb-5">
-                <h2 class="heading-section">Create New Game</h2>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-4">
-                <div class="login-wrap p-0">
-                    <h3 class="mb-4 text-center">Start a New Game</h3>
-                    <form id="setupForm" class="signup-form" action="/api/game" method="post">
-                        <div class="form-group">
-                            <label for="playAgainstAI">Do you want to play against AI?</label>
-                            <select id="playAgainstAI" name="playAgainstAI" class="form-control">
-                                <option value="true">Yes</option>
-                                <option value="false" selected>No</option>
-                            </select>
-                        </div>
-                        <div class="form-group" id="aiOptions" style="display: none;">
-                            <label for="aiFirst">Should AI play first?</label>
-                            <select id="aiFirst" name="aiFirst" class="form-control">
-                                <option value="true">Yes</option>
-                                <option value="false">No</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <button type="button" class="form-control btn btn-primary submit px-3" onclick="launchGame()">Launch Game</button>
-                        </div>
-                        <div class="form-group">
-                            <button type="button" class="form-control btn btn-primary submit px-3" onclick="startOnlineGame()">Play online Game</button>
-                        </div>
-                        <div class="form-group">
-                            <button type="button" class="form-control btn btn-primary submit px-3 messages-button" onclick="PickFriend()">Challenge a friend</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</section>
-<script src="/assets/js/jquery.min.js"></script>
-<script src="/assets/js/popper.js"></script>
-<script src="/assets/js/bootstrap.min.js"></script>
-<script src="/assets/js/main.js"></script>
+      <button class="cybr-btn">
+        challenge a friend<span aria-hidden> </span>
+      <span aria-hidden class="cybr-btn__glitch">challenge a friend</span>
+      </button>
+ 
+</div>
+ 
 
 
+
+  <script src="../js/jquery.min.js"></script>
+  <script src="../js/popper.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/main.js"></script>
 </body>
 </html>
