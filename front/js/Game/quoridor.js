@@ -6,6 +6,10 @@ var ContinuePlaying = true;
 var Row, Col;
 const fogGrid = [];
 var playerNumber=0;
+const cellClickListeners = [];
+const wallHoverListeners = [];
+const wallClickListeners = [];
+const playerHoverListeners = [];
 for (let i = 0; i < rows; i++) {
   grid[i] = [];
   fogGrid[i] = [];
@@ -24,6 +28,8 @@ var urlParams = new URLSearchParams(window.location.search);
 var playAgainstAIParam = urlParams.get("playAgainstAI");
 var aiFirstParam = urlParams.get("aiFirst");
 var gameId = urlParams.get("gameId");
+var winner = null;
+
 
 //socket communications
 const gameNamespace = io("/api/game"); 
@@ -32,15 +38,25 @@ if (gameId) {
 } else {
   gameNamespace.emit("setup", playAgainstAIParam, aiFirstParam);
 }
-let CancelCurrentMessageId = null;
+let CancelCurrentMessageId = () => {};
 gameNamespace.on("ErrorPlaying", (msg) => CancelCurrentMessageId = showMessage(msg,2000));
-gameNamespace.on("GameOver", (msg) => CancelCurrentMessageId = showMessage(msg, 2000));
+gameNamespace.on("GameOver", (msg) => {
+  removeEventListeners();
+        showMessage("gameover", 2000);
+        if (msg.includes("0")) {
+          winner = 1;
+        } else if (msg.includes("1")) {
+          winner = 2;
+        };
+});
+
+
 gameNamespace.on(
   "updatedBoard",
   (id, board, playerPostion, wallsPositions, newGame,LoadedGameplayerNumber) => {
     if(LoadedGameplayerNumber!=null){
       playerNumber=LoadedGameplayerNumber;
-      console.log("Looooooooading");
+
       let OldRow = playerPostion[playerNumber][0];
       let OldCol = playerPostion[playerNumber][1];
       let Opponent = playerNumber == 1 ? 0 : 1;
@@ -134,9 +150,9 @@ function UpdatePiecePositionOnBoard(
   grid[newRow][newCol] = NumberOfPlayer === 0 ? "P2" : "P1";
 }
 function addMoveChoices(opponentRow, opponentCol, row, col) {
-  console.log("ADD MOVE CHOICE"+row+"-"+col);
+  //console.log("ADD MOVE CHOICE"+row+"-"+col);
   if (row + 2 <= 16 && (row + 2 !== opponentRow || col !== opponentCol)&&(!(grid[row+1][Math.abs((col+1)%17)].endsWith('h'))&&!(grid[row+1][Math.abs((col-1)%17)].endsWith('h')))) {
-    console.log("Adding playerChoice to cell-" + (row + 2) + "-" + col);
+    //console.log("Adding playerChoice to cell-" + (row + 2) + "-" + col);
     document
       .getElementById("cell-" + (row + 2) + "-" + col)
       .classList.add("playerChoice");
@@ -144,7 +160,7 @@ function addMoveChoices(opponentRow, opponentCol, row, col) {
   }
 
   if (row - 2 >= 0 && (row - 2 !== opponentRow || col !== opponentCol)&&(!(grid[row-1][Math.abs((col-1)%17)].endsWith('h'))&&!(grid[row-1][Math.abs((col+1)%17)].endsWith('h')))) {
-    console.log("Adding playerChoice to cell-" + (row - 2) + "-" + col);
+    //console.log("Adding playerChoice to cell-" + (row - 2) + "-" + col);
     document
       .getElementById("cell-" + (row - 2) + "-" + col)
       .classList.add("playerChoice");
@@ -152,7 +168,7 @@ function addMoveChoices(opponentRow, opponentCol, row, col) {
   }
 
   if (col + 2 <= 16 && (row !== opponentRow || col + 2 !== opponentCol)&&(!(grid[Math.abs((row+1)%17)][col+1].endsWith('v'))&&!(grid[Math.abs((row-1)%17)][col+1].endsWith('v')))) {
-    console.log("Adding playerChoice to cell-" + row + "-" + (col + 2));
+    //console.log("Adding playerChoice to cell-" + row + "-" + (col + 2));
     document
       .getElementById("cell-" + row + "-" + (col + 2))
       .classList.add("playerChoice");
@@ -160,7 +176,7 @@ function addMoveChoices(opponentRow, opponentCol, row, col) {
   }
 
   if (col - 2 >= 0 && (row !== opponentRow || col - 2 !== opponentCol)&&(!(grid[Math.abs((row-1)%17)][col-1].endsWith('v'))&&!(grid[Math.abs((row+1)%17)][col-1].endsWith('v')))) {
-    console.log("Adding playerChoice to cell-" + row + "-" + (col - 2));
+    //console.log("Adding playerChoice to cell-" + row + "-" + (col - 2));
     document
       .getElementById("cell-" + row + "-" + (col - 2))
       .classList.add("playerChoice");
@@ -324,6 +340,8 @@ function drawBoard() {
   let player2Image;
   let fogImage;
   let possibleImage;
+  let redWinImage;
+  let blueWinImage;
 
   // Appeler la fonction pour charger l'image au démarrage
   loadImages()
@@ -348,6 +366,23 @@ function drawBoard() {
     item.addEventListener("mouseenter", playChoiceHover);
   });
 }
+
+// Fonction pour retirer tous les event listeners ajoutés
+function removeEventListeners() {
+  const wallItems = document.querySelectorAll(".inWall");
+  wallItems.forEach((item) => {
+    item.removeEventListener("mouseenter", highlightWall);
+    item.removeEventListener("click", handleClickWall);
+  });
+
+  const playerChoicesE = document.querySelectorAll(".piece");
+  playerChoicesE.forEach((item) => {
+    item.removeEventListener("mouseenter", playChoiceHover);
+    item.removeEventListener("click", handleClick);
+  });
+}
+
+
 // ===================================FONCTIONS UTILES =======================================================================
 function loadImages() {
   return Promise.all([
@@ -356,6 +391,8 @@ function loadImages() {
     loadImage("http://localhost:8000/assets/P2.png"),
     loadImage("http://localhost:8000/assets/fog.png"),
     loadImage("http://localhost:8000/assets/possibleMove.png"),
+    loadImage("http://localhost:8000/assets/images/redWin.png"),
+    loadImage("http://localhost:8000/assets/images/blueWin.png"),
   ]);
 }
 
@@ -376,6 +413,10 @@ function loadImage(src) {
         fogImage = image;
       } else if (src === "http://localhost:8000/assets/possibleMove.png") {
         possibleImage = image;
+      } else if (src === "http://localhost:8000/assets/images/redWin.png") {
+        redWinImage = image;
+      } else if (src === "http://localhost:8000/assets/images/blueWin.png") {
+        blueWinImage = image;
       }
 
       resolve();
@@ -389,87 +430,95 @@ function loadImage(src) {
 
 // Fonction pour dessiner la grille avec l'image chargée
 function drawGrid(player1 = true, player2 = true) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if(winner == 1 ){
+    ctx.drawImage(redWinImage,0,0,canvas.width, canvas.height)
+  }
+  else if (winner == 2){
+    ctx.drawImage(blueWinImage,0,0,canvas.width, canvas.height)
+  }
+  else {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Vérifier si l'image est chargée
+    // Vérifier si l'image est chargée
 
-  if (gridImage && player1Image && player2Image) {
-    // Dessiner l'image
-    ctx.drawImage(gridImage, 0, 0, canvas.width, canvas.height);
+    if (gridImage && player1Image && player2Image) {
+      // Dessiner l'image
+      ctx.drawImage(gridImage, 0, 0, canvas.width, canvas.height);
 
-    // Dessiner la grille
-    ctx.fillStyle = "#444444";
+      // Dessiner la grille
+      ctx.fillStyle = "#444444";
 
-    for (let x = 0; x < 17; x += 2) {
-      for (let y = 0; y < 17; y += 2) {
-        if (grid[x][y] == "P1" && player1) {
-          ctx.drawImage(player1Image, y * 80, x * 80, 128, 128);
-        }
-        if (grid[x][y] == "P2" && player2) {
-          ctx.drawImage(player2Image, y * 80, x * 80, 128, 128);
-        }
-        if (grid[x][y] == "PChoice") {
-          ctx.drawImage(possibleImage, y * 80, x * 80, 128, 128);
-        }
-        if (fogGrid[x][y] == 0) {
-          ctx.drawImage(fogImage, y * 80 - 32, x * 80 - 32, 192, 192);
+      for (let x = 0; x < 17; x += 2) {
+        for (let y = 0; y < 17; y += 2) {
+          if (grid[x][y] == "P1" && player1) {
+            ctx.drawImage(player1Image, y * 80, x * 80, 128, 128);
+          }
+          if (grid[x][y] == "P2" && player2) {
+            ctx.drawImage(player2Image, y * 80, x * 80, 128, 128);
+          }
+          if (grid[x][y] == "PChoice") {
+            ctx.drawImage(possibleImage, y * 80, x * 80, 128, 128);
+          }
+          if (fogGrid[x][y] == 0) {
+            ctx.drawImage(fogImage, y * 80 - 32, x * 80 - 32, 192, 192);
+          }
         }
       }
-    }
-    //dessiner les murs
-    for (let x = 1; x < 17; x += 2) {
-      for (let y = 1; y < 17; y += 2) {
-        if (grid[x][y] == "P1v") {
-          ctx.fillStyle = "#fa861f";
-          drawRotatedRectangle(
-            ctx,
-            y * 80 + 64,
-            x * 80 + 64,
-            wallLong,
-            wallShort,
-            90
-          );
-        }
-        if (grid[x][y] == "P2v") {
-          ctx.fillStyle = "#07f9fa";
+      //dessiner les murs
+      for (let x = 1; x < 17; x += 2) {
+        for (let y = 1; y < 17; y += 2) {
+          if (grid[x][y] == "P1v") {
+            ctx.fillStyle = "#fa861f";
+            drawRotatedRectangle(
+                ctx,
+                y * 80 + 64,
+                x * 80 + 64,
+                wallLong,
+                wallShort,
+                90
+            );
+          }
+          if (grid[x][y] == "P2v") {
+            ctx.fillStyle = "#07f9fa";
 
-          drawRotatedRectangle(
-            ctx,
-            y * 80 + 64,
-            x * 80 + 64,
-            wallLong,
-            wallShort,
-            90
-          );
-        }
-        if (grid[x][y] == "P1h") {
-          ctx.fillStyle = "#fa861f";
+            drawRotatedRectangle(
+                ctx,
+                y * 80 + 64,
+                x * 80 + 64,
+                wallLong,
+                wallShort,
+                90
+            );
+          }
+          if (grid[x][y] == "P1h") {
+            ctx.fillStyle = "#fa861f";
 
-          drawRotatedRectangle(
-            ctx,
-            y * 80 + 64,
-            x * 80 + 64,
-            wallLong,
-            wallShort,
-            0
-          );
-        }
-        if (grid[x][y] == "P2h") {
-          ctx.fillStyle = "#07f9fa";
+            drawRotatedRectangle(
+                ctx,
+                y * 80 + 64,
+                x * 80 + 64,
+                wallLong,
+                wallShort,
+                0
+            );
+          }
+          if (grid[x][y] == "P2h") {
+            ctx.fillStyle = "#07f9fa";
 
-          drawRotatedRectangle(
-            ctx,
-            y * 80 + 64,
-            x * 80 + 64,
-            wallLong,
-            wallShort,
-            0
-          );
+            drawRotatedRectangle(
+                ctx,
+                y * 80 + 64,
+                x * 80 + 64,
+                wallLong,
+                wallShort,
+                0
+            );
+          }
         }
       }
+    } else {
+      console.error("L'image n'est pas encore chargée.1");
     }
-  } else {
-    console.error("L'image n'est pas encore chargée.1");
   }
 }
 function highlightWall(event) {
@@ -634,7 +683,9 @@ function animateRectangle(
   width,
   height
 ) {
-  CancelCurrentMessageId();
+  if(CancelCurrentMessageId!= null) {
+    CancelCurrentMessageId();
+  }
   var startTime = null;
 
   function animate(currentTime) {
@@ -736,13 +787,14 @@ function showMessage(message, duration) {
   return cancelAnimation;
 }
 function handleClick(row, col) {
-  //console.log("Clicked on cell:", row, col);
 
-  //we should check if the move is possible or not
   gameNamespace.emit("newMove", TestGame.id, playerNumber, row, col);
   console.log(grid)
+  setTimeout(() => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGrid(); // Redessiner votre grille après avoir effacé le message
+  }, 10);
 
-  // Add your logic for handling the click event
 }
 
 function updateGame(playerNumber, row, col) {
@@ -831,4 +883,9 @@ function handleClickWall(event) {
       playerNumber
     );
   }
+  setTimeout(() => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGrid(); // Redessiner votre grille après avoir effacé le message
+  }, 10);
+
 }
