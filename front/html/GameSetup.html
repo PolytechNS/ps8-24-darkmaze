@@ -8,6 +8,11 @@
 <link href="https://fonts.googleapis.com/css?family=Denk+One" rel="stylesheet">
 <link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style_theme_1.css">
+<style>
+  #myform {
+    display: none; /* Formulaire caché par défaut */
+  }
+</style>
 </head>
 <body>
 <!-- Ici on insère le menu défini dans le fichier 'menu.html'
@@ -23,12 +28,13 @@
 <div class="box">
     <h2>Create New game</h2>
     <h3>start a game</h3>   
-    
- 
-    <label>Do you want to play against AI?</label>
-    <input type="checkbox" id="playai" name="playai" value="playai"/>  
+    <br>
+    <button class="cybr-btn">
+      Play against AI<span aria-hidden> </span>
+    <span aria-hidden class="cybr-btn__glitch">Play against AI</span>
+    </button>
     <br><br>
- 
+ <!--
       <form>
         <fieldset>
           <legend><label>Please select your choice:</label></legend>
@@ -45,25 +51,57 @@
             <button class="cybr-btn">
               launch<span aria-hidden> </span>
             <span aria-hidden class="cybr-btn__glitch">launch</span>
-            </button>          </div>
+            </button>
+            </div>
         </fieldset>
       </form>
-      <br>
+-->
+  <button class="cybr-btn" id="quickgame">
+  Quick Game ...<span aria-hidden> </span>
+  <span aria-hidden class="cybr-btn__glitch">Quick Game ...</span>
+  </button>
 
-        <button class="cybr-btn">
+<form id="myform">
+      <fieldset>
+        <button class="cybr-btn" id="loadgame">
+        load game<span aria-hidden> </span>
+        <span aria-hidden class="cybr-btn__glitch">load game</span>
+        </button>
+
+        <button class="cybr-btn" id="newgame">
+         new game<span aria-hidden> </span>
+        <span aria-hidden class="cybr-btn__glitch">new game</span>
+       </button>
+      </fieldset>
+</form>
+
+<br><br>
+      <button class="cybr-btn" id="onlinegame">
         launch online game<span aria-hidden> </span>
       <span aria-hidden class="cybr-btn__glitch">launch online game</span>
       </button>
-      <button class="cybr-btn">
+      <br><br>
+      <button class="cybr-btn" id="challengefriend">
         challenge a friend<span aria-hidden> </span>
       <span aria-hidden class="cybr-btn__glitch">challenge a friend</span>
       </button>
  
 </div>
- 
+<script>
+  // Récupération du bouton 'QUICK GAME' et du formulaire
+  var quickgame = document.getElementById('quickgame');
+  var myform = document.getElementById('myform');
 
-
-
+  // Ajout d'un écouteur d'événement sur le clic du bouton
+  quickgame.addEventListener('click', function() {
+    // Si le formulaire est caché, le rendre visible ; sinon, le cacher
+    if (myform.style.display === 'none') {
+      myform.style.display = 'block';
+    } else {
+      myform.style.display = 'none';
+    }
+  });
+</script>
   <script src="../js/jquery.min.js"></script>
   <script src="../js/popper.js"></script>
   <script src="../js/bootstrap.min.js"></script>

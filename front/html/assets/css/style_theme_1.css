@@ -356,7 +356,7 @@
     top: 0;
     left: 0;
     padding: 0.05rem 0;
-    font-size: 1rem;
+    letter-spacing: 3px;
     color: #fff;
     pointer-events: none;
     transition: 0.5s;
@@ -397,7 +397,20 @@
     pointer-events: none;
     transition: 0.5s;
   }
-/***********************************************/
+  .box h4 {
+    position: relative;
+    top: 0;
+    left: 0;
+    padding: 0.05rem 0;
+    letter-spacing: 3px;
+    font-size: 0.9rem;
+    line-height: 150%;
+    font-weight: lighter;
+    color: rgb(154, 154, 154);
+    pointer-events: none;
+    transition: 0.5s;
+  }
+  /***********************************************/
 
 .nav, .menu {
   display: flex;
@@ -631,5 +644,67 @@ textarea:focus {
   border: 2px solid rgba(255, 255, 255, 0.24);
 }
 
+        /********** Style List friends ***********/
 
+        /* User-friendly Scrollbar */
+        .better_scrollbar::-webkit-scrollbar {
+          width: 18px;
+      }
+      .better_scrollbar::-webkit-scrollbar-track {
+          -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+          border-radius: 10px;
+          background-color: lightgrey;
+      }
+      .better_scrollbar::-webkit-scrollbar-thumb {
+          border-radius: 10px;
+          -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+      }
+      .better_scrollbar {
+          overflow-x: hidden!important;
+      }
+      /* end User-friendly Scrollbar */
+      /* list */
+      #listcontainer {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          border: 1px solid white;
+          display: flex;
+          flex-direction: column;
+          
+        /*  justify-content: flex-start;*/
+          align-items: center;
+          overflow: scroll;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          padding: 2.5rem;
+          box-sizing: border-box;
+          background: rgba(0, 0, 0, 0.6);
+          border-radius: 0.625rem;
+      }
+      .item_friend {
+          flex:0 0 0 0 ;
+          width: 100%;
+          height: 24px;
+          color:white;
+          border-bottom: 1px solid white; /*darkblue;*/
+          background-color:rgba(0,0,0,0.2);/* lightgrey;*/
+          cursor: pointer;
+
+          flex-direction: row;
+          justify-content:flex-start;
+          align-items: left;
+          padding: 6px;
+
+      }
+      .item_friend:last-child {
+          border-bottom: none;
+      }
+      .item_friend:hover {
+          background-color: papayawhip;
+          color:#8B0606;
+      }
+      /********** End Style List friends ***********/
 

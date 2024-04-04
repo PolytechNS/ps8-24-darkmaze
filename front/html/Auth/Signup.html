@@ -16,29 +16,27 @@
   s'ouvrent dans la fenêtre principale
 -->
 <div class="upper"> 
-  <object data="menu.html" width="500px"></object>
+  <object data="../menu.html" width="500px"></object>
 </div>
 <!------------ Fin insertion menu ------------------>
 <div class="box">
     <h2>Sign Up</h2>
     <h3>Create an Account</h3>    
-<form>
+<form id="signupForm"  action="/api/signup"  method="post">
   <div class="inputBox">
-    <input type="text" name="text" required onkeyup="this.setAttribute('value', this.value);" value="">
-    <label>Pseudonym</label>
+    <input type="text" id="username" name="username" required="" autocomplete="username">
+    <label>Username</label>
   </div>      
      <div class="inputBox">
-        <input type="email" name="email" required onkeyup="this.setAttribute('value', this.value);" value="">
-        <label>Username (email)</label>
+        <input type="email" id="email" name="email" required="" autocomplete="email">
+        <label>Email</label>
       </div>
       <div class="inputBox">
-        <input type="password" name="password" required value=""
-               onkeyup="this.setAttribute('value', this.value);"
-               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-               title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
+        <input type="password" id="password" name="password" required="" autocomplete="new-password">
+
         <label>Password</label>
       </div>
-      <button class="cybr-btn">
+      <button type="submit" class="cybr-btn" name="sign-up" value="Sign Up">
         Sign Up<span aria-hidden> </span>
       <span aria-hidden class="cybr-btn__glitch">Sign In</span>
       </button>
@@ -56,9 +54,10 @@
 
 
 
-  <script src="../js/jquery.min.js"></script>
-  <script src="../js/popper.js"></script>
-  <script src="../js/bootstrap.min.js"></script>
-  <script src="../js/main.js"></script>
+
+  <script src="/assets/js/jquery.min.js"></script>
+  <script src="/assets/js/popper.js"></script>
+  <script src="/assets/js/bootstrap.min.js"></script>
+  <script src="/assets/js/main.js"></script>
 </body>
 </html>
