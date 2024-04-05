@@ -74,8 +74,11 @@ function manageRequest(request, response) {
           "./front/assets/js/main.js",
           "./front/assets/css/style.css",
           "./front/assets/css/style.css",
+          "./front/html/css/style_theme_1.css",
           "./front/assets/js/bootstrap.min.js",
           "./front/assets/images/ph1.png",
+          "./front/assets/images/icon.png",
+          "./front/html/menu.html"
 
 
 
