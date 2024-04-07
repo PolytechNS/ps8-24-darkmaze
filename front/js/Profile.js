@@ -189,13 +189,13 @@ function addFriend(username) {
         .then(data => {
             // Display a message containing the result
             //alert(data.message);
-            afficherNotification('Ami ajouté avec succès');
+            afficherNotification('Friend request sent successfully');
         })
         .catch(error => {
             console.error('Error adding friend:', error);
             // Display an error message
             //alert('Failed to add friend');
-            afficherNotification('Échec de l\'ajout de l\'ami');
+            afficherNotification('Error adding friend');
         });
 
 
@@ -218,6 +218,7 @@ function acceptFriendRequest(requestId) {
         // Handle the response accordingly
         if (response.ok) {
             console.log('Friend request accepted successfully.');
+            afficherNotification('Friend request accepted successfully');
             // Optionally, you can update the UI to reflect the acceptance of the request
         } else {
             console.error('Failed to accept friend request:', response.statusText);
