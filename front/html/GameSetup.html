@@ -3,16 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DarkMaze Game -  Game Setup</title>
+<title>DarkMaze Game - Game Setup</title>
 <link rel="icon" href="assets/images/icon.png">
 <link href="https://fonts.googleapis.com/css?family=Denk+One" rel="stylesheet">
 <link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style_theme_1.css">
+<script src="http://localhost:8000/js/Game/GameSetupSerCom.js"></script>
+
 <style>
-  #myform {
-    display: none; /* Formulaire caché par défaut */
-  }
+    :root {
+  --background-gradient: linear-gradient(178deg, #ffff33 10%, #3333ff);
+  --gray: #34495e;
+  --darkgray: #2c3e50;
+}
+
+select {
+  /* Reset Select */
+  appearance: none;
+  outline: 10px red;
+  border: 0;
+  box-shadow: none;
+  /* Personalize */
+  flex: 1;
+  padding: 0 1em;
+  color: #fff;
+  background-color: var(--darkgray);
+  background-image: none;
+  cursor: pointer;
+}
+/* Remove IE arrow */
+select::-ms-expand {
+  display: none;
+}
+/* Custom Select wrapper */
+.select {
+  position: relative;
+  left: 25%;
+  display: flex;
+  width: 15em;
+  height: 2em;
+  border-radius: .25em;
+  overflow: hidden;
+}
+/* Arrow */
+.select::after {
+  content: '\25BC';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5em;
+  background-color: #34495e;
+  transition: .25s all ease;
+  pointer-events: none;
+}
+/* Transition */
+.select:hover::after {
+  color: #f39c12;
+}
+
+/* Other styles*/
+
+a {
+  font-weight: bold;
+  color: var(--gray);
+  text-decoration: drop-shadow;
+  padding: .25em;
+  border-radius: .50em;
+  background: pink;
+}
+
+.down_note {
+    display: flex;
+    justify-content: center;
+    color:white;
+
+}
+
+        table,
+        th,
+        td {
+          padding: 2px;
+          border: 1px solid white;
+          border-collapse: collapse;
+        }
 </style>
+
 </head>
 <body>
 <!-- Ici on insère le menu défini dans le fichier 'menu.html'
@@ -25,86 +100,122 @@
 </div>
 <!------------ Fin insertion menu ------------------>
 
+
+<body>
 <div class="box">
-    <h2>Create New game</h2>
-    <h3>start a game</h3>   
-    <br>
-    <button class="cybr-btn">
-      Play against AI<span aria-hidden> </span>
-    <span aria-hidden class="cybr-btn__glitch">Play against AI</span>
-    </button>
-    <br><br>
- <!--
-      <form>
-        <fieldset>
-          <legend><label>Please select your choice:</label></legend>
-          <div>
-            <br>
-            <input type="radio" id="loadgame" name="game" value="loadgame" checked/>
-            <label for="loadgame">Load Game</label>
-      
-            <input type="radio" id="newgame" name="game" value="newgame" />
-            <label for="newgame">New Game</label>
-          </div>
-          <div>
-            <br>
-            <button class="cybr-btn">
-              launch<span aria-hidden> </span>
-            <span aria-hidden class="cybr-btn__glitch">launch</span>
-            </button>
+<!--
+        <button class="btn-close">Profile</button>
+        <button class="btn-close">Chanllenge Friend</button>
+        <button class="btn-close">Online Game</button>
+        <button class="btn-close">Save Game</button>
+        <br><br>
+-->
+    <h2>Create new game</h2>
+    
+    <fieldset>
+    <div class="inputBox">
+        <form id="setupForm"  action="/api/game" method="post">
+            <div class="form-group">
+                <div class = "down_note">
+                    <p>Do you want to play against AI?</p>
+                </div>
+                <div class="select">
+                    <select id="playAgainstAI" name="playAgainstAI">
+                        <option value="true">Yes</option>
+                        <option value="false" selected>No</option>
+                    </select>
+                </div>
+             </div>
+ 
+             <div id="aiOptions" style="display: none;">
+                <div class = "down_note">
+                    <p>Should AI play first?</p>
+                </div>               
+                <div class="select">
+                <select id="aiFirst" name="aiFirst">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <button type="button" class="cybr-btn" onclick="launchGame()">
+                    Launch Game<span aria-hidden> </span>
+                  <span aria-hidden class="cybr-btn__glitch"> Launch Game</span>
+                  </button>
+            </div>
+        </form>
+    </div>
+    </fieldset>
+    <fieldset>
+    <p class="note">Experience the thrill of multiplayer gaming with 
+        our online platform. Challenge friends or match up with random 
+        opponents from around the world. Get ready to test your skills 
+        and strategy in intense battles!</p>
+        <button class="cybr-btn" onclick="PickFriend()">
+            Let's Start<span aria-hidden> </span>
+          <span aria-hidden class="cybr-btn__glitch"> Let's Start</span>
+          </button>    
+          <button class="cybr-btn" onclick="startOnlineGame()">
+            Online Game<span aria-hidden> </span>
+          <span aria-hidden class="cybr-btn__glitch"> Online Game</span>
+          </button>
+          <button class="cybr-btn" onclick="newLocalGame()">
+            New local Game<span aria-hidden> </span>
+          <span aria-hidden class="cybr-btn__glitch"> New local Game</span>
+          </button>      
+
+          
+    </fieldset>
+    <fieldset>
+    <!-- QuickGame -->
+ 
+    <div id="booking1" class="banner-area">
+
+              <div class="row align-items-center">
+                <p class="note">
+                <label> Saved Games: </label>
+                Explore your saved games and pick up where you left off.
+                </p>
+                
+                <table id="savedGamesTable" style="width: 100%; border-collapse: collapse; margin-top: 2px;"">
+                    <thead>
+                        <tr style="background-color: #f8f9fa;">
+                            <th style="padding: 5px; border: 1px solid #dee2e6;">Game ID</th>
+                            <th style="padding: 5px; border: 1px solid #dee2e6;">Created At</th>
+                            <th style="padding: 5px; border: 1px solid #dee2e6;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="savedGamesBody" style="color:whitesmoke; font-size: 12px;">
+                        <!-- Saved games will be displayed here -->
+                    </tbody>    
+                </table>
+                
             </div>
         </fieldset>
-      </form>
--->
-  <button class="cybr-btn" id="quickgame">
-  Quick Game ...<span aria-hidden> </span>
-  <span aria-hidden class="cybr-btn__glitch">Quick Game ...</span>
-  </button>
+    </div>
 
-<form id="myform">
-      <fieldset>
-        <button class="cybr-btn" id="loadgame">
-        load game<span aria-hidden> </span>
-        <span aria-hidden class="cybr-btn__glitch">load game</span>
-        </button>
 
-        <button class="cybr-btn" id="newgame">
-         new game<span aria-hidden> </span>
-        <span aria-hidden class="cybr-btn__glitch">new game</span>
-       </button>
-      </fieldset>
-</form>
 
-<br><br>
-      <button class="cybr-btn" id="onlinegame">
-        launch online game<span aria-hidden> </span>
-      <span aria-hidden class="cybr-btn__glitch">launch online game</span>
-      </button>
-      <br><br>
-      <button class="cybr-btn" id="challengefriend">
-        challenge a friend<span aria-hidden> </span>
-      <span aria-hidden class="cybr-btn__glitch">challenge a friend</span>
-      </button>
- 
 </div>
-<script>
-  // Récupération du bouton 'QUICK GAME' et du formulaire
-  var quickgame = document.getElementById('quickgame');
-  var myform = document.getElementById('myform');
+ 
+  <script>
+    document.getElementById('playAgainstAI').addEventListener('change', function() {
+        var aiOptions = document.getElementById('aiOptions');
+        var aiFirst = document.getElementById('aiFirst');
 
-  // Ajout d'un écouteur d'événement sur le clic du bouton
-  quickgame.addEventListener('click', function() {
-    // Si le formulaire est caché, le rendre visible ; sinon, le cacher
-    if (myform.style.display === 'none') {
-      myform.style.display = 'block';
-    } else {
-      myform.style.display = 'none';
-    }
-  });
+        if (this.value === 'true') {
+            aiOptions.style.display = 'block';
+            aiFirst.setAttribute('required', true); // Ajouter la validation si nécessaire
+        } else {
+            aiOptions.style.display = 'none';
+            aiFirst.removeAttribute('required'); // Retirer la validation si nécessaire
+        }
+    });
 </script>
-  <script src="../js/jquery.min.js"></script>
-  <script src="../js/popper.js"></script>
-  <script src="../js/bootstrap.min.js"></script>
-  <script src="../js/main.js"></script>
+  <script src="../assets/js/jquery.min.js"></script>
+  <script src="../assets/js/popper.js"></script>
+  <script src="../assets/js/bootstrap.min.js"></script>
+  <script src="../assets/js/main.js"></script>
 </body>
 </html>

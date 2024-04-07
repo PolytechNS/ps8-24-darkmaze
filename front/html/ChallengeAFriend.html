@@ -19,10 +19,20 @@
 </div>
 <!------------ Fin insertion menu ------------------>
 
+
+
+
+
 <div class="box" id="listcontainer">
   <h2>Chanllenge a friend</h2>  
   <h3>Friends List</h3>    
-<div class="better_scrollbar">
+
+
+<div class="better_scrollbar" id="friendsList">
+    <div id="friendsList"></div>
+    <script src="../js/socket.io.js"></script>
+</div>
+<!--
     <div class="item_friend" value="Dave Jones">Dave Jones</div>
     <div class="item_friend" value="John Smith">John Smith</div>
     <div class="item_friend" value="Harold Kramer">Harold Kramer</div>
@@ -43,7 +53,8 @@
     <div class="item_friend" value="Monica McEnroe">Monica McEnroe</div>
     <div class="item_friend" value="Mary Matthews">Mary Matthews</div>
     <div class="item_friend" value="Larry Last">Larry Last</div>
-</div>
+
+
 <br><br>
 <button class="cybr-btn">
     Play with<span aria-hidden> </span>
@@ -53,7 +64,7 @@
     <input type="text" id="selectedValue" name="selectedValue" readonly>
   </div>      
 </div>
-
+-->
 <script>
 /* Ci-dessous un script qui ajoute un gestionnaire d'événement clic à chaque 
    élément de classe "item_friend". Lorsqu'un élément est cliqué, 
@@ -87,6 +98,7 @@ zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz*/
             cookies: document.cookie
             }
         });
+        /*-------- 
         function fetchFriendsWithMessages() {
             // Assuming you have an API endpoint to fetch friends with messages
             console.log("get frieeeeeends")
@@ -109,6 +121,33 @@ zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz*/
                 // Set HTML content in the friends list container
                 friendsListContainer.innerHTML = htmlContent;
             })
+            .catch(error => {
+                console.error('Error fetching friends with messages:', error);
+                alert('Error fetching friends with messages. Please try again later.');
+            });
+        }  --------*/
+
+        function fetchFriendsWithMessages() {
+            // Assuming you have an API endpoint to fetch friends with messages
+            console.log("get friends")
+            fetch('/api/user/friends')
+            .then(response => response.json())
+            .then(friends => {
+                // Get reference to the friends list container
+                const friendsListContainer = document.getElementById('friendsList');
+
+                // Create HTML content for the list of friends
+                let htmlContent = "";
+
+                // Loop through friends and create list items with "Challenge Friend" button
+                friends.forEach(friend => {
+                    htmlContent += `<div class="item_friend" value="${friend.username}">${friend.username} 
+                        <button class="btn-challenge" onclick="challengeFriend('${friend.username}')">Challenge</button></div>`;
+                 });
+
+                 // Set HTML content in the friends list container
+                friendsListContainer.innerHTML = `<div class="better_scrollbar">${htmlContent}</div>`;
+                })
             .catch(error => {
                 console.error('Error fetching friends with messages:', error);
                 alert('Error fetching friends with messages. Please try again later.');
