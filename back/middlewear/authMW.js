@@ -22,6 +22,10 @@ function authMiddleware(req, res, next) {
         return res.end();
     }
 
+
+
+    
+
     try {
 
         // Verify the token using the secret key from .env file
@@ -38,5 +42,7 @@ function authMiddleware(req, res, next) {
         return res.end();
     }
 }
+
+
 
 module.exports = authMiddleware;
