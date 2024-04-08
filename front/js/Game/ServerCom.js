@@ -10,5 +10,9 @@ function saveGame() {
             'Content-Type': 'application/json'
         },
         body:JSON.stringify({gameId:TestGame.id,playerNumber:playerNumber})
+    }).then(()=>{
+        window.location.href = "http://localhost:8000/html/GameSetup.html"
+
     })
+
 }
