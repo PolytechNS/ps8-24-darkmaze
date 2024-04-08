@@ -24,6 +24,7 @@
     <h2>Quick Game</h2>
     <h3>Join a Quick Game</h3>    
 <form>
+ 
       <div class="inputBox">
         <input type="text" name="player1" required="" value="">
         <label>Pick a name for the Player 1</label>
@@ -31,14 +32,19 @@
       <div class="inputBox">
         <input type="text" name="player2" required="" value="">
         <label>Pick a name for the Player 2</label>
-      </div>
+      </div><!---
       <button class="cybr-btn">
         Join<span aria-hidden> </span>
       <span aria-hidden class="cybr-btn__glitch">Sign In</span>
       </button>
-    <!--
-      <input type="submit" name="sign-in" value="Sign In">
+    
+      <input type="submit" name="sign-in" value="Sign In">s
   -->
+  <script src="../js/Game/GameSetupSerCom.js"></script>
+  <button type="button" class="cybr-btn" onclick="launchGame2()">
+    Launch Game<span aria-hidden> </span>
+  <span aria-hidden class="cybr-btn__glitch"> Launch Game</span>
+  </button>
 </form>
   
 

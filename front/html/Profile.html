@@ -49,6 +49,7 @@
     overflow-y: auto;
     transition: left 0.3s ease;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    display: flex;
   }
   
   .modal.open {
@@ -67,6 +68,37 @@
   
   .modal-content {
     padding: 20px;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    width:100%
+  }
+
+  .modal-content>ul>li>a{
+    background-color: white;
+    border-radius: 2em;
+    
+    color:green;
+    width:100%;
+    display:block;
+    font-size: 16px;
+  }
+  .modal-content>ul>li{
+    background-color: white;
+    border-radius: 2em;
+    margin : 0.25em;
+    padding:0.5em;
+    color:green;
+    width:100%;
+    font-size: 16px;
+  }
+
+  .modal-content>ul{
+    width:90%;
+    padding-left: 0;
+    list-style-type: none;
+    font-size: 16px;
   }
   
   .modal-close {
@@ -80,6 +112,32 @@
     left: 65%;
     width: 30%;
     font-size: medium;
+    
+  }
+
+  #messages-container{
+    overflow-y:scroll;
+    overflow-x: hidden;
+    max-width:260px;
+    max-height:80%;
+  }
+  #message-input{
+    border-radius: 5em;
+    border : none;
+    padding: 0.5em;
+  }
+  #message-input:focus{
+    border:none
+  }
+*
+  #message-form{
+    background-color: white;
+    border-radius: 5em;
+
+  }
+  #message-form>button{
+    border-radius: 5em;
+    margin-right: 0.5em;
   }
   
   </style>
@@ -118,7 +176,7 @@
               <span aria-hidden class="cybr-btn__glitch">Friend Requests</span>
               </button>
               <br>
-              <button class="cybr-btn" onclick="ListLeagues()">
+              <button class="cybr-btn" onclick="window.location.href='leagues.html'">
                 join league<span aria-hidden> </span>
               <span aria-hidden class="cybr-btn__glitch">join league</span>
               </button>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Menu</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #eaeaea;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* Align buttons horizontally */
+  }
+
+  .menu-button {
+    background-color: #fff;
+    color: #000;
+    border: 2px solid #000;
+    padding: 20px 40px;
+    margin: 10px 0; /* Spacing between buttons vertically */
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 250px; /* Set a specific width for your buttons */
+  }
+
+  .menu-button:hover {
+    background-color: #000;
+    color: #fff;
+    border-color: #fff;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    padding: 10px 0;
+    background: #fff;
+    display: flex;
+    justify-content: space-around; /* Space items equally */
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .icon {
+    font-size: 24px;
+  }
+</style>
+</head>
+<body>
+
+
+<div class="menu">
+  <button class="menu-button">New Game</button>
+  <button class="menu-button">Load Game</button>
+</div>
+
+</body>
+</html>
