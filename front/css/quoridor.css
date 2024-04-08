@@ -77,9 +77,15 @@ canvas {
 .hidedCell{
     background-color: #000000;
 }
-
 body{
-    background: url('http://localhost:8000/assets/fond.png') no-repeat center center fixed;
+    background: url('../assets/fond.png') no-repeat center center fixed;
+    /* 'no-repeat' évite de répéter l'image, 'center center' la centre, et 'fixed' la fixe en place */
+    background-size: cover; /* Ajuste la taille de l'image pour couvrir la section entière */
+    position: relative;
+    background-color: #ec1616;
+}
+.theme1{
+    background: url('../../html/assets/images/ph1.png') no-repeat center center fixed;
     /* 'no-repeat' évite de répéter l'image, 'center center' la centre, et 'fixed' la fixe en place */
     background-size: cover; /* Ajuste la taille de l'image pour couvrir la section entière */
     position: relative;
@@ -106,4 +112,10 @@ body{
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 8px;
+    transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.save-button:hover {
+    transform:scale(1.1);
+    background-color: #77ba79;
 }

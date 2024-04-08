@@ -118,13 +118,13 @@ function addFriend(username) {
         .then(data => {
             // Display a message containing the result
             //alert(data.message);
-            afficherNotification('Ami ajouté avec succès');
+            afficherNotification('Friend request sent successfully');
         })
         .catch(error => {
             console.error('Error adding friend:', error);
             // Display an error message
             //alert('Failed to add friend');
-            afficherNotification('Échec de l\'ajout de l\'ami');
+            afficherNotification('Error adding friend');
         });
 
 
