@@ -1,10 +1,75 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DarkMaze Game - Online Game</title>
+<link rel="icon" href="assets/images/icon.png">
+<link href="https://fonts.googleapis.com/css?family=Denk+One" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style_theme_1.css">
+</head>
+
+<body>
+ Ici on insère le menu défini dans le fichier 'menu.html'
+  N.B: dans le fichier 'menu.html' il faut définir dans la balise 
+  <a href= .... target="_parent"> et ce pour que les liens 
+  s'ouvrent dans la fenêtre principale
+
+<div class="upper"> 
+  <object data="menu.html" width="500px"></object>
+</div>
+---------- Fin insertion menu ----------------
+
+<div class="box">
+    <h2>Online Game</h2>
+    <div class="loader"></div>
+    <h3>Loading...</h3>
+    <p><label>Waiting for other player to join... </label></p>
+    <p id="timer"></p>
+ 
+  
+</div>
+
+
+
+    <script src="../js/socket.io.js"></script>
+    <script src="../js/OnlineGameJS.js"></script>
+    <script src="../js/GameState.js"></script>
+    <script src="../js/Onlinequoridor.js"></script>
+
+    
+ 
+
+
+ 
+
+
+
+  <script src="../js/jquery.min.js"></script>
+  <script src="../js/popper.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/main.js"></script>
+
+
+ 
+</body>
+</html>
+-->
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="http://localhost:8000/css/quoridor.css">
     <link rel="stylesheet" href="../css/OnlineGameStyles.css">
+    <link rel="stylesheet" href="../css/notifications.css"> <!-- Ajout du CSS des notifications -->
     <title>Online Quoridor Game</title>
 </head>
 <body>
@@ -17,17 +82,21 @@
             <p>Waiting for other player's turn...</p>
             <p id="timer">1:30</p>
         </div>
-    </div> <!-- Add the invisible overlay -->
+    </div>
     <canvas id="myCanvas" width="1408" height="1408"></canvas>
     <div id="quoridor-board"></div>
-    <script src="../js/socket.io.js"></script>
-    <script src="../js/Game/OnlineGameJS.js"></script>
-    <script src="../js/Game/GameState.js"></script>
-    <script src="../js/Game/Onlinequoridor.js"></script>
     <div class="messaging_box">
         <input type="text" id="messageInput" placeholder="Type your message...">
         <button class="send-button" onclick="sendMessage()">Send</button>
     </div>
-
+    <script src="../js/socket.io.js"></script>
+    <script src="../js/Game/OnlineGameJS.js"></script>
+    <script src="../js/Game/GameState.js"></script>
+    <script src="../js/Game/Onlinequoridor.js"></script>
+    <script src="../js/userNotif.js"></script> <!-- Ajout du script des notifications -->
 </body>
 </html>
+
+
+
+

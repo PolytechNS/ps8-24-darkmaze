@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DarkMaze Game - Sign In</title>
+<link rel="icon" href="assets/images/icon.png">
+<link href="https://fonts.googleapis.com/css?family=Denk+One" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style_theme_1.css">
+</head>
+<body>
+<!-- Ici on insère le menu défini dans le fichier 'menu.html'
+  N.B: dans le fichier 'menu.html' il faut définir dans la balise 
+  <a href= .... target="_parent"> et ce pour que les liens 
+  s'ouvrent dans la fenêtre principale
+-->
+<div class="upper"> 
+  <object data="menu.html" width="500px"></object>
+</div>
+<!------------ Fin insertion menu ------------------>
+
+<div class="box">
+    <h2>rules</h2>
+    <h3>of the Game</h3>    
+<textarea class="rules" readonly>
+The game can only be played with 2 players, 1 versus 1.
+Player A starts on any column of line 1 ; Player B starts on any column of line 9.
+During the game, the cell the player A is on, and the 4 adjacent cells have a +1 visibility;
+the cell the player B is on, and the 4 adjacent cells have a -1 visibility
+Walls are 2 cells long and can be placed between cells; each player starts with 10 Walls
+Each cell in contact with a Wall placed by player A gets +2 visibility; Each cell that is 1
+cell away from a Wall placed by player A gets +1 visibility.
+• Each cell in contact with a Wall placed by player B gets -2 visibility; Each cell that is 1
+cell away from a Wall placed by player B gets -1 visibility.
+• The visibility modifiers are cumulative.
+Player A can only see the cell it’s on, and the cells that have a visibility score of at
+least 0; Player B can only see the cell it’s on, and the cells that have a visibility score
+of at most 0.
+• A player can see the other player if it is 1 cell away or if it is on a visible cell.
+• Players don’t know the visibility value of a cell; they just know if they can see it.
+• Players can see all the walls.
+The goal for Player A is to reach line 9; Player B has to reach line 1.
+• Player A plays first.
+• If Player A reaches line 9 first, Player B has one move to try and reach line 1. If player B
+succeeds, the game ends in a draw ; otherwise, Player A wins.
+• If Player B reaches line 1 first, the game ends with Player B victory.
+• When it’s a player’s turn, the options are:
+• Placing a wall somewhere it doesn’t make it impossible for any player to reach the end,
+• Moving 1 cell in a cardinal direction. Notes:
+• Players can’t jump over walls
+• Players can jump over players
+• Players cannot skip their turn unless they have no actions available.
+• After 100 turns from both players (200 in total), the game ends in a draw.
+
+</textarea>
+</div>
+ 
+
+
+
+  <script src="../js/jquery.min.js"></script>
+  <script src="../js/popper.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>

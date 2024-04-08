@@ -1,95 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>DarkMaze</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DarkMaze Game - Login</title>
+<link rel="icon" href="assets/images/icon.png">
+<link href="https://fonts.googleapis.com/css?family=Denk+One" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style_theme_1.css">
+</head>
+<body>
+<!-- Ici on insère le menu défini dans le fichier 'menu.html'
+  N.B: dans le fichier 'menu.html' il faut définir dans la balise 
+  <a href= .... target="_parent"> et ce pour que les liens 
+  s'ouvrent dans la fenêtre principale
+-->
+<div class="upper"> 
+  <object data="../menu.html" width="500px"></object>
+</div>
+<!------------ Fin insertion menu ------------------>
 
-  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&amp;display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  
-  <link rel="stylesheet" href="/assets/css/style.css" rel="stylesheet">
-
-  </head>
-  <style>
-    /* Custom CSS for Navbar */
-    .navbar {
-        background-color: rgba(0, 0, 0, 0.5); /* Couleur de fond semi-transparente */
-    }
-    .navbar-brand, .navbar-nav .nav-link {
-        color: #ffffff; /* Couleur du texte */
-    }
-    .navbar-toggler {
-        border-color: #ffffff; /* Couleur de la bordure du bouton toggle */
-    }
-    .navbar-toggler-icon {
-        background-color: #ffffff; /* Couleur de l'icône du bouton toggle */
-    }
-    .navbar-nav .nav-link {
-        padding-right: 20px; /* Espacement entre les éléments de la barre de navigation */
-    }
-</style>
-  <body class="img js-fullheight" style="background-image: url('/assets/images/ph1.png'); height: 716px;">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-          <a class="navbar-brand" href="#">DarkMaze</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fa fa-bell"></i></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fa fa-envelope"></i></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fa fa-volume-up"></i></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fa fa-user"></i></a>
-              </li>
-             
-              <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fa fa-cog"></i></a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    <section class="ftco-section">
-      <div class="container">
-          <div class="row justify-content-center">
-              <div class="col-md-6 text-center mb-5">
-                  <h2 class="heading-section">WELCOME TO DarkMaze !</h2>
-              </div>
-          </div>
-          <div class="row justify-content-center">
-              <div class="col-md-6 col-lg-4">
-                  <div class="login-wrap p-0">
-                <h3 class="mb-4 text-center">Have an account?</h3>
-                <form action="/api/login" class="login-form"  method="post">
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="username" placeholder="Username" required>
-                    </div>
-              <div class="form-group">
-                <input type="password" name="password" class="form-control" placeholder="Password" required>
-                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
-              </div>
-              <div class="form-group">
-                  <button type="submit" class="form-control btn btn-primary submit px-3">Sign In</button>
-              </div>
-            
-            </form>
-            <p class="w-100 text-center">—<a href="/html/Auth/Signup.html" style="color: #fff">— Or Sign up !</a></p>
-         
-            </div>
-              </div>
-          </div>
+<div class="box">
+    <h2>Login</h2>
+    <h3>Have an account?</h3>    
+<form action="/api/login" class="login-form"  method="post">
+      <div class="inputBox">
+        <input type="text" name="username" required>
+        <label>Username</label>
       </div>
-  </section>
+      <div class="inputBox">
+        <input type="password" name="password" required value="">
+        <label>Password</label>
+      </div>
+      <button class="cybr-btn" type="submit">
+        Sign In<span aria-hidden> </span>
+      <span aria-hidden class="cybr-btn__glitch">Sign In</span>
+      </button>
+      <input type="checkbox" id="rem_in" name="rem_in" value="rem_in"/>  
+      <label>Remember me</label> <br>  
+       
+  <!--
+      <input type="submit" name="sign-in" value="Sign In">
+  -->
+</form>
+  <div>
+    <p><a href="Signup.html">Create an Account</a></p>
+  </div>
+
+    
+</div>
 
   <script src="/assets/js/jquery.min.js"></script>
   <script src="/assets/js/popper.js"></script>

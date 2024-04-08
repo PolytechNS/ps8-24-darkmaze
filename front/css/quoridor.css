@@ -88,12 +88,12 @@ body{
 .save_game{
     position:absolute;
     top:50px;
-    bottom: 50px;
     left: 50px;
-    background-color: black;
+    background-color: black; /* Ou changer à 'transparent' si vous ne voulez aucun fond */
     border-radius: 8px;
     padding: 5px;
 }
+
 .save-button {
     background-color: #4CAF50;
     border: none;

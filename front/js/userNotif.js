@@ -46,11 +46,11 @@ const socket2 = io("/api/message", {
 
 // Puis remplacez les appels console.log dans vos écouteurs d'événements socket.on par afficherNotification
 socket.on('friend_request', (msg) => {
-  afficherNotification('Vous avez reçu une demande d\'amitié'); // Remplacez cette ligne au lieu de console.log
+  afficherNotification('You have received a friend request'); // Remplacez cette ligne au lieu de console.log
 });
 
 socket2.on('new_message', (msg) => {
-  afficherNotification('Vous avez reçu un nouveau message'); // Utilisez cette ligne au lieu de console.log
+  afficherNotification('You have received a new message'); // Utilisez cette ligne au lieu de console.log
 });
 /*
 socket2.on('new_message', (msg) => {
