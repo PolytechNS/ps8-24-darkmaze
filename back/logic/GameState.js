@@ -264,7 +264,7 @@ class GameState {
 
   placeWalls(wallDirection, wallRow, wallCol, player) {
     // IF IT IS POSSIBLE TO PLACE A WALL, RETURN TRUE AND ADD THE WALL TO THE TABLE OF THE WALLS
-
+    console.log("-----------> inside the PLACEWALLS ...",wallDirection);
     if (wallDirection == "vertical" && wallCol % 2 == 1 && wallRow % 2 == 0) {
       // Vertical Wall
       let newWalls = [...this.wallsPositions];

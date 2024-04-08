@@ -119,7 +119,6 @@ function setIo(ioInstance) {
     socket.on("newWall", (id, direction, row, col, playerNumber) => {
       var gameStateToBeModified = GamesTable.find((game) => game.id === id);
       if (gameStateToBeModified) {
-        console.log("too risky ", direction, row, col, playerNumber);
         if (
           gameStateToBeModified.placeWalls(direction, row, col, playerNumber) ==
           true

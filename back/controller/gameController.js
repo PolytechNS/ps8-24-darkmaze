@@ -97,7 +97,6 @@ function setIo(io){
       console.log("joined api/OnlineGame");
       const gameState = new GameState();
       GamesTable.push(gameState);
-
       // Create an instance of GameState 
       // // Save the instance to the database
       console.log(decoded.username,"ONLINE GAMES inside SETUP event ",onlineGames); 
@@ -138,7 +137,6 @@ function setIo(io){
       if (gameStateToBeModified) {
       if((gameStateToBeModified.playTurn==1 && decoded.username == onlineGames[decoded.username]) ||
       (gameStateToBeModified.playTurn==2 && decoded.username != onlineGames[decoded.username])){
-
         const oldpostions = gameStateToBeModified.playersPosition[playerNumber];
           if (gameStateToBeModified.play(playerNumber, row, col) == true) {
             gameStateToBeModified.playTurn = gameStateToBeModified.playTurn==1?2:1;

@@ -13,7 +13,7 @@ async function updateUsersState(winnerUsername, loserUsername) {
 
         if (!winner || !loser) {
             throw new Error("Player not found");
-        }
+        } 
 
 
         // Return updated player data
