@@ -13,8 +13,9 @@ require("dotenv").config();
 var GamesTable = [];
 var RoomsQueue = [];
 var onlineGames = {};
-var onlineGamesTimers = {}
+var onlineGamesTimers = {};
 var userSockets = {};
+
 function setIo(io){
   NotifIo = io;
   io.of('/api/OnlineGame').on("connection", (socket) => {
@@ -26,23 +27,31 @@ function setIo(io){
     const token = cookiesList.jwt;
     
     const decoded = jwt.verify(token, process.env.jwt_secret);
-    userSockets[decoded.username] = socket.id;
+    userSockets[decoded.username] = socket.id; 
 
     
-    socket.on('joinGame',(is_friendGame,friendGame)=>{
+    socket.on('joinGame',async (is_friendGame,friendGame)=>{
       console.log("joining the game",friendGame,is_friendGame);
       if(!is_friendGame){
-        if(RoomsQueue.length == 0){
+        //if(RoomsQueue.length == 0){
+        let gameFoundFlag = 0 ;
+        if(!RoomsQueue.includes(decoded.username)){
+          for(let waitingPlayer of  RoomsQueue){
+            if(isValidRival(await getEloByUsername(waitingPlayer), await getEloByUsername(decoded.username))){
+              const roomToJoin = waitingPlayer; 
+              RoomsQueue = RoomsQueue.filter(item => item !== waitingPlayer);
+              socket.join(roomToJoin.toString());
+              onlineGames[decoded.username]=roomToJoin;
+              io.of('/api/OnlineGame').to(roomToJoin.toString()).emit("playerFound");
+              gameFoundFlag = 1;
+              break;
+            }
+          }
+        }
+        if(gameFoundFlag == 0){
           RoomsQueue.push(decoded.username);
           socket.join((decoded.username).toString());
           onlineGames[decoded.username]=decoded.username;
-    
-        }
-        else{
-          const roomToJoin = RoomsQueue.pop(); 
-          socket.join(roomToJoin.toString());
-          onlineGames[decoded.username]=roomToJoin;
-          io.of('/api/OnlineGame').to(roomToJoin.toString()).emit("playerFound");
         }
       }
       else if(is_friendGame && friendGame == null){
@@ -124,6 +133,7 @@ function setIo(io){
           
     socket.on("newMove", async (id, playerNumber, row, col) => {
       console.log("newMove --- ",playerNumber,row,col);
+      console.log("timers",Object.keys(onlineGamesTimers).length);
       var gameStateToBeModified = GamesTable.find((game) => game.id === id);
       if (gameStateToBeModified) {
       if((gameStateToBeModified.playTurn==1 && decoded.username == onlineGames[decoded.username]) ||
@@ -221,7 +231,7 @@ function setIo(io){
             true
           ){
             gameStateToBeModified.playTurn = gameStateToBeModified.playTurn==1?2:1;
-            clearInterval(onlineGamesTimers[onlineGames[decoded.username]])
+            clearInterval(onlineGamesTimers[onlineGames[decoded.username]]);
             io.of('/api/OnlineGame').to(onlineGames[decoded.username].toString()).emit(
               "UpdateWalls",
               id,
@@ -301,7 +311,7 @@ function startCountDown(io,decoded,id){
        
       );
       GamesTable = GamesTable.filter((game) => game.id !== id);
-  },180000)
+  },5000)
 }
 function updateElo(winnerElo, loserElo) {
   const K = 32; // Elo K-factor, you can adjust this value based on your requirements
@@ -395,7 +405,25 @@ async function updateUsersState(winnerUsername, loserUsername,io) {
       throw error;
   }
 }
+async function getEloByUsername(username) {
+  try {
+      const userInstance = await user.findOne({ username: username });
+      if (!userInstance) {
+          console.log('User not found');
+          return null;
+      }
 
+      return userInstance.eloRanking;
+  } catch (error) {
+      console.error('Error retrieving user ELO:', error);
+      throw error; // or handle the error as needed
+  }
+}
+
+function isValidRival(player1Elo, player2Elo) {
+  if (Math.abs(player1Elo - player2Elo) > 200) return false;
+  return true;
+}
 
 
 async function gameController(request, response, gamesTable) {

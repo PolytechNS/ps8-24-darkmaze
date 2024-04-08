@@ -21,7 +21,6 @@ for (let i = 0; i < rows; i++) {
 }
 
   
-
 //socket communications
 var urlParams = new URLSearchParams(window.location.search);
 var playAgainstFriend= urlParams.get("roomId");
@@ -39,7 +38,8 @@ else{
   gameNamespace.emit ("joinGame",false,null);
 
 }
-  
+
+
 gameNamespace.on("leagueUpgrade",(msg)=>{window.alert(msg)})
 gameNamespace.on("leagueDowngrade",(msg)=>{window.alert(msg)})
 
