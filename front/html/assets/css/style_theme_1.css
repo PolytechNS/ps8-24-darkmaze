@@ -829,3 +829,28 @@ textarea:focus {
   width: 30%;
   font-size: medium;
 }
+
+.toggle-container {
+  display: flex;
+}
+
+.toggle-btn {
+  padding: 5px 10px;
+  border: none;
+  background-color: #ccc;
+  cursor: pointer;
+}
+
+.toggle-btn.active {
+  background-color: #4CAF50;
+  color: white;
+}
+#buttonnns>fieldset{
+  margin:auto;
+}
+
+#buttonnns{
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+}
