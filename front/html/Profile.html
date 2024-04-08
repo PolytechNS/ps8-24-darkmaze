@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,71 +11,78 @@
     <link rel="stylesheet" type="text/css" href="../css/notifications.css">
     <link rel="icon" href="assets/images/icon.png">
     <link href="https://fonts.googleapis.com/css?family=Denk+One" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet">
-
     <link rel="stylesheet" href="assets/css/style_theme_1.css">
+
     <style>
-        /* styles.css */
-    .modal-container {
-      position: absolute;
-      top: 50px;
-      left: 10%;
-      width: 100%;
-      height: 80%;
-      background-color: rgba(0, 0, 0, 0.5);
-      border-radius: 10px;
-      z-index: 9999;
-      display: none;
-    }
-    
-    .modal {
-      position: absolute;
-      top: 45px;
-      left: -300px; /* Off-canvas initially */
-      width: 300px;
-      height: 90%;
-      border: 5px;
-      border-color: white;
-      border-radius: 10px;
-      background: rgb(11,43,2);
-      background: linear-gradient(185deg, rgba(11,43,2,1) 0%, rgba(9,121,61,0.9585959383753502) 52%, rgba(129,255,211,1) 100%);
-      overflow-y: auto;
-      transition: left 0.3s ease;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    }
-    
-    .modal.open {
-      left: 0; /* Slide in from left */
-    }
-    
-    .modal-header {
-      background-color: #333;
-      color: black;
-      padding: 10px;
-    }
-    
-    .modal-header h2 {
-      margin: 0;
-    }
-    
-    .modal-content {
-      padding: 20px;
-    }
-    
-    .modal-close {
-      position: absolute;
-      background-color: rgb(154, 154, 154);
-      color: #810101;
-      pointer-events: pointer;
-      border: 1px;
-      border-radius: 4px;
-      padding: 5px;
-      left: 65%;
-      width: 30%;
-      font-size: medium;
-    }
-    
-    </style>
+      /* styles.css */
+  .modal-container {
+    position: absolute;
+    top: 50px;
+    left: 10%;
+    width: 100%;
+    height: 80%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    display: none;
+    font-family:'Roboto';
+    font-size: 12px;
+    z-index: 9999;   
+  }
+  .modal-container a {
+    color:whitesmoke;
+  }
+  .modal {
+    position: absolute;
+    top: 45px;
+    left: -300px; /* Off-canvas initially */
+    width: 300px;
+    height: 90%;
+    border: 4px;
+    border-color: white;
+    border-radius: 10px;
+
+    background: rgb(11,43,2);
+    background: linear-gradient(185deg, rgba(11,43,2,1) 0%, rgba(9,121,61,0.9585959383753502) 52%, rgba(129,255,211,1) 100%);
+
+    overflow-y: auto;
+    transition: left 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .modal.open {
+    left: 0; /* Slide in from left */
+  }
+  
+  .modal-header {
+    background-color: #333;
+    color: black;
+    padding: 10px;
+  }
+  
+  .modal-header h2 {
+    margin: 0;
+  }
+  
+  .modal-content {
+    padding: 20px;
+  }
+  
+  .modal-close {
+    position: absolute;
+    background-color: rgb(154, 154, 154);
+    color: #810101;
+    pointer-events: pointer;
+    border: 1px;
+    border-radius: 4px;
+    padding: 5px;
+    left: 65%;
+    width: 30%;
+    font-size: medium;
+  }
+  
+  </style>
 </head>
 <body>
 <!-- Ici on insère le menu défini dans le fichier 'menu.html'
@@ -95,7 +101,6 @@
         <div class="avatar">
             <img src="assets/images/avatar.png" width="100px" alt="Profile Picture">
         </div>
-
         <h3 id="usernameDisplay">Jhon Doe</h3>
          <br><br><br>
         <div class="user-info">
@@ -108,9 +113,9 @@
               <span aria-hidden class="cybr-btn__glitch">add friend</span>
               </button>
               <br>
-              <button class="cybr-btn" onclick="listFriendRequests()">
+              <button class="cybr-btn friend-requests-button" onclick="listFriendRequests()">
                 friend requests<span aria-hidden> </span>
-              <span aria-hidden class="cybr-btn__glitch">friend requests</span>
+              <span aria-hidden class="cybr-btn__glitch">Friend Requests</span>
               </button>
               <br>
               <button class="cybr-btn" onclick="ListLeagues()">
@@ -118,40 +123,15 @@
               <span aria-hidden class="cybr-btn__glitch">join league</span>
               </button>
               <br>
-              <button class="cybr-btn">
-                messages<span aria-hidden> </span>
-              <span aria-hidden class="cybr-btn__glitch">messages</span>
+              
+              <button class="cybr-btn messages-button">
+                Messages<span aria-hidden> </span>
+              <span aria-hidden class="cybr-btn__glitch">Messages</span>
               </button>      
             </div>
         </div>
   </div>
  
-
-<!--
-    <div class="profile-container">
-        <div class="profile-picture">
-            
-          
-           url('/assets/images/ph1.png') </div>
-           <div class="single-main-slider slider-animated-2 bg-img slider-height-2" data-overlay="dark">
-           <div class="container height-100-percent">
-            <div class="col-12 row g-0 p-lg-0">
-                <div class="main-slider-content-2 text-center">
-
-                    <h1 class="animated">Jhon Doe</h1>
-                    <input type="text" id="friendUsername" placeholder="Enter friend's username">
-                   <div class="profile-buttons">
-                       <button class="button add-friend-button" onclick="searchUser()">Add Friend</button>
-                       <button class="button friend-requests-button" onclick="listFriendRequests()">Friend Requests</button>
-                       <button class="button friend-requests-button" onclick="ListLeagues()">Join League</button>
-                       <button class="button messages-button">Messages</button>
-                   </div>
-                </div>
-    
-            </div>
-    </div>
-        </div></div></div>
-    -->
     <!--Messages Modal -->
     <div class="modal-container">
         <div class="modal">
