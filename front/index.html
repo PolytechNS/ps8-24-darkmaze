@@ -1,35 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DarkMaze Game - Welcome</title>
-<link rel="icon" href="html/assets/images/icon.png">
-<link href="https://fonts.googleapis.com/css?family=Denk+One" rel="stylesheet">
-<link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet"><link rel="stylesheet" href="html/assets/css/style_theme_1.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
 </head>
 <body>
-<!-- Ici on insère le menu défini dans le fichier 'menu.html'
-  N.B: dans le fichier 'menu.html' il faut définir dans la balise 
-  <a href= .... target="_parent"> et ce pour que les liens 
-  s'ouvrent dans la fenêtre principale
--->
-<div class="upper"> 
-  <object data="html/menu.html" width="500px"></object>"
-</div>
-<!------------ Fin insertion menu ------------------>
-<div class="container">
-    <h1>WELCOME TO DarkMaze</h1>
-    <a href="html/QuickGame.html">
-    <button class="cybr-btn"> Quick Game<span aria-hidden></span> <span aria-hidden class="cybr-btn__glitch"> Quick Game</span></button>
-    </a>
-
-     <a href="html/Auth/Login.html">
-     <button class="cybr-btn"> Log In<span aria-hidden></span><span aria-hidden class="cybr-btn__glitch">Log In</span></button>
-    </a>
-    <div class="footer">
-    </div>
-  </div>
-  
+    <script>
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+        const themeCookie = getCookie('theme');
+        if (themeCookie === 'theme2') {
+            window.location.href = 'html2/Welcome.html';
+        } else {
+            window.location.href = 'index1.html';
+        }
+    </script>
 </body>
 </html>
