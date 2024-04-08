@@ -43,7 +43,9 @@ else{
 gameNamespace.on("leagueUpgrade",(msg)=>{window.alert(msg)})
 gameNamespace.on("leagueDowngrade",(msg)=>{window.alert(msg)})
 
-gameNamespace.emit("setup");
+setTimeout(() => {
+  gameNamespace.emit("setup");
+}, 1000);
 
 gameNamespace.on("ErrorPlaying", (msg) => window.alert(msg));
 gameNamespace.on("GameOver", (msg) => {

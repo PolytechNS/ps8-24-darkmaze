@@ -54,6 +54,7 @@ function setIo(io){
           socket.join((decoded.username).toString());
           onlineGames[decoded.username]=decoded.username;
         }
+        console.log("online GAmes after joining",onlineGames);
       }
       else if(is_friendGame && friendGame == null){
         socket.join(decoded.username);
@@ -141,7 +142,8 @@ function setIo(io){
         const oldpostions = gameStateToBeModified.playersPosition[playerNumber];
           if (gameStateToBeModified.play(playerNumber, row, col) == true) {
             gameStateToBeModified.playTurn = gameStateToBeModified.playTurn==1?2:1;
-            clearInterval(onlineGamesTimers[onlineGames[decoded.username]])
+            clearInterval(onlineGamesTimers[onlineGames[decoded.username]]);
+            console.log("new timers",Object.keys(onlineGamesTimers).length,Object.keys(onlineGamesTimers));
             socket.emit(
               "updatedBoard",
               id,
@@ -318,8 +320,16 @@ function getOpponentUserName(playerUserName){
 }
 function startCountDown(io,decoded,id){ 
   
-    
-  onlineGamesTimers[onlineGames[decoded.username]]=setTimeout(async ()=>{
+    console.log("setting a timer ",onlineGames,decoded.username,onlineGames[decoded.username]);
+    var timerID ;
+    if(typeof onlineGames[decoded.username] == 'undefined'){
+      console.log(getOpponentUserName[decoded.username]);
+      timerID = onlineGames [getOpponentUserName[decoded.username]]
+    }
+    else 
+      timerID = onlineGames[decoded.username]
+    console.log("2ac",timerID);
+  onlineGamesTimers[timerID]=setTimeout(async ()=>{
     var loserUsername ;
     if (typeof getOpponentUserName(decoded.username) === 'undefined') {
       console.log("online Games",onlineGames);      
@@ -350,7 +360,7 @@ function startCountDown(io,decoded,id){
        
       );
       GamesTable = GamesTable.filter((game) => game.id !== id);
-  },5000)
+  },90000)
 }
 function updateElo(winnerElo, loserElo) {
   const K = 32; // Elo K-factor, you can adjust this value based on your requirements
@@ -384,6 +394,7 @@ async function updateUsersState(winnerUsername, loserUsername,io) {
   try {
     console.log(winnerUsername,loserUsername);
     if (typeof loserUsername === 'undefined') {
+      console.log("switching");
       const winnerUserKey = Object.keys(onlineGames).find(key => onlineGames[key] === winnerUsername);
       if (winnerUserKey) {
         loserUsername = winnerUserKey;

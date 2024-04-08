@@ -86,8 +86,13 @@
     <canvas id="myCanvas" width="1408" height="1408"></canvas>
     <div id="quoridor-board"></div>
     <div class="messaging_box">
+        
+        <button class="send-button" onclick="MuteMessages()">
+                Mute
+        </button>
         <input type="text" id="messageInput" placeholder="Type your message...">
         <button class="send-button" onclick="sendMessage()">Send</button>
+        
     </div>
     <script src="../js/socket.io.js"></script>
     <script src="../js/Game/OnlineGameJS.js"></script>

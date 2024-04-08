@@ -1,4 +1,5 @@
 const invisibleOverlay = document.getElementById('invisible-overlay');
+var Mute = false ;
 const gameNamespace = io("/api/OnlineGame", {
     query: { 
       cookies: document.cookie
@@ -31,12 +32,30 @@ const gameNamespace = io("/api/OnlineGame", {
     window.location.href = url;
 
 })
-  gameNamespace.on("recieveMessage",(username,message)=>{console.log(username+" : "+message)});
+  gameNamespace.on("recieveMessage",(username,message)=>{
+    if(Mute==false){
+      console.log("hhhhh0",Mute);
+      window.alert(username+" : "+message)
+
+    }
+    });
   function sendMessage() {
     var message = document.getElementById("messageInput").value;
     gameNamespace.emit("sendMessage",message);
     document.getElementById("messageInput").value="";
 }
+var muteButton = document.querySelector('.send-button');
+muteButton.addEventListener('click', function() {
+  if (!Mute) {
+    muteButton.style.backgroundColor = '#2bff00';//green
+  } else {
+    muteButton.style.backgroundColor = '#d400ff';
+  }})
+function MuteMessages(){
+    Mute=Mute==true?false:true;
+    console.log("Mute",Mute);
+  };
+
   // JavaScript to control the visibility of the overlay and manage the timer
 
 
@@ -56,7 +75,6 @@ function switchOverlay() {
       var timerElement = document.getElementById('timer');
         var totalTime = 90; // 1 minute 30 seconds in seconds
         interval = setInterval(function() {
-          console.log("total timer",totalTime);        
             var minutes = Math.floor(totalTime / 60);
             var seconds = totalTime % 60;
             timerElement.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
