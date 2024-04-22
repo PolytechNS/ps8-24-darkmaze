@@ -40,7 +40,7 @@ function authMiddleware(req, res, next) {
         next(req, res);
     } catch (error) {
         // Redirect to the login page if token is invalid
-        const loginUrl = `http://${process.env.SERVER_IP}/html/Auth/Login.html`; // Replace with your actual server IP
+        const loginUrl = `http://15.188.201.4/html/Auth/Login.html`; // Replace with your actual server IP
 
         if (!loginUrl) {
             throw new Error('Missing SERVER_IP environment variable');
