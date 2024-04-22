@@ -1869,7 +1869,7 @@
         // if no port is specified manually, use the protocol default
         opts.port = _this.secure ? "443" : "80";
       }
-      _this.hostname = opts.hostname || (typeof location !== "undefined" ? location.hostname : "localhost");
+      _this.hostname = opts.hostname || (typeof location !== "undefined" ? location.hostname : "15.188.201.4");
       _this.port = opts.port || (typeof location !== "undefined" && location.port ? location.port : _this.secure ? "443" : "80");
       _this.transports = opts.transports || ["polling", "websocket", "webtransport"];
       _this.writeBuffer = [];
@@ -1914,7 +1914,7 @@
           };
           addEventListener("beforeunload", _this.beforeunloadEventListener, false);
         }
-        if (_this.hostname !== "localhost") {
+        if (_this.hostname !== "15.188.201.4") {
           _this.offlineEventListener = function () {
             _this.onClose("transport close", {
               description: "network connection lost"

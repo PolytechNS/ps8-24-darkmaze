@@ -1,7 +1,7 @@
 function checkSameServer(req, res, next) {
     // Check if Referer header exists and matches the server URL (origin)
     const referer = req.headers.referer;
-    const serverUrl = `http://${process.env.SERVER_IP}:8000`; // No trailing slash for better comparison
+    const serverUrl = `http://15.188.201.4:8000`; // No trailing slash for better comparison
 
     if (referer && referer.startsWith(serverUrl)) {
         // Request is likely from the same server (origin)

@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
             content: messageContent
         };
     
-        fetch("http://localhost:8000/api/conversation/send-message", {
+        fetch("http://15.188.201.4:8000/api/conversation/send-message", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -1,6 +1,6 @@
 async function fetchLeagues() {
     try {
-        const response = await fetch('http://localhost:8000/api/league/list', {
+        const response = await fetch('http://15.188.201.4:8000/api/league/list', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
