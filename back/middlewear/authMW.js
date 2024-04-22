@@ -19,7 +19,7 @@ function authMiddleware(req, res, next) {
 
     if (!token) {
         // Redirect to the login page if token is missing
-        const loginUrl = `http://${process.env.SERVER_IP}/html/Auth/Login.html`; // Replace with your actual server IP
+        const loginUrl = `http://15.188.201.4/html/Auth/Login.html`; // Replace with your actual server IP
 
         if (!loginUrl) {
             throw new Error('Missing SERVER_IP environment variable');
@@ -31,7 +31,7 @@ function authMiddleware(req, res, next) {
 
     try {
         // Verify the token using the secret key from .env file
-        const decoded = jwt.verify(token, process.env.jwt_secret);
+        const decoded = jwt.verify(token, '15.188.201.4'');
 
         // Attach the decoded token to the request object
         req.user = decoded;
@@ -40,7 +40,7 @@ function authMiddleware(req, res, next) {
         next(req, res);
     } catch (error) {
         // Redirect to the login page if token is invalid
-        const loginUrl = `http://${process.env.SERVER_IP}/html/Auth/Login.html`; // Replace with your actual server IP
+        const loginUrl = `http://15.188.201.4/html/Auth/Login.html`; // Replace with your actual server IP
 
         if (!loginUrl) {
             throw new Error('Missing SERVER_IP environment variable');
