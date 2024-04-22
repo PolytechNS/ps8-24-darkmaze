@@ -19,7 +19,7 @@ function authMiddleware(req, res, next) {
 
     if (!token) {
         // Redirect to the login page if token is missing
-        const loginUrl = `http://15.188.201.4/html/Auth/Login.html`; // Replace with your actual server IP
+        const loginUrl = `http://15.188.201.4:8000/html/Auth/Login.html`; // Replace with your actual server IP
 
         if (!loginUrl) {
             throw new Error('Missing SERVER_IP environment variable');
