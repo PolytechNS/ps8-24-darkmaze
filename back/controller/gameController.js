@@ -615,7 +615,7 @@ async function gameController(request, response, gamesTable) {
     });
   } else if (request.method === "GET" && filePath[2] === "game") {
     response.writeHead(302, {
-      Location: "http://localhost:8000/html/GameSetup.html",
+      Location: "http://15.188.201.4:80/html/GameSetup.html",
     });
     return response.end();
   }

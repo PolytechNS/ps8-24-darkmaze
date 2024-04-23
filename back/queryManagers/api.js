@@ -240,10 +240,13 @@ async function manageRequest(request, response) {
             { expiresIn: max_age }
           );
           //,maxAge:max_age*1000
+          response.setHeader("Access-Control-Allow-Origin", "*");
+          response.setHeader("Access-Control-Allow-Headers", "*");
+          response.setHeader("Access-Control-Allow-Credentials", "true");
           response.setHeader("Set-Cookie", [
-            `jwt=${token}; Secure; Path=/; Max-Age=${max_age}`,
+            `jwt=${token}; Path=/;`,
           ]);
-
+          console.log("setting the cookie ...");
           response.statusCode = 200;
           response.writeHead(302, {
             Location: "/api/game",

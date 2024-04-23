@@ -1,5 +1,8 @@
 #Webstorm
 .idea
+
+data/
+ResetConfig.sh
 #Data
 /data/
 # Logs
