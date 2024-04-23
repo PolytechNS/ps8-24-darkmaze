@@ -66,6 +66,10 @@
                                                         <li class="nav-item">
                                                             <a class="nav-link" href="signup.html">Signup</a>
                                                         </li>   
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" onclick="switchTheme()">Switch theme</a>
+                                                        </li>   
+                                                          
                                                           
                                                     </ul>                                                       
                                                 </div>  
@@ -73,14 +77,7 @@
                                             </nav>
                                         </div>
                                     </div>
-                                    <div class="col-xl-2 col-lg-2 col-md-4">
-                                        <div class="header-right-wrap header-right-flex button-ticket">
-                                            <div class="btn-style-3 btn-hover-2">
-                                                <script src="../js/themeSwitcher.js"></script>
-                                                <a class="animated bs3-black-text bs3-btn-bg bs3-ptb bs3-ptb bs3-border-radius ptb-2-white-hover" onclick="switchTheme()">Switch theme</a>
-                                            </div>
-                                        </div>
-                                    </div>
+                                  
                                 </div>
                             </div>
                         </div>
@@ -172,7 +169,7 @@
                     <p>No need to log in, just start a quick game!</p>
                     <div class="btn-style-3 btn-hover-2">
                         <script src="../js/Game/GameSetupSerCom.js"></script>
-                        <a class="animated bs3-black-text bs3-btn-bg bs3-ptb bs3-ptb bs3-border-radius ptb-2-white-hover" onclick="launchGame2()" >QuickGame</a>
+                        <a class="animated bs3-black-text bs3-btn-bg bs3-ptb bs3-ptb bs3-border-radius ptb-2-white-hover" href="quickgame1.html" >QuickGame</a>
                     </div>
                 </div>
             </div>
@@ -192,14 +189,15 @@
                         <a href="index.html">
                             <img src="/assets2/images/logo/logo.png" alt="logo">
                         </a>
-                    </div>
-                    <audio controls src="mlv.mp3"></audio>  
+                    </div> 
+                    <iframe src="../html2/template.html" style="display: none;"></iframe>
 
                 </div>
             </div>
         </footer>
        
     </div>
+<!-- Script pour démarrer automatiquement la musique -->
 
     <!-- All JS is here
         ============================================ -->
