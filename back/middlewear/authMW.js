@@ -14,16 +14,12 @@ function authMiddleware(req, res, next) {
       });
       return res.end();
     }
-
     if (!token) {
         // Redirect to the login page if token is missing
-
         res.writeHead(302, { 'Location': 'http://localhost:8000/html/Auth/Login.html' }); 
         return res.end();
     }
-
     try {
-
         // Verify the token using the secret key from .env file
         const decoded = jwt.verify(token, process.env.jwt_secret);
 

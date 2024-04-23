@@ -1,5 +1,25 @@
 // Function to handle searching for users
+window.addEventListener('load', fetchUsername);
 
+function fetchUsername() {
+    // Assuming you have an API endpoint to fetch the username
+    fetch('/api/user/whoami')
+        .then(response => response.json())
+        .then(data => {
+            // Call a function to handle the fetched username
+            handleUsername(data);
+        })
+        .catch(error => console.error('Error fetching username:', error));
+}
+
+function handleUsername(data) {
+    // Do something with the fetched username
+    console.log('Fetched username:', data);
+
+    // You can update the UI or perform any other actions with the username here
+    document.getElementById("usernameDisplay").innerHTML = `${data.username}<br>${data.eloRanking}<br>${data.leagueName}`;
+    
+}
 function searchUser() {
     const popupDiv = document.getElementById('userPopup');
     if(popupDiv)document.body.removeChild(popupDiv); // Close the popup when "Go Back" button is clicked
@@ -140,18 +160,20 @@ function addFriend(username) {
 
 
 function listFriendRequests() {
+    console.log("fetching");
     // Assuming you have an API endpoint to retrieve friend requests
     fetch(`/api/user/friendRequests`)
-        .then(response => response.json())
-        .then(data => displayFriendRequestsPopup(data))
+        .then(response => {console.log("data1",response);return response.json()})
+        .then(data => {console.log("data",data);displayFriendRequestsPopup(data)})
         .catch(error => console.error('Error fetching friend requests:', error));
 }
 
 function displayFriendRequestsPopup(requests) {
     // Create a div element to hold the popup content
+    console.log("requests",requests);
     const popupDiv = document.createElement('div');
     popupDiv.classList.add('messaging_box');
-    popupDiv.id = 'friendRequestsPopup'; 
+    popupDiv.id = 'friendRequestsPopup';  
     popupDiv.style.zIndex='9999';
 
     // Create a div element to display the friend requests

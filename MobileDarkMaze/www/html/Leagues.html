@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DarkMaze Game - Leagues</title>
+    <link rel="icon" href="assets/images/icon.png">
+    <link rel="stylesheet" type="text/css" href="../css/Profile.css">
+    <link rel="stylesheet" type="text/css" href="../css/FriendsSideMenu.css">
+    <link rel="stylesheet" type="text/css" href="../css/Messages.css">
+    <link rel="stylesheet" type="text/css" href="../css/notifications.css">
+    <link rel="stylesheet" href="assets/css/style_theme_1.css">
+    <link href="https://fonts.googleapis.com/css?family=Denk+One" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet">
+
+</head>
+<body>
+<!-- Ici on insère le menu défini dans le fichier 'menu.html'
+    N.B: dans le fichier 'menu.html' il faut définir dans la balise 
+    <a href= .... target="_parent"> et ce pour que les liens 
+    s'ouvrent dans la fenêtre principale
+  -->
+  <div class="upper"> 
+    <object data="menu.html" width="500px"></object>
+  </div>
+  <!------------ Fin insertion menu ------------------>
+
+  
+    <div class="box">
+        <h2>List of Leagues</h2>
+         <ul id="leagueList"></ul>
+        <label id="LeagueTitle">Select a league</label>
+        <ul id="userList"></ul> 
+        <!-- Empty list to display users -->
+    </div>
+
+    <script src="../js/Game/League.js"></script>
+</body>
+</html>

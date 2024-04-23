@@ -141,7 +141,7 @@ function setIo(ioInstance) {
       } else socket.emit("ErrorPlaying", "Game not found! start a new game");
     });
   });
-}
+} 
  
 async function manageRequest(request, response) {
   let filePath = request.url.split("/").filter(function (elem) {

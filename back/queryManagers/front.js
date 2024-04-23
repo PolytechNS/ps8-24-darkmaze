@@ -90,7 +90,6 @@ function manageRequest(request, response) {
 
       ];  
         if (!authPaths.includes(pathName)) {
-          console.log(pathName);
           authMW(request, response, (request, response) => {
             response.setHeader(
               "Content-type",
