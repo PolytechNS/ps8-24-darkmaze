@@ -2,7 +2,7 @@
 
 ## How to launch DarkMaze 
   - execute : docker compose up
-  - open a browser and enter : http://localhost:8000/html/Auth/Login.html
+  - open a browser and enter : http://15.188.201.4:8000/html/Auth/Login.html
 -----------------------------------------------------------------------------------
 The code of this repo is split in 2 folders:
 

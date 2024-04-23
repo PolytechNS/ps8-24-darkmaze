@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.3"
 services:
   db:
     image: mongo
@@ -13,6 +13,6 @@ services:
       - "8000:8000"
     environment:
       MONGODB_URL: mongodb://db:27017/DarkMaze
-      jwt_secret: asdcn@#dc#ãc#~r99d83$!ac9536"·$d9d5d9"·46a8c962"·4sdl23!·1@#dc23@#3f85s
+      jwt_secret: asdcn@#dc#ãc#~r99d83$$!ac9536"·$d9d5d9"·46a8c962"·4sdl23!·1@#dc23@#3f85s
     depends_on:
       - db

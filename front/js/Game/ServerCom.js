@@ -11,7 +11,7 @@ function saveGame() {
         },
         body:JSON.stringify({gameId:TestGame.id,playerNumber:playerNumber})
     }).then(()=>{
-        window.location.href = "http://localhost:8000/html/GameSetup.html"
+        window.location.href = "http://15.188.201.4:8000/html/GameSetup.html"
 
     })
 
