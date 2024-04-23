@@ -26,8 +26,13 @@
             body.classList.add('theme2');    
         }
     </script>
-    <canvas id="myCanvas" width="1408" height="1408"></canvas>
-    <div id="quoridor-board"></div>
+    <span id="boardContainer">
+        <div id="boardContent">
+            <canvas id="myCanvas" width="1408" height="1408"></canvas>
+            <div id="quoridor-board"></div>
+        </div>
+    </span>
+
     <script src="http://localhost:8000/js/socket.io.js"></script>
     <script src="http://localhost:8000/js/Game/quoridor.js"></script>
     <script src="http://localhost:8000/js/Game/ServerCom.js"></script>
