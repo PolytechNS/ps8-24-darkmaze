@@ -5,6 +5,7 @@ require('dotenv').config(); // Load environment variables from .env file
 function authMiddleware(req, res, next) {
     // Get the token from the request headers
     let token;
+    console.log("insiiiiide MW"); 
     if (req.headers.cookie) {
         const cookies = parseCookies(req.headers.cookie);
         token = cookies.jwt;
