@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalContent = modal.querySelector('.modal-content');
     const modalClose = modal.querySelector('.modal-close');
     const messagesButton = document.querySelector('.messages-button');
-
+    var frID ="";
+    var frUsername = "";
     // Open modal
     function openModal() {
         modalContainer.style.display = 'block';
@@ -33,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Loop through friends and create clickable list items
             friends.forEach(friend => {
-                htmlContent += `<li><a href="#" class="friend" data-id="${friend.id}">${friend.username}</a></li>`;
+                htmlContent += `<li><a href="#" class="friend" data-username="${friend.username}" data-id="${friend.id}">${friend.username}</a></li>`;
             });
 
             htmlContent += "</ul>";
@@ -50,8 +51,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 link.addEventListener('click', function(event) {
                     event.preventDefault();
                     const friendId = this.getAttribute('data-id');
+                    const friendUsername = this.getAttribute('data-username');
                     // Open messaging box for the selected friend
-                    openMessagingBox(friendId);
+                    console.log("frieeend",friendUsername);
+                    frID = friendId;
+                    frUsername = friendUsername;
+                    openMessagingBox(friendId,friendUsername);
                 });
             });
         })
@@ -62,8 +67,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Function to open messaging box for a specific friend
-    function openMessagingBox(friendId) {
+    function openMessagingBox(friendId,friendUsername) {
         // Fetch messages for the conversation with the selected friend
+
         fetch(`/api/conversation/messages/${friendId}`)
         .then(response => response.json())
         .then(messages => {
@@ -73,7 +79,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
             // Display messages
             messages.forEach(message => {
-                htmlContent += `<div>${message.sender}: ${message.content}</div>`;
+                if(message.sender==friendId)
+                    htmlContent += `<div>${friendUsername}: ${message.content}</div>`;
+                else
+                    htmlContent += `<div>Me : ${message.content}</div>`;
+
+
             });
     
             htmlContent += "</div>";
@@ -114,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
             content: messageContent
         };
     
-        fetch("http://localhost:8000/api/conversation/send-message", {
+        fetch("http://15.188.201.4:8000/api/conversation/send-message", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -126,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log("Message sent successfully");
                 // Optionally, you can update the UI to reflect the sent message
                 document.getElementById('message-input').value = ''; // Clear input field after sending message
+                openMessagingBox(frID,frUsername)
             } else {
                 console.error("Failed to send message");
                 alert("Failed to send message. Please try again later.");

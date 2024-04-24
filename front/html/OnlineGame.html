@@ -67,7 +67,7 @@
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="http://localhost:8000/css/quoridor.css">
+    <link rel="stylesheet" href="http://15.188.201.4:8000/css/quoridor.css">
     <link rel="stylesheet" href="../css/OnlineGameStyles.css">
     <link rel="stylesheet" href="../css/notifications.css"> <!-- Ajout du CSS des notifications -->
     <title>Online Quoridor Game</title>
@@ -86,8 +86,13 @@
     <canvas id="myCanvas" width="1408" height="1408"></canvas>
     <div id="quoridor-board"></div>
     <div class="messaging_box">
+        
+        <button class="send-button" onclick="MuteMessages()">
+                Mute
+        </button>
         <input type="text" id="messageInput" placeholder="Type your message...">
         <button class="send-button" onclick="sendMessage()">Send</button>
+        
     </div>
     <script src="../js/socket.io.js"></script>
     <script src="../js/Game/OnlineGameJS.js"></script>

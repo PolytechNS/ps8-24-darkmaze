@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+body {
+    background: url('ph1.png') center center / cover no-repeat;
+    margin: 0;
+    height: 100vh;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+   .profile-container {
+    position: absolute; /* Positionner en haut à droite */
+    top:0;
+    right:0;
+    width: 100%; /* Utilisez la pleine largeur de la page */
+    margin: 0 auto; /* Centrer le conteneur dans la page */
+    text-align: center; /* Centrer le texte dans le conteneur */
+    padding: 20px 0; /* Ajouter un peu d'espace au-dessus et en dessous du contenu */
+    /* Les autres propriétés restent inchangées */
+}
+.button {
+    padding-left: 33px;
+    padding-right: 33px;
+    padding-bottom: 16px;
+    padding-top: 16px;
+    border-radius: 9px;
+    background: #d5f365;
+    border: none;
+    font-family: "Press Start 2p";
+    text-align: center;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.profile-picture img {
+    /* ... */
+    margin: 0 auto; /* Centrer l'image de profil si nécessaire */
+    display: block; /* S'assurer que l'image est affichée en tant que bloc pour permettre le centrage automatique */
+}
+
+/* Utilisez Flexbox pour organiser les boutons horizontalement avec un espacement entre eux */
+.profile-buttons {
+    display: flex;
+    justify-content: space-around; /* Espacer les boutons également */
+    margin-top: 10px; /* Ajouter un peu d'espace au-dessus des boutons */
+}
+
+/* Assurez-vous que le titre est centré et occupe la pleine largeur si nécessaire */
+.user-name {
+    display: block; /* Afficher le nom comme un bloc pour permettre le centrage du texte */
+    width: 100%; /* Prendre toute la largeur disponible */
+    margin-bottom: 300px; /* Ajouter de l'espace sous le nom */
+    color: black;
+}

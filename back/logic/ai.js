@@ -52,11 +52,13 @@ function playAi(gameStateToBeModified,socket,id){
         let direction = move['value'][1];
         direction == 0 && row-- ;
         direction == 1 && col++ ;
-        direction ==0 ?'horizontal':'vertical';
+        let StringDirection = direction ==0 ?'horizontal':'vertical';
+        console.log("Right before Putting Walls",StringDirection, row, col, gameStateToBeModified.GameType['aiPlayer']);
         if (
-          gameStateToBeModified.placeWalls(direction, row, col, gameStateToBeModified.GameType['aiPlayer']) ==
+          gameStateToBeModified.placeWalls(StringDirection, row, col, gameStateToBeModified.GameType['aiPlayer']) ==
           true
         )
+          console.log("123 Putting Walls");
           socket.emit(
             "UpdateWalls",
             id,

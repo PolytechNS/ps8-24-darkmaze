@@ -78,11 +78,18 @@ function manageRequest(request, response) {
           "./front/assets/js/bootstrap.min.js",
           "./front/assets/images/ph1.png",
           "./front/assets/images/icon.png",
-          "./front/html/menu.html"
+          "./front/html/menu.html",
+          "./front/html/assets/css/style_theme_1.css",
+          "./front/html/assets/images/ph1.png",
+          "./front/html/assets/images/3d_Red.png",
+          "./front/assets/Grid.png",
+          "./front/assets/P1.png",
+          "./front/assets/P2.png",
+          "./front/assets/fog.png",
+          "./front/assets/possibleMove.png",
+          "./front/js/themeSwitcher.js"
 
-
-
-      ];
+      ];  
         if (!authPaths.includes(pathName)) {
           authMW(request, response, (request, response) => {
             response.setHeader(

@@ -13,8 +13,10 @@ require("dotenv").config();
 var GamesTable = [];
 var RoomsQueue = [];
 var onlineGames = {};
-var onlineGamesTimers = {}
+var onlineGamesTimers = {};
 var userSockets = {};
+var onlineDisconnectedUsers = {}
+
 function setIo(io){
   NotifIo = io;
   io.of('/api/OnlineGame').on("connection", (socket) => {
@@ -26,24 +28,33 @@ function setIo(io){
     const token = cookiesList.jwt;
     
     const decoded = jwt.verify(token, process.env.jwt_secret);
-    userSockets[decoded.username] = socket.id;
+    userSockets[decoded.username] = socket.id; 
 
     
-    socket.on('joinGame',(is_friendGame,friendGame)=>{
+    socket.on('joinGame',async (is_friendGame,friendGame)=>{
       console.log("joining the game",friendGame,is_friendGame);
       if(!is_friendGame){
-        if(RoomsQueue.length == 0){
+        //if(RoomsQueue.length == 0){
+        let gameFoundFlag = 0 ;
+        if(!RoomsQueue.includes(decoded.username)){
+          for(let waitingPlayer of  RoomsQueue){
+            if(isValidRival(await getEloByUsername(waitingPlayer), await getEloByUsername(decoded.username))){
+              const roomToJoin = waitingPlayer; 
+              RoomsQueue = RoomsQueue.filter(item => item !== waitingPlayer);
+              socket.join(roomToJoin.toString());
+              onlineGames[decoded.username]=roomToJoin;
+              io.of('/api/OnlineGame').to(roomToJoin.toString()).emit("playerFound");
+              gameFoundFlag = 1;
+              break;
+            }
+          }
+        }
+        if(gameFoundFlag == 0){
           RoomsQueue.push(decoded.username);
           socket.join((decoded.username).toString());
           onlineGames[decoded.username]=decoded.username;
-    
         }
-        else{
-          const roomToJoin = RoomsQueue.pop(); 
-          socket.join(roomToJoin.toString());
-          onlineGames[decoded.username]=roomToJoin;
-          io.of('/api/OnlineGame').to(roomToJoin.toString()).emit("playerFound");
-        }
+        console.log("online GAmes after joining",onlineGames);
       }
       else if(is_friendGame && friendGame == null){
         socket.join(decoded.username);
@@ -88,7 +99,6 @@ function setIo(io){
       console.log("joined api/OnlineGame");
       const gameState = new GameState();
       GamesTable.push(gameState);
-
       // Create an instance of GameState 
       // // Save the instance to the database
       console.log(decoded.username,"ONLINE GAMES inside SETUP event ",onlineGames); 
@@ -124,15 +134,16 @@ function setIo(io){
           
     socket.on("newMove", async (id, playerNumber, row, col) => {
       console.log("newMove --- ",playerNumber,row,col);
+      console.log("timers",Object.keys(onlineGamesTimers).length);
       var gameStateToBeModified = GamesTable.find((game) => game.id === id);
       if (gameStateToBeModified) {
       if((gameStateToBeModified.playTurn==1 && decoded.username == onlineGames[decoded.username]) ||
       (gameStateToBeModified.playTurn==2 && decoded.username != onlineGames[decoded.username])){
-
         const oldpostions = gameStateToBeModified.playersPosition[playerNumber];
           if (gameStateToBeModified.play(playerNumber, row, col) == true) {
             gameStateToBeModified.playTurn = gameStateToBeModified.playTurn==1?2:1;
-            clearInterval(onlineGamesTimers[onlineGames[decoded.username]])
+            clearInterval(onlineGamesTimers[onlineGames[decoded.username]]);
+            console.log("new timers",Object.keys(onlineGamesTimers).length,Object.keys(onlineGamesTimers));
             socket.emit(
               "updatedBoard",
               id,
@@ -180,7 +191,17 @@ function setIo(io){
                 );
   
             if (gameStateToBeModified.is_Win(playerNumber)) {
-              const gameResults = await updateUsersState(decoded.username,getOpponentUserName(decoded.username),io);
+              
+              var loserUsername ;
+              if (typeof getOpponentUserName(decoded.username) === 'undefined') {
+                loserUsername = onlineDisconnectedUsers[onlineGames[decoded.username]];
+                console.log(3);
+              } else {
+                loserUsername = getOpponentUserName(decoded.username);
+                console.log(4);
+              }
+
+              const gameResults = await updateUsersState(decoded.username,loserUsername,io);
               socket.emit(
                 "GameOver",
                 "YOU WIN !!! your new elo is : "+gameResults.winner
@@ -221,7 +242,7 @@ function setIo(io){
             true
           ){
             gameStateToBeModified.playTurn = gameStateToBeModified.playTurn==1?2:1;
-            clearInterval(onlineGamesTimers[onlineGames[decoded.username]])
+            clearInterval(onlineGamesTimers[onlineGames[decoded.username]]);
             io.of('/api/OnlineGame').to(onlineGames[decoded.username].toString()).emit(
               "UpdateWalls",
               id,
@@ -261,8 +282,26 @@ function setIo(io){
     
     socket.on('disconnect', () => {
       //delete userSockets[decoded.username]; // Remove the user's socket ID when they disconnect
-      console.log("disconnected");
+      console.log("disconnected -------- here ");
+      console.log("onlineGames",onlineGames);
       delete onlineGamesTimers[onlineGames[decoded.username]]
+      var disconnectedUserGame = onlineGames[decoded.username];
+      const onlineGamesKeys = Object.keys(onlineGames);
+      let count = 0;
+      for (let i = 0; i < onlineGamesKeys.length; i++) {
+        const key = onlineGamesKeys[i];
+        console.log("counting ... ",i,onlineGames[key] ,disconnectedUserGame);
+        if (onlineGames[key] == disconnectedUserGame) {
+          count++;
+        }
+      }
+ 
+      if(count==2){
+        console.log("Number of onlineGames keys for disconnectedUserGame:", count);
+
+        onlineDisconnectedUsers[onlineGames[decoded.username]]=decoded.username;
+        
+      }
       delete onlineGames[decoded.username]
       delete userSockets[decoded.username]
   });
@@ -279,11 +318,31 @@ function getOpponentUserName(playerUserName){
       return username;
   }
 }
-function startCountDown(io,decoded,id){
+function startCountDown(io,decoded,id){ 
   
-  
-  onlineGamesTimers[onlineGames[decoded.username]]=setTimeout(async ()=>{
-    const gameResults = await updateUsersState(decoded.username,getOpponentUserName(decoded.username),io);
+    console.log("setting a timer ",onlineGames,decoded.username,onlineGames[decoded.username]);
+    var timerID ;
+    if(typeof onlineGames[decoded.username] == 'undefined'){
+      console.log(getOpponentUserName[decoded.username]);
+      timerID = onlineGames [getOpponentUserName[decoded.username]]
+    }
+    else 
+      timerID = onlineGames[decoded.username]
+    console.log("2ac",timerID);
+  onlineGamesTimers[timerID]=setTimeout(async ()=>{
+    var loserUsername ;
+    if (typeof getOpponentUserName(decoded.username) === 'undefined') {
+      console.log("online Games",onlineGames);      
+      loserUsername = onlineDisconnectedUsers[onlineGames[decoded.username]];
+      console.log(decoded.username,onlineDisconnectedUsers);
+      console.log(1,onlineGames[decoded.username],loserUsername,onlineDisconnectedUsers[onlineGames[decoded.username]]);
+    } else {
+      loserUsername = getOpponentUserName(decoded.username);
+      console.log(2);
+    }
+ 
+
+    const gameResults = await updateUsersState(decoded.username,loserUsername,io);
     console.log("executed ",decoded.username);
     io.of('/api/OnlineGame')
     .to(userSockets[decoded.username])
@@ -301,7 +360,7 @@ function startCountDown(io,decoded,id){
        
       );
       GamesTable = GamesTable.filter((game) => game.id !== id);
-  },180000)
+  },90000)
 }
 function updateElo(winnerElo, loserElo) {
   const K = 32; // Elo K-factor, you can adjust this value based on your requirements
@@ -330,17 +389,24 @@ async function getLeagueByElo(elo) {
       throw error;
   } 
 }
-
+  
 async function updateUsersState(winnerUsername, loserUsername,io) {
   try {
-      // Fetch data of the winner and loser by their usernames
+    console.log(winnerUsername,loserUsername);
+    if (typeof loserUsername === 'undefined') {
+      console.log("switching");
+      const winnerUserKey = Object.keys(onlineGames).find(key => onlineGames[key] === winnerUsername);
+      if (winnerUserKey) {
+        loserUsername = winnerUserKey;
+        winnerUsername = onlineGames[winnerUserKey];
+      }
+    }
       let winner = await user.findOne({ username: winnerUsername });
-      let loser = await user.findOne({ username: loserUsername });
+      let loser = await user.findOne({ username: loserUsername }); 
       
       if (!winner || !loser) {
           throw new Error("Player not found");
       }
-     console.log("scoooooores"  ,winner.eloRanking, loser.eloRanking); 
       // Assuming updateElo is defined elsewhere
       const updatedEloValues = updateElo(winner.eloRanking, loser.eloRanking);
       if(updatedEloValues.winnerElo>2500)updatedEloValues.winnerElo=2500;
@@ -387,7 +453,7 @@ async function updateUsersState(winnerUsername, loserUsername,io) {
           .to(userSockets[loserUsername])
           .emit("leagueDowngrade","you're to0 weak for this league! you're now in "+loser_league.name);
       }
-
+      delete onlineDisconnectedUsers[onlineGames[winnerUsername]]
       // Return updated player data
       return { winner: updatedWinner['eloRanking'], loser: updatedLoser['eloRanking'] };
   } catch (error) {
@@ -395,7 +461,25 @@ async function updateUsersState(winnerUsername, loserUsername,io) {
       throw error;
   }
 }
+async function getEloByUsername(username) {
+  try {
+      const userInstance = await user.findOne({ username: username });
+      if (!userInstance) {
+          console.log('User not found');
+          return null;
+      }
 
+      return userInstance.eloRanking;
+  } catch (error) {
+      console.error('Error retrieving user ELO:', error);
+      throw error; // or handle the error as needed
+  }
+}
+
+function isValidRival(player1Elo, player2Elo) {
+  if (Math.abs(player1Elo - player2Elo) > 200) return false;
+  return true;
+}
 
 
 async function gameController(request, response, gamesTable) {
@@ -437,10 +521,8 @@ async function gameController(request, response, gamesTable) {
         existingGameState.playerNumber = gameToSave.playerNumber;
 
         await existingGameState.save();
-        console.log(
-          "GameState updated in the database _id",
-          existingGameState._id
-        );
+        response.writeHead(200, { "Content-Type": "application/json" });
+        response.end();
       } else {
         const userInstance = await user.findById(decoded.id);
         if (!userInstance) {
@@ -454,9 +536,11 @@ async function gameController(request, response, gamesTable) {
           .save()
           .then((savedGame) => {
             console.log("GameState saved to the database _id", savedGame._id);
+            response.writeHead(200, { "Content-Type": "application/json" });
+            response.end();
           })
           .catch((error) => {
-            console.log("GameState saved to the database");
+            console.log("GameState saved to the database",error);
           });
       }
     });
@@ -531,7 +615,7 @@ async function gameController(request, response, gamesTable) {
     });
   } else if (request.method === "GET" && filePath[2] === "game") {
     response.writeHead(302, {
-      Location: "http://localhost:8000/html/GameSetup.html",
+      Location: "../html/GameSetup.html",
     });
     return response.end();
   }

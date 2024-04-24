@@ -1,0 +1,36 @@
+.notification-container {
+    position: fixed;
+    top: 5px; /* La distance du haut de la page */
+    right: 20px; /* La distance du côté droit de la page */
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Pour aligner les notifications vers la droite */
+}
+
+.notification {
+    background-color: #f44336; /* Couleur de fond de la notification */
+    color: white; /* Couleur du texte */
+    padding: 10px; /* Espacement à l'intérieur de la notification */
+    margin-bottom: 10px; /* Espace entre les notifications */
+    border-radius: 4px; /* Bords arrondis */
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.2); /* Ombre portée */
+    transition: all 0.5s ease; /* Transition douce pour l'affichage */
+    transform: translateY(-50px); /* Commence un peu plus haut */
+    opacity: 0; /* Commence invisible */
+    display: block; /* Nécessaire pour l'affichage */
+    pointer-events: auto; /* Pour permettre l'interaction */
+    max-width: 200px; /* Largeur maximale de la notification */
+}
+
+.notification-show {
+    transform: translateY(0); /* Retour à la position normale */
+    opacity: 1; /* Rendre visible */
+}
+
+.notification-hide {
+    transform: translateY(-50px); /* Remonter lors de la disparition */
+    opacity: 0; /* Devenir invisible */
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Transition douce pour la disparition */
+}
+

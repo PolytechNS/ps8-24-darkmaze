@@ -119,7 +119,6 @@ function setIo(ioInstance) {
     socket.on("newWall", (id, direction, row, col, playerNumber) => {
       var gameStateToBeModified = GamesTable.find((game) => game.id === id);
       if (gameStateToBeModified) {
-        console.log("too risky ", direction, row, col, playerNumber);
         if (
           gameStateToBeModified.placeWalls(direction, row, col, playerNumber) ==
           true
@@ -142,7 +141,7 @@ function setIo(ioInstance) {
       } else socket.emit("ErrorPlaying", "Game not found! start a new game");
     });
   });
-}
+} 
  
 async function manageRequest(request, response) {
   let filePath = request.url.split("/").filter(function (elem) {
@@ -241,10 +240,13 @@ async function manageRequest(request, response) {
             { expiresIn: max_age }
           );
           //,maxAge:max_age*1000
+          response.setHeader("Access-Control-Allow-Origin", "*");
+          response.setHeader("Access-Control-Allow-Headers", "*");
+          response.setHeader("Access-Control-Allow-Credentials", "true");
           response.setHeader("Set-Cookie", [
-            `jwt=${token}; Secure; Path=/; Max-Age=${max_age}`,
+            `jwt=${token}; Path=/;`,
           ]);
-
+          console.log("setting the cookie ...");
           response.statusCode = 200;
           response.writeHead(302, {
             Location: "/api/game",
@@ -262,8 +264,10 @@ async function manageRequest(request, response) {
         }
       }
     });
+    console.log("Login ...");
   } else {
     authMW(request, response, (request, response) => {
+      console.log("API request ...");
       GMController.gameController(request, response, GamesTable);
       USController.userController(request, response, GamesTable);
       MSGController.messageController(request, response);

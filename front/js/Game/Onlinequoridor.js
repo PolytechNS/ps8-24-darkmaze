@@ -21,7 +21,6 @@ for (let i = 0; i < rows; i++) {
 }
 
   
-
 //socket communications
 var urlParams = new URLSearchParams(window.location.search);
 var playAgainstFriend= urlParams.get("roomId");
@@ -39,16 +38,19 @@ else{
   gameNamespace.emit ("joinGame",false,null);
 
 }
-  
+
+
 gameNamespace.on("leagueUpgrade",(msg)=>{window.alert(msg)})
 gameNamespace.on("leagueDowngrade",(msg)=>{window.alert(msg)})
 
-gameNamespace.emit("setup");
+setTimeout(() => {
+  gameNamespace.emit("setup");
+}, 1000);
 
 gameNamespace.on("ErrorPlaying", (msg) => window.alert(msg));
 gameNamespace.on("GameOver", (msg) => {
   window.alert(msg);    
-  var url = 'http://localhost:8000/api/game';
+  var url = 'http://15.188.201.4:8000/api/game';
   window.location.href = url;
 });
 gameNamespace.on("player2Setup",(id, board, playerPostion, wallsPositions) => {
