@@ -775,6 +775,8 @@ function showMessage(message, duration) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid();
     ctx.fillStyle = `rgba(250, 0, 0, ${opacity})`;
+    console.log(window.innerWidth);
+    console.log(window.innerHeight);
     const isMobile = window.innerWidth <= window.innerHeight;
     if(isMobile) {
       console.log("mobile !");
