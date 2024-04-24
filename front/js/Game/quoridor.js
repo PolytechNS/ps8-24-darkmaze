@@ -10,7 +10,7 @@ const cellClickListeners = [];
 const wallHoverListeners = [];
 const wallClickListeners = [];
 const playerHoverListeners = [];
-const isMobile = window.innerWidth <= window.innerHeight;
+
 for (let i = 0; i < rows; i++) {
   grid[i] = [];
   fogGrid[i] = [];
@@ -355,6 +355,7 @@ function drawBoard() {
       });
 
   const wallItems = document.querySelectorAll(".inWall");
+  const isMobile = window.innerWidth <= window.innerHeight;
   wallItems.forEach((item) => {
     if (isMobile) { // Vérifier si le code est exécuté sur un téléphone
       item.addEventListener("click", highlightWall); // Changement de l'événement de survol à clic
@@ -774,6 +775,7 @@ function showMessage(message, duration) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid();
     ctx.fillStyle = `rgba(250, 0, 0, ${opacity})`;
+    const isMobile = window.innerWidth <= window.innerHeight;
     if(isMobile) {
       console.log("mobile !");
       ctx.fillStyle = `rgba(150, 200, 0, ${opacity})`;
