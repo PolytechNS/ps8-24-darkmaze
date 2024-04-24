@@ -35,7 +35,8 @@
 }
 
 .nav input:checked ~ .menu {
-  width: 450px;
+  width: 32em;
+  display: flex;
 }
 
 .menu li {
@@ -91,6 +92,22 @@
 .nav input:checked ~ span:nth-child(3) {
   transform: translateY(0) rotate(45deg);
 }
+
+
+@media (max-width: 450px) {
+  body{
+        font-family: 'Denk One', sans-serif;
+        font-size:2.8vw;
+        font-weight: lighter;
+    }
+  
+    .nav input:checked ~ .menu {
+  width: 32em;
+  display: flex;
+  }
+}
+
+
 </style>    
 </head>
 <body>
@@ -104,7 +121,7 @@
                     <li><a href="Rules.html" target="_parent">rules</a></li>
                     <li><a href="GameSetup.html" target="_parent">Play</a></li>
                     <li><a href="Profile.html" target="_parent">player</a></li>
-                   
+                    <li><a href="Auth/Login.html" target="_parent" onclick="logout()">Logout</a></li>
                     <li><a href="AboutUs.html" target="_parent">About</a></li>
                     <li><a onclick="switchTheme()">Switch Theme</a></li>
                 </div>
