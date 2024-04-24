@@ -10,7 +10,7 @@ const cellClickListeners = [];
 const wallHoverListeners = [];
 const wallClickListeners = [];
 const playerHoverListeners = [];
-const isMobile = window.innerWidth <= 768;
+const isMobile = window.innerWidth <= window.innerHeight;
 for (let i = 0; i < rows; i++) {
   grid[i] = [];
   fogGrid[i] = [];
@@ -357,7 +357,7 @@ function drawBoard() {
   const wallItems = document.querySelectorAll(".inWall");
   wallItems.forEach((item) => {
     if (isMobile) { // Vérifier si le code est exécuté sur un téléphone
-      item.addEventListener("click", handleClickWall); // Changement de l'événement de survol à clic
+      item.addEventListener("click", highlightWall); // Changement de l'événement de survol à clic
     } else {
       item.addEventListener("mouseenter", highlightWall);
     }
