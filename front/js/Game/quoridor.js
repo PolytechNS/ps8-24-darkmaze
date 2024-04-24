@@ -775,7 +775,8 @@ function showMessage(message, duration) {
     drawGrid();
     ctx.fillStyle = `rgba(250, 0, 0, ${opacity})`;
     if(isMobile) {
-      ctx.fillStyle = `rgba(250, 200, 0, ${opacity})`;
+      console.log("mobile !");
+      ctx.fillStyle = `rgba(150, 200, 0, ${opacity})`;
     }
     ctx.shadowColor = 'rgba(0, 0, 0, 150)';
     ctx.shadowOffsetX = 1;
