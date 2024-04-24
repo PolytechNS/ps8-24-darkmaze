@@ -10,6 +10,7 @@ const cellClickListeners = [];
 const wallHoverListeners = [];
 const wallClickListeners = [];
 const playerHoverListeners = [];
+const isMobile = window.innerWidth <= 768;
 for (let i = 0; i < rows; i++) {
   grid[i] = [];
   fogGrid[i] = [];
@@ -355,15 +356,39 @@ function drawBoard() {
 
   const wallItems = document.querySelectorAll(".inWall");
   wallItems.forEach((item) => {
-    item.addEventListener("mouseenter", highlightWall);
+    if (isMobile) { // Vérifier si le code est exécuté sur un téléphone
+      item.addEventListener("click", handleClickWall); // Changement de l'événement de survol à clic
+    } else {
+      item.addEventListener("mouseenter", highlightWall);
+    }
   });
+
   wallItems.forEach((item) => {
     item.addEventListener("click", handleClickWall);
   });
 
   const playerChoicesE = document.querySelectorAll(".piece");
+  document.querySelectorAll(".piece");
   playerChoicesE.forEach((item) => {
-    item.addEventListener("mouseenter", playChoiceHover);
+    if (isMobile) { // Vérifier si le code est exécuté sur un téléphone
+      let clickCount = 0;
+      let timer;
+      item.addEventListener("click", function() {
+        clickCount++;
+        if (clickCount === 1) {
+          timer = setTimeout(function() {
+            clickCount = 0;
+          }, 300); // Définir le délai pour le double clic ici (par exemple 300 ms)
+        } else if (clickCount === 2) {
+          clearTimeout(timer);
+          clickCount = 0;
+          // Gérer le double clic ici, par exemple appeler une fonction handleClickDouble()
+        }
+      });
+    } else {
+      item.addEventListener("mouseenter", playChoiceHover);
+      item.addEventListener("click", handleClick);
+    }
   });
 }
 
