@@ -1,16 +1,17 @@
 function checkSameServer(req, res, next) {
-    // Check if Referer header exists and matches the server URL
-    const referer = req.headers;
-    const serverUrl = 'http://localhost:8000/api'; // Replace with your server URL
-    console.log(referer, serverUrl);
-    if (1==1) {
-      // Request is from the same server
-      console.log("file MW IN");
-      next(req, res);
-    } else {
-      // Request is from an external source, block access
-      res.status(403).send('Access Forbidden');
-    }
-  }
+    // Check if Referer header exists and matches the server URL (origin)
+    const referer = req.headers.referer;
+    const serverUrl = `http://15.188.201.4:8000`; // No trailing slash for better comparison
 
-  module.exports = checkSameServer;
+    if (referer && referer.startsWith(serverUrl)) {
+        // Request is likely from the same server (origin)
+        console.log("File MW IN");
+        next(req, res);
+    } else {
+        // Request may be from an external source, investigate further
+        console.warn('Request might be from an external source:', referer);
+        res.status(403).send('Access Forbidden');
+    }
+}
+
+module.exports = checkSameServer;

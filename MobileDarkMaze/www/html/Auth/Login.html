@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DarkMaze Game - Login</title>
+<link rel="icon" href="assets/images/icon.png">
+<link href="https://fonts.googleapis.com/css?family=Denk+One" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style_theme_1.css">
+</head>
+<body>
+<!-- Ici on insère le menu défini dans le fichier 'menu.html'
+  N.B: dans le fichier 'menu.html' il faut définir dans la balise 
+  <a href= .... target="_parent"> et ce pour que les liens 
+  s'ouvrent dans la fenêtre principale
+-->
+<div class="upper"> 
+  <object data="../menu.html" width="500px"></object>
+</div>
+<!------------ Fin insertion menu ------------------>
+
+
+<div class="box">
+    <h2>Login</h2>
+    <h3>Have an account?</h3>    
+    <form class="login-form" method="post" action="http://15.188.201.4:80/api/login">
+      <div class="inputBox">
+        <input type="text" id="username" name="username" required>
+        <label for="username">Username</label>
+      </div>
+      <div class="inputBox">
+        <input type="password" id="password" name="password" required>
+        <label for="password">Password</label>
+      </div>
+      <button class="cybr-btn" type="submit">Sign In<span aria-hidden> </span><span aria-hidden class="cybr-btn__glitch">Sign In</span></button>
+      <input type="checkbox" id="rem_in" name="rem_in" value="rem_in"/>  
+      <label for="rem_in">Remember me</label><br>
+    </form>
+    
+  <div>
+    <p><a href="Signup.html">Create an Account</a></p>
+  </div>
+
+    
+</div>
+
+  <script src="/assets/js/jquery.min.js"></script>
+  <script src="/assets/js/popper.js"></script>
+  <script src="/assets/js/bootstrap.min.js"></script>
+  <script src="/assets/js/main.js"></script>
+  
+
+
+</body></html>

@@ -28,7 +28,7 @@ const gameNamespace = io("/api/OnlineGame", {
   gameNamespace.on("challengeNotAccepted",()=>{
     console.log("your challenge is rejected");
     window.alert("challenge rejected");
-    var url = 'http://localhost:8000/html/ChallengeAFriend.html';
+    var url = 'http://15.188.201.4:8000/html/ChallengeAFriend.html';
     window.location.href = url;
 
 })

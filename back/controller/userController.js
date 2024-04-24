@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const authMW = require("../middlewear/authMW");
 const GameStateModel = require("../models/GameStateModel");
 const user = require("../models/UserModel");
+const LeagueModel  = require("../models/LeagueModel");
 const querystring = require("querystring");
 let NotifIo ;
 require("dotenv").config();
@@ -122,6 +123,7 @@ else if (
   filePath[3] === "friendRequests" // Check if the request is for friend requests
 ) {
   try {
+    console.log("Friend Requests ----");
     // Find the user's information from the decoded token
     const decoded = jwt.verify(token, process.env.jwt_secret);
     
@@ -137,7 +139,7 @@ else if (
     
     // Retrieve friend requests for the user
     const friendRequests = await user.find({ _id: { $in: userInfo.friendRequests } });
-
+    console.log(friendRequests);
     // Send the friend requests as a response
     response.writeHead(200, { "Content-Type": "application/json" });
     response.end(JSON.stringify(friendRequests)); 
@@ -147,7 +149,40 @@ else if (
     response.writeHead(500, { "Content-Type": "application/json" });
     response.end(JSON.stringify({ error: "Internal Server Error" }));
   }
-}// Assuming this code is within an HTTP server setup
+}
+else if (
+  request.method === "GET" &&
+  filePath[2] === "user" &&
+  filePath[3] === "whoami" // Check if the request is for getting user information
+) {
+  try {
+    // Find the user's information from the decoded token
+    const decoded = jwt.verify(token, process.env.jwt_secret);
+    // Find the user's information
+    console.log("fetching user info");
+    var userInfo = await user.findOne({ username: decoded.username });
+    const league = await LeagueModel.findById(userInfo.league);
+    if (league) {
+      console.log(league.name);
+      
+      userInfo = {"username":userInfo.username,"eloRanking":userInfo.eloRanking,"leagueName":league.name}
+    }
+    if (!userInfo) {
+      // If the user does not exist, handle the error
+      response.writeHead(404, { "Content-Type": "application/json" });
+      response.end(JSON.stringify({ error: "User not found" }));
+      return;
+    }
+    // Send the user's information as a response
+    response.writeHead(200, { "Content-Type": "application/json" });;
+    response.end(JSON.stringify(userInfo));
+  } catch (error) {
+    // Handle any errors
+    console.error("Error while fetching user information:", error);
+    response.writeHead(500, { "Content-Type": "application/json" });
+    response.end(JSON.stringify({ error: "Internal Server Error" }));
+  }
+}
 
 else if (
   request.method === "GET" &&

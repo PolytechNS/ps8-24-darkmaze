@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DarkMaze Game - Challenge friend</title>
+<link rel="icon" href="assets/images/icon.png">
+<link href="https://fonts.googleapis.com/css?family=Denk+One" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style_theme_1.css"></head>
+<body>
+<!-- Ici on insère le menu défini dans le fichier 'menu.html'
+  N.B: dans le fichier 'menu.html' il faut définir dans la balise 
+  <a href= .... target="_parent"> et ce pour que les liens 
+  s'ouvrent dans la fenêtre principale
+-->
+<div class="upper"> 
+  <object data="menu.html" width="500px"></object>
+</div>
+<!------------ Fin insertion menu ------------------>
+
+
+
+
+
+<div class="box" id="listcontainer">
+  <h2>Chanllenge a friend</h2>  
+  <h3>Friends List</h3>    
+
+
+<div class="better_scrollbar" id="friendsList">
+    <div id="friendsList"></div>
+    <script src="../js/socket.io.js"></script>
+</div>
+<!--
+    <div class="item_friend" value="Dave Jones">Dave Jones</div>
+    <div class="item_friend" value="John Smith">John Smith</div>
+    <div class="item_friend" value="Harold Kramer">Harold Kramer</div>
+    <div class="item_friend" value="Bill Gates">Bill Gates</div>
+    <div class="item_friend" value="Jake Johnson">Jake Johnson</div>
+    <div class="item_friend" value="Carry Kramer">Carry Kramer</div>
+    <div class="item_friend" value="Will Wheatley">Will Wheatley</div>
+    <div class="item_friend" value="Fred Flint">Fred Flint</div>
+    <div class="item_friend" value="Andrew Andrews">Andrew Andrews</div>
+    <div class="item_friend" value="Stephen Steptoe">Stephen Steptoe</div>
+    <div class="item_friend" value="Monica McEnroe">Monica McEnroe</div>
+    <div class="item_friend" value="Mary Matthews">Mary Matthews</div>
+    <div class="item_friend" value="Larry Last">Larry Last</div>
+
+    <div class="item_friend" value="Fred Flint">Fred Flint</div>
+    <div class="item_friend" value="Andrew Andrews">Andrew Andrews</div>
+    <div class="item_friend" value="Stephen Steptoe">Stephen Steptoe</div>
+    <div class="item_friend" value="Monica McEnroe">Monica McEnroe</div>
+    <div class="item_friend" value="Mary Matthews">Mary Matthews</div>
+    <div class="item_friend" value="Larry Last">Larry Last</div>
+
+
+<br><br>
+<button class="cybr-btn">
+    Play with<span aria-hidden> </span>
+  <span aria-hidden class="cybr-btn__glitch" onclick="sendMessage()">Send</span>
+  </button>
+  <div class="inputBox">
+    <input type="text" id="selectedValue" name="selectedValue" readonly>
+  </div>      
+</div>
+-->
+<script>
+/* Ci-dessous un script qui ajoute un gestionnaire d'événement clic à chaque 
+   élément de classe "item_friend". Lorsqu'un élément est cliqué, 
+   il récupère la valeur de l'attribut "value" de l'élément et l'affiche dans
+   la zone text 'inputBox'
+*/
+
+// Sélection de tous les éléments avec la classe "item_friend"
+var items = document.querySelectorAll('.item_friend');
+var inputText = document.getElementById('selectedValue');// Sélection de l'élément input
+// Ajout d'un gestionnaire d'événement à chaque élément
+items.forEach(function(item) {
+    item.addEventListener('click', function() {
+        // Récupération de la valeur de l'élément cliqué
+        var value = item.getAttribute('value');
+        
+        // Définition de la valeur de l'élément input
+        inputText.value = value;
+    });
+});
+/************** FIN DE SCRIPT DE GESTION DE L'EMEMENT SELECTIONNE **********/
+
+
+/*zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+/****** CI-DESSOUS VOS SCRIPT ORIGINAUX ************************************
+zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz*/
+
+        // Function to fetch friends with messages
+        const io_instance = io("/api/OnlineGame", {
+            query: { 
+            cookies: document.cookie
+            }
+        });
+        /*-------- 
+        function fetchFriendsWithMessages() {
+            // Assuming you have an API endpoint to fetch friends with messages
+            console.log("get frieeeeeends")
+            fetch('/api/user/friends')
+            .then(response => response.json())
+            .then(friends => {
+                // Get reference to the friends list container
+                const friendsListContainer = document.getElementById('friendsList');
+                
+                // Create HTML content for the list of friends
+                let htmlContent = "<ul>";
+
+                // Loop through friends and create list items with "Challenge Friend" button
+                friends.forEach(friend => {
+                    htmlContent += `<li>${friend.username} <button onclick="challengeFriend('${friend.username}')">Challenge</button></li>`;
+                });
+
+                htmlContent += "</ul>";
+
+                // Set HTML content in the friends list container
+                friendsListContainer.innerHTML = htmlContent;
+            })
+            .catch(error => {
+                console.error('Error fetching friends with messages:', error);
+                alert('Error fetching friends with messages. Please try again later.');
+            });
+        }  --------*/
+
+        function fetchFriendsWithMessages() {
+            // Assuming you have an API endpoint to fetch friends with messages
+            console.log("get friends")
+            fetch('/api/user/friends')
+            .then(response => response.json())
+            .then(friends => {
+                // Get reference to the friends list container
+                const friendsListContainer = document.getElementById('friendsList');
+
+                // Create HTML content for the list of friends
+                let htmlContent = "";
+
+                // Loop through friends and create list items with "Challenge Friend" button
+                friends.forEach(friend => {
+                    htmlContent += `<div class="item_friend" value="${friend.username}">${friend.username} 
+                        <button class="btn-challenge" onclick="challengeFriend('${friend.username}')">Challenge</button></div>`;
+                 });
+
+                 // Set HTML content in the friends list container
+                friendsListContainer.innerHTML = `<div class="better_scrollbar">${htmlContent}</div>`;
+                })
+            .catch(error => {
+                console.error('Error fetching friends with messages:', error);
+                alert('Error fetching friends with messages. Please try again later.');
+            });
+        }
+
+
+        io_instance.on("challengeRecieved",(roomId)=>{
+            console.log("reciveeddd A chanllenge");
+            const confirmation = window.confirm("You have received a challenge from "+roomId +". Do you want to accept it?");
+            if (confirmation==true) {
+                console.log("Challenge accepted");
+                // Your code for when the challenge is accepted
+                var url = 'http://localhost:8000/html/OnlineGame.html?roomId='+roomId;
+                window.location.href = url;
+            } else {
+                console.log("Challenge refused");
+                io_instance.emit("challengeRejected",roomId);
+                
+                // Your code for when the challenge is refused
+            }
+
+        })
+
+
+        io_instance.on("userNotConnected",()=>{
+        window.alert("user not Connected")
+        
+        })
+        // Function to handle challenging a friend
+        function challengeFriend(friendId) {
+            // Emit the event to the server
+            io_instance.emit("ChallengeGame", friendId, (response) => {
+                console.log("server response ",response);
+                // This callback function will be executed when the server responds
+                if (response === "success") {
+                    // If the server acknowledges the challenge, redirect the user
+                    var url = 'http://localhost:8000/html/OnlineGame.html?challenge=true';
+                    window.location.href = url;
+                } else {
+                    // Handle other cases, if necessary
+                    console.log("Challenge failed");
+                }
+            });
+        }
+        // Call the function to fetch friends when the page loads
+        window.onload = fetchFriendsWithMessages;
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

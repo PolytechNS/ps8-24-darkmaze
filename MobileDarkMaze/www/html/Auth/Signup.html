@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DarkMaze Game - Sign Up</title>
+<link rel="icon" href="assets/images/icon.png">
+<link href="https://fonts.googleapis.com/css?family=Denk+One" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/bloody" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style_theme_1.css">
+</head>
+<body>
+<!-- Ici on insère le menu défini dans le fichier 'menu.html'
+  N.B: dans le fichier 'menu.html' il faut définir dans la balise 
+  <a href= .... target="_parent"> et ce pour que les liens 
+  s'ouvrent dans la fenêtre principale
+-->
+<div class="upper"> 
+  <object data="../menu.html" width="500px"></object>
+</div>
+<!------------ Fin insertion menu ------------------>
+<div class="box">
+    <h2>Sign Up</h2>
+    <h3>Create an Account</h3>    
+<form id="signupForm"  action="http://15.188.201.4:80/api/signup"  method="post">
+  <div class="inputBox">
+    <input type="text" id="username" name="username" required="" autocomplete="username">
+    <label>Username</label>
+  </div>      
+     <div class="inputBox">
+        <input type="email" id="email" name="email" required="" autocomplete="email">
+        <label>Email</label>
+      </div>
+      <div class="inputBox">
+        <input type="password" id="password" name="password" required="" autocomplete="new-password">
+
+        <label>Password</label>
+      </div>
+      <button type="submit" class="cybr-btn" name="sign-up" value="Sign Up">
+        Sign Up<span aria-hidden> </span>
+      <span aria-hidden class="cybr-btn__glitch">Sign In</span>
+      </button>
+      <input type="checkbox" id="rem_up" name="rem_up" value="rem_up"/>  
+      <label>Remember me</label> <br>  
+  <!--
+      <input type="submit" name="sign-in" value  
+"Sign In">
+  -->
+</form>
+  <div>
+    <p><a href="Login.html">Already have an account?</a></p>
+  </div>
+
+  </div>
+
+
+
+
+  <script src="/assets/js/jquery.min.js"></script>
+  <script src="/assets/js/popper.js"></script>
+  <script src="/assets/js/bootstrap.min.js"></script>
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>

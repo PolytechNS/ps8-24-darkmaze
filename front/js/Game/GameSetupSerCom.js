@@ -6,12 +6,12 @@ function launchGame() {
     else 
       var aiFirst = false;
     // Redirect to localhost:8000/html/index.html with query parameters
-    var url = `http://localhost:8000/html/index.html?playAgainstAI=${playAgainstAI}&aiFirst=${aiFirst}`;
+    var url = `http://15.188.201.4:8000/html/index.html?playAgainstAI=${playAgainstAI}&aiFirst=${aiFirst}`;
     window.location.href = url;
   }
   
 function startOnlineGame(){
-  var url = `http://localhost:8000/html/OnlineGame.html`;
+  var url = `http://15.188.201.4:8000/html/OnlineGame.html`;
   window.location.href = url;
 
 }
@@ -20,13 +20,13 @@ function launchGame2() {
   var aiFirst = false;
   var playAgainstAI =false
   // Redirect to localhost:8000/html/index.html with query parameters
-  var url = `http://localhost:8000/html/index.html?playAgainstAI=false&aiFirst=false`;
+  var url = `http://15.188.201.4:8000/html/index.html?playAgainstAI=false&aiFirst=false`;
   window.location.href = url;
 }
 function PickFriend() {
 
     // Redirect to localhost:8000/html/index.html with query parameters
-    var url = `http://localhost:8000/html/ChallengeAFriend.html`;
+    var url = `http://15.188.201.4:8000/html/ChallengeAFriend.html`;
     window.location.href = url;
   }
 
@@ -42,7 +42,7 @@ function PickFriend() {
 
   async function fetchSavedGames() {
     try {
-      const response = await fetch('http://localhost:8000/api/game/all', {
+      const response = await fetch('http://15.188.201.4:8000/api/game/all', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ function PickFriend() {
 
   async function startGame(gameId) {
     try {
-      const response = await fetch('http://localhost:8000/api/game/load', {
+      const response = await fetch('http://15.188.201.4:8000/api/game/load', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
