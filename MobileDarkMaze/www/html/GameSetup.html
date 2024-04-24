@@ -202,25 +202,24 @@ a {
  
   <script>
 
-      // Récupère les cookies de la page
-      const cookies = document.cookie;
+const cookies = document.cookie;
 
-      let themeValue = null;
-      if (cookies) {
-          const cookieArray = cookies.split(';');
-          for (const cookie of cookieArray) {
-              const [key, value] = cookie.trim().split('=');
-              if (key === 'theme') {
-                  themeValue = decodeURIComponent(value);
-                  break;
-              }
-          }
-      }
+let themeValue = null;
+if (cookies) {
+  const cookieArray = cookies.split(';');
+  for (const cookie of cookieArray) {
+    const [key, value] = cookie.trim().split('=');
+    if (key === 'theme') {
+      themeValue = decodeURIComponent(value);
+      break; 
+    }
+  }
+}
 
-      console.log(themeValue);
-      if (themeValue === 'theme2') {
-          window.location.href = '../html2/GameSetup.html';
-      }
+console.log(themeValue);
+if (themeValue === 'theme2') {
+  window.location.href = '../html2/GameSetup.html';
+}
     document.getElementById('playAgainstAI').addEventListener('change', function() {
         var aiOptions = document.getElementById('aiOptions');
         var aiFirst = document.getElementById('aiFirst');
