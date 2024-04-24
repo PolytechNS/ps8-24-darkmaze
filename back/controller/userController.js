@@ -88,6 +88,8 @@ else if (
   try {
       // Find the friend's information
       const friendToAddInfo = await user.findOne({ username: friendToAdd });
+	      console.log("decoded --- ",decoded.username,decoded.id);
+    console.log("friend to add",friendToAddInfo);
 
       if (!friendToAddInfo) {
           // If the friend to add does not exist, handle the error
@@ -126,17 +128,17 @@ else if (
     console.log("Friend Requests ----");
     // Find the user's information from the decoded token
     const decoded = jwt.verify(token, process.env.jwt_secret);
-    
+    console.log("Username ",decoded.username);
     // Find the user's information
     const userInfo = await user.findOne({ username: decoded.username });
-    
+	console.log("userInfo ",userInfo);
     if (!userInfo) {
       // If the user does not exist, handle the error
       response.writeHead(404, { "Content-Type": "application/json" });
       response.end(JSON.stringify({ error: "User not found" }));
       return;
     }
-    
+   console.log("userInfo.friendRequests",userInfo.friendRequests);
     // Retrieve friend requests for the user
     const friendRequests = await user.find({ _id: { $in: userInfo.friendRequests } });
     console.log(friendRequests);
