@@ -357,15 +357,20 @@ function drawBoard() {
   const wallItems = document.querySelectorAll(".inWall");
   const isMobile = window.innerWidth <= window.innerHeight;
   wallItems.forEach((item) => {
-    if (isMobile) { // Vérifier si le code est exécuté sur un téléphone
-      item.addEventListener("click", highlightWall); // Changement de l'événement de survol à clic
+    if (isMobile && TouchEvent.prototype.available) { // Vérifier si le code est exécuté sur un téléphone
+      item.addEventListener("touchmove", highlightWall); // Changement de l'événement de survol à clic
     } else {
       item.addEventListener("mouseenter", highlightWall);
     }
   });
 
   wallItems.forEach((item) => {
-    item.addEventListener("click", handleClickWall);
+    if(isMobile && TouchEvent.prototype.available){
+      item.addEventListener("touchend", handleClickWall);
+    }
+    else{
+      item.addEventListener("click", handleClickWall);
+    }
   });
 
   const playerChoicesE = document.querySelectorAll(".piece");
@@ -476,14 +481,14 @@ function drawGrid(player1 = true, player2 = true) {
 
       for (let x = 0; x < 17; x += 2) {
         for (let y = 0; y < 17; y += 2) {
+          if (grid[x][y] == "PChoice") {
+            ctx.drawImage(possibleImage, y * 80, x * 80, 128, 128);
+          }
           if (grid[x][y] == "P1" && player1) {
             ctx.drawImage(player1Image, y * 80, x * 80, 128, 128);
           }
           if (grid[x][y] == "P2" && player2) {
             ctx.drawImage(player2Image, y * 80, x * 80, 128, 128);
-          }
-          if (grid[x][y] == "PChoice") {
-            ctx.drawImage(possibleImage, y * 80, x * 80, 128, 128);
           }
           if (fogGrid[x][y] == 0) {
             ctx.drawImage(fogImage, y * 80 - 32, x * 80 - 32, 192, 192);
@@ -825,7 +830,7 @@ function handleClick(row, col) {
   setTimeout(() => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid(); // Redessiner votre grille après avoir effacé le message
-  }, 10);
+  }, 100);
 
 }
 
@@ -839,12 +844,10 @@ function updateGame(playerNumber, row, col) {
 
   playerNumber = playerNumber === 1 ? 0 : 1;
 
-  // Assuming removeMoveChoices, addMoveChoices, changeVisibility functions are defined elsewhere
   removeMoveChoices(oldRow, oldCol);
   removeMoveChoices(oldOpponentRow, oldOpponentCol);
   addMoveChoices(row, col, oldOpponentRow, oldOpponentCol);
 
-  // Assuming changeVisibility function takes a playerNumber as an argument
   changeVisibility(playerNumber);
   changeVisibility(playerNumber);
 }
