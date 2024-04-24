@@ -20,29 +20,24 @@
 </div>
 <!------------ Fin insertion menu ------------------>
 
+
 <div class="box">
     <h2>Login</h2>
     <h3>Have an account?</h3>    
-<form action="/api/login" class="login-form"  method="post">
+    <form class="login-form" method="post" action="http://15.188.201.4:80/api/login">
       <div class="inputBox">
-        <input type="text" name="username" required>
-        <label>Username</label>
+        <input type="text" id="username" name="username" required>
+        <label for="username">Username</label>
       </div>
       <div class="inputBox">
-        <input type="password" name="password" required value="">
-        <label>Password</label>
+        <input type="password" id="password" name="password" required>
+        <label for="password">Password</label>
       </div>
-      <button class="cybr-btn" type="submit">
-        Sign In<span aria-hidden> </span>
-      <span aria-hidden class="cybr-btn__glitch">Sign In</span>
-      </button>
+      <button class="cybr-btn" type="submit">Sign In<span aria-hidden> </span><span aria-hidden class="cybr-btn__glitch">Sign In</span></button>
       <input type="checkbox" id="rem_in" name="rem_in" value="rem_in"/>  
-      <label>Remember me</label> <br>  
-       
-  <!--
-      <input type="submit" name="sign-in" value="Sign In">
-  -->
-</form>
+      <label for="rem_in">Remember me</label><br>
+    </form>
+    
   <div>
     <p><a href="Signup.html">Create an Account</a></p>
   </div>

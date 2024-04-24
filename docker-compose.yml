@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.3"
 services:
   db:
     image: mongo
@@ -6,6 +6,7 @@ services:
       - ./data/db:/data/db
     ports:
       - "27017:27017"
+
   app:
     build: .
     image: ps8back:v0.1
@@ -16,3 +17,13 @@ services:
       jwt_secret: asdcn@#dc#ãc#~r99d83$$!ac9536"·$d9d5d9"·46a8c962"·4sdl23!·1@#dc23@#3f85s
     depends_on:
       - db
+
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - app
+

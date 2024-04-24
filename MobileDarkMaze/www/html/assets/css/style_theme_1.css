@@ -314,10 +314,10 @@
     left: 50%;
     height: auto;
     transform: translate(-50%, -50%);
-    width: 45rem;
+    width: 80%;
     padding: 2.5rem;
     box-sizing: border-box;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(231, 18, 18, 0.6);
     border-radius: 0.625rem;
   }
   

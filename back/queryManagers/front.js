@@ -86,7 +86,8 @@ function manageRequest(request, response) {
           "./front/assets/P1.png",
           "./front/assets/P2.png",
           "./front/assets/fog.png",
-          "./front/assets/possibleMove.png"
+          "./front/assets/possibleMove.png",
+          "./front/js/themeSwitcher.js"
 
       ];  
         if (!authPaths.includes(pathName)) {
