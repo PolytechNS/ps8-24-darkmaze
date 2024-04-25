@@ -106,8 +106,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         })
         .catch(error => {
-            console.error('Error fetching messages:', error);
-            alert('Error fetching messages. Please try again later.');
+           alert('Error fetching messages:', error);
+           alert('Error fetching messages. Please try again later.');
         });
     }
     
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
             content: messageContent
         };
     
-        fetch("http://15.188.201.4:8000/api/conversation/send-message", {
+        fetch("/api/conversation/send-message", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

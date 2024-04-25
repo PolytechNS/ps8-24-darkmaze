@@ -157,11 +157,27 @@ zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz*/
 
         io_instance.on("challengeRecieved",(roomId)=>{
             console.log("reciveeddd A chanllenge");
-            const confirmation = window.confirm("You have received a challenge from "+roomId +". Do you want to accept it?");
+ var audioFile = "www/sounds/mixkit-game-notification-wave-alarm-987.wav";
+
+    // Create a Media object
+    var media = new Media(audioFile,
+        // Success callback
+        function() {
+            console.log("Audio played successfully");
+        },
+        // Error callback
+        function(err) {
+            console.error("Error playing audio: " + JSON.stringify(err));
+        }
+    );
+
+    // Play the audio
+    media.play();
+		const confirmation = window.confirm("You have received a challenge from "+roomId +". Do you want to accept it?");
             if (confirmation==true) {
                 console.log("Challenge accepted");
                 // Your code for when the challenge is accepted
-                var url = 'http://localhost:8000/html/OnlineGame.html?roomId='+roomId;
+                var url = 'OnlineGame.html?roomId='+roomId;
                 window.location.href = url;
             } else {
                 console.log("Challenge refused");
@@ -185,7 +201,7 @@ zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz*/
                 // This callback function will be executed when the server responds
                 if (response === "success") {
                     // If the server acknowledges the challenge, redirect the user
-                    var url = 'http://localhost:8000/html/OnlineGame.html?challenge=true';
+                    var url = 'OnlineGame.html?challenge=true';
                     window.location.href = url;
                 } else {
                     // Handle other cases, if necessary
@@ -193,6 +209,7 @@ zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz*/
                 }
             });
         }
+
         // Call the function to fetch friends when the page loads
         window.onload = fetchFriendsWithMessages;
 </script>

@@ -27,7 +27,7 @@ function authMiddleware(req, res, next) {
         
         // Attach the decoded token to the request object
         req.user = decoded;
-        
+        console.log("Mobile Debugging: ",decoded);
         console.log("insiiiiide MW"); 
         // Call the next middleware or route handler
         next(req,res);
