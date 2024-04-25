@@ -855,3 +855,8 @@ textarea:focus {
   align-items: center; 
 }
 
+@media screen and (max-width: 768px) {
+  #buttonnns {
+    flex-direction: column; /* Stack buttons vertically */
+  }
+}

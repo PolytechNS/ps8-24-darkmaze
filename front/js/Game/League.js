@@ -36,7 +36,7 @@ async function fetchUsersForLeague(leagueId) {
         console.error('Error fetching users for league:', error);
         throw error;
     }
-}
+} 
 async function populateLeagueList() {
     try {
         const leagues = await fetchLeagues();

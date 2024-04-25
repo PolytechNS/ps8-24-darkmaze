@@ -11,7 +11,7 @@ async function leagueController(request, response, gamesTable, UserModel) {
         league.find()
             .then((leagues) => {
                 // Send the leagues array as JSON in the response
-                response.writeHead(200, { "Content-Type": "application/json" });
+                response.writeHead(200, { "Content-Type": "application/json" }); 
                 response.end(JSON.stringify(leagues));
             })
             .catch((error) => {
