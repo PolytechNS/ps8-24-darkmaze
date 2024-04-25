@@ -829,7 +829,10 @@ function handleClick(row, col) {
   //we should check if the move is possible or not
   gameNamespace.emit("newMove", TestGame.id, playerNumber, row, col);
   console.log(grid)
-
+  setTimeout(() => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGrid(); // Redessiner votre grille après avoir effacé le message
+  }, 200);
   // Add your logic for handling the click event
 }
 
