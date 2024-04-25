@@ -176,6 +176,7 @@ function setIo(io){
                   true
   
                 );  
+ 
             io.of('/api/OnlineGame')
               .to(userSockets[getOpponentUserName(decoded.username)])
                 .emit(

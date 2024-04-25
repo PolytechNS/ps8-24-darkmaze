@@ -197,6 +197,7 @@ function displayFriendRequestsPopup(requests) {
         acceptButton.addEventListener('click', () => {
             // Call the acceptFriendRequest function with the request ID as an argument
             acceptFriendRequest(request._id);
+            document.getElementById('friendRequestsPopup').remove();
         });
         
         listItem.textContent = request.username;

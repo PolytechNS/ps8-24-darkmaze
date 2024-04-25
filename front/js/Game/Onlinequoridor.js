@@ -50,7 +50,7 @@ setTimeout(() => {
 gameNamespace.on("ErrorPlaying", (msg) => window.alert(msg));
 gameNamespace.on("GameOver", (msg) => {
   window.alert(msg);
-  var url = 'http://15.188.201.4:8000/api/game';
+  var url = '/api/game';
   window.location.href = url;
 });
 gameNamespace.on("player2Setup",(id, board, playerPostion, wallsPositions) => {
@@ -96,7 +96,7 @@ gameNamespace.on(
 
       if (newGame) {
         TestGame = new GameState(id, board, playerPostion, wallsPositions);
-        drawBoard();
+        drawBoard(0);
       } else {
 
         let OldRow = TestGame.playersPosition[playerNumber][0];
@@ -137,9 +137,10 @@ gameNamespace.on(
         );
         //this code should be on the update
         console.log("players Position ",playerPostion);
-
+        console.log("########## player Number ",playerNumber);
         changeVisibility(playerNumber);
-        drawBoard();
+        drawBoard(0);
+        
 
       }
     }
@@ -167,6 +168,8 @@ gameNamespace.on(
         removeMoveChoices(OldRow, OldCol);
         removeMoveChoices(OldOpponentRow, OldOpponentCol);
       }else{
+        removeMoveChoices(OldRow, OldCol);
+        removeMoveChoices(OldOpponentRow, OldOpponentCol);
         addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
       }
 
@@ -184,6 +187,7 @@ gameNamespace.on(
       );
       //this code should be on the update
       changeVisibility(playerNumber);
+      drawBoard(1);
 
 
     }
@@ -338,7 +342,7 @@ function changeVisibility(playerNumber) {
   }
 }
 
-function drawBoard() {
+function drawBoard(PlayerNumber) {
   const quoridorBoard = document.getElementById("quoridor-board");
   //pour l'animation :
   window.lastpiece = null;
@@ -393,12 +397,12 @@ function drawBoard() {
     is_piece_box = is_piece_box ? false : true;
   }
   addMoveChoices(
-      TestGame.playersPosition[1][0],
-      TestGame.playersPosition[1][1],
-      TestGame.playersPosition[0][0],
-      TestGame.playersPosition[0][1]
+      TestGame.playersPosition[PlayerNumber==0?1:0][0],
+      TestGame.playersPosition[PlayerNumber==0?1:0][1],
+      TestGame.playersPosition[PlayerNumber][0],
+      TestGame.playersPosition[PlayerNumber][1]
   );
-  changeVisibility(0);
+  changeVisibility(playerNumber);
   // Function to handle cell click
 
   //----------------------------GRID MANIPULATION--------------------------

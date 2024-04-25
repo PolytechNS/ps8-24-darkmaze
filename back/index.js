@@ -25,9 +25,9 @@ const server = http.createServer(function (request, response) {
             apiQuery.manage(request, response);
             // If it doesn't start by /api, then it's a request for a file.
  
-        } else {
+        } else { 
 
-            fileQuery.manage(request, response);
+            fileQuery.manage(request, response); 
 
         }
     } catch(error) {

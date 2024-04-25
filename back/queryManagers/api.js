@@ -266,6 +266,7 @@ async function manageRequest(request, response) {
     });
     console.log("Login ...");
   } else {
+    console.log("before authMW");
     authMW(request, response, (request, response) => {
       console.log("API request ...");
       GMController.gameController(request, response, GamesTable);

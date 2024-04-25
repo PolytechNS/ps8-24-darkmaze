@@ -66,17 +66,22 @@ function MuteMessages(){
 // Function to show the overlay
 var interval
 function switchOverlay() { 
+
+    
     console.log("-------> switching");
     if(invisibleOverlay.style.display == 'block'){
+      setTimeout(() => {
       invisibleOverlay.style.display = 'none';
-      document.getElementById('timer').textContent="1:30"
+      document.getElementById('timer').textContent="1:29"
       clearInterval(interval);
+    }, 200);
 
     }
     else{
+      
       invisibleOverlay.style.display = 'block'
       var timerElement = document.getElementById('timer');
-        var totalTime = 90; // 1 minute 30 seconds in seconds
+        var totalTime = 88; // 1 minute 30 seconds in seconds
         interval = setInterval(function() {
             var minutes = Math.floor(totalTime / 60);
             var seconds = totalTime % 60;
@@ -88,6 +93,8 @@ function switchOverlay() {
                 totalTime--;
             }
         }, 1000); // Update every second
+      
     }
+
 }
 
