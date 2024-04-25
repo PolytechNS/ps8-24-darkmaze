@@ -156,23 +156,10 @@ zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz*/
 
 
         io_instance.on("challengeRecieved",(roomId)=>{
-            console.log("reciveeddd A chanllenge");
- var audioFile = "www/sounds/mixkit-game-notification-wave-alarm-987.wav";
-
-    // Create a Media object
-    var media = new Media(audioFile,
-        // Success callback
-        function() {
-            console.log("Audio played successfully");
-        },
-        // Error callback
-        function(err) {
-            console.error("Error playing audio: " + JSON.stringify(err));
-        }
-    );
-
-    // Play the audio
-    media.play();
+            window.alert("reciveeddd A chanllenge");
+            
+var audio = new Audio("../assests/mixkit-game-notification-wave-alarm-987.mp3");
+  audio.play();
 		const confirmation = window.confirm("You have received a challenge from "+roomId +". Do you want to accept it?");
             if (confirmation==true) {
                 console.log("Challenge accepted");
