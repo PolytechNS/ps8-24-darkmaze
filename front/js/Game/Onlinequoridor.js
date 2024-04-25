@@ -234,9 +234,9 @@ function UpdatePiecePositionOnBoard(
 }
 
 function addMoveChoices(opponentRow, opponentCol, row, col) {
-  //console.log("ADD MOVE CHOICE"+row+"-"+col);
+  console.log("ADD MOVE CHOICE"+row+"-"+col);
   if (row + 2 <= 16 && (row + 2 !== opponentRow || col !== opponentCol)&&(!(grid[row+1][Math.abs((col+1)%17)].endsWith('h'))&&!(grid[row+1][Math.abs((col-1)%17)].endsWith('h')))) {
-    //console.log("Adding playerChoice to cell-" + (row + 2) + "-" + col);
+    console.log("Adding playerChoice to cell-" + (row + 2) + "-" + col);
     document
         .getElementById("cell-" + (row + 2) + "-" + col)
         .classList.add("playerChoice");
@@ -244,7 +244,7 @@ function addMoveChoices(opponentRow, opponentCol, row, col) {
   }
 
   if (row - 2 >= 0 && (row - 2 !== opponentRow || col !== opponentCol)&&(!(grid[row-1][Math.abs((col-1)%17)].endsWith('h'))&&!(grid[row-1][Math.abs((col+1)%17)].endsWith('h')))) {
-    //console.log("Adding playerChoice to cell-" + (row - 2) + "-" + col);
+    console.log("Adding playerChoice to cell-" + (row - 2) + "-" + col);
     document
         .getElementById("cell-" + (row - 2) + "-" + col)
         .classList.add("playerChoice");
@@ -252,7 +252,7 @@ function addMoveChoices(opponentRow, opponentCol, row, col) {
   }
 
   if (col + 2 <= 16 && (row !== opponentRow || col + 2 !== opponentCol)&&(!(grid[Math.abs((row+1)%17)][col+1].endsWith('v'))&&!(grid[Math.abs((row-1)%17)][col+1].endsWith('v')))) {
-    //console.log("Adding playerChoice to cell-" + row + "-" + (col + 2));
+    console.log("Adding playerChoice to cell-" + row + "-" + (col + 2));
     document
         .getElementById("cell-" + row + "-" + (col + 2))
         .classList.add("playerChoice");
@@ -260,7 +260,7 @@ function addMoveChoices(opponentRow, opponentCol, row, col) {
   }
 
   if (col - 2 >= 0 && (row !== opponentRow || col - 2 !== opponentCol)&&(!(grid[Math.abs((row-1)%17)][col-1].endsWith('v'))&&!(grid[Math.abs((row+1)%17)][col-1].endsWith('v')))) {
-    //console.log("Adding playerChoice to cell-" + row + "-" + (col - 2));
+    console.log("Adding playerChoice to cell-" + row + "-" + (col - 2));
     document
         .getElementById("cell-" + row + "-" + (col - 2))
         .classList.add("playerChoice");
@@ -451,11 +451,11 @@ function drawBoard() {
 // ===================================FONCTIONS UTILES =======================================================================
 function loadImages() {
   return Promise.all([
-    loadImage("http://14.188.201.4:8000/assets/Grid.png"),
-    loadImage("http://14.188.201.4:8000/assets/P1.png"),
-    loadImage("http://14.188.201.4:8000/assets/P2.png"),
-    loadImage("http://14.188.201.4:8000/assets/fog.png"),
-    loadImage("http://14.188.201.4:8000/assets/possibleMove.png"),
+    loadImage("../../assets/Grid.png"),
+    loadImage("../../assets/P1.png"),
+    loadImage("../../assets/P2.png"),
+    loadImage("../../assets/fog.png"),
+    loadImage("../../assets/possibleMove.png"),
   ]);
 }
 
@@ -466,15 +466,15 @@ function loadImage(src) {
     image.src = src;
 
     image.onload = function () {
-      if (src === "../assets/Grid.png") {
+      if (src === "../../assets/Grid.png") {
         gridImage = image;
-      } else if (src === "../assets/P1.png") {
+      } else if (src === "../../assets/P1.png") {
         player1Image = image;
-      } else if (src === "../assets/P2.png") {
+      } else if (src === "../../assets/P2.png") {
         player2Image = image;
-      } else if (src === "../assets/fog.png") {
+      } else if (src === "../../assets/fog.png") {
         fogImage = image;
-      } else if (src === "../assets/possibleMove.png") {
+      } else if (src === "../../assets/possibleMove.png") {
         possibleImage = image;
       }
 
