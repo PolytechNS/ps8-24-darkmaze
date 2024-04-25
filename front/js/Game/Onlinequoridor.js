@@ -71,6 +71,7 @@ gameNamespace.on("player2Setup",(id, board, playerPostion, wallsPositions) => {
   console.log("Switching Overlayyyy");
   switchOverlay();
   removeMoveChoices(OldRow, OldCol);
+  removeMoveChoices(OldOpponentRow, OldOpponentCol);
 
   addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
 
@@ -117,6 +118,7 @@ gameNamespace.on(
         if(switchOverlayFlag==true){
           switchOverlay();
           removeMoveChoices(OldRow, OldCol);
+          removeMoveChoices(OldOpponentRow, OldOpponentCol);
         }else{
           addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
         }
@@ -163,6 +165,7 @@ gameNamespace.on(
       if(switchOverlayFlag==true){
         switchOverlay();
         removeMoveChoices(OldRow, OldCol);
+        removeMoveChoices(OldOpponentRow, OldOpponentCol);
       }else{
         addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
       }
