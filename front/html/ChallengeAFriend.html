@@ -158,7 +158,7 @@ zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz*/
         io_instance.on("challengeRecieved",(roomId)=>{
             window.alert("reciveeddd A chanllenge");
             
-var audio = new Audio("../assests/mixkit-game-notification-wave-alarm-987.mp3");
+var audio = new Audio("../sounds/notif.mp3");
   audio.play();
 		const confirmation = window.confirm("You have received a challenge from "+roomId +". Do you want to accept it?");
             if (confirmation==true) {
