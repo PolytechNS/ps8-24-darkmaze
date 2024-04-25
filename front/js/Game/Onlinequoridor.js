@@ -50,7 +50,7 @@ setTimeout(() => {
 gameNamespace.on("ErrorPlaying", (msg) => window.alert(msg));
 gameNamespace.on("GameOver", (msg) => {
   window.alert(msg);
-  var url = 'http://localhost:8000/api/game';
+  var url = 'http://15.188.201.4:8000/api/game';
   window.location.href = url;
 });
 gameNamespace.on("player2Setup",(id, board, playerPostion, wallsPositions) => {
@@ -451,11 +451,11 @@ function drawBoard() {
 // ===================================FONCTIONS UTILES =======================================================================
 function loadImages() {
   return Promise.all([
-    loadImage("http://localhost:8000/assets/Grid.png"),
-    loadImage("http://localhost:8000/assets/P1.png"),
-    loadImage("http://localhost:8000/assets/P2.png"),
-    loadImage("http://localhost:8000/assets/fog.png"),
-    loadImage("http://localhost:8000/assets/possibleMove.png"),
+    loadImage("http://14.188.201.4:8000/assets/Grid.png"),
+    loadImage("http://14.188.201.4:8000/assets/P1.png"),
+    loadImage("http://14.188.201.4:8000/assets/P2.png"),
+    loadImage("http://14.188.201.4:8000/assets/fog.png"),
+    loadImage("http://14.188.201.4:8000/assets/possibleMove.png"),
   ]);
 }
 
@@ -466,15 +466,15 @@ function loadImage(src) {
     image.src = src;
 
     image.onload = function () {
-      if (src === "http://localhost:8000/assets/Grid.png") {
+      if (src === "http://14.188.201.4:8000/assets/Grid.png") {
         gridImage = image;
-      } else if (src === "http://localhost:8000/assets/P1.png") {
+      } else if (src === "http://14.188.201.4:8000/assets/P1.png") {
         player1Image = image;
-      } else if (src === "http://localhost:8000/assets/P2.png") {
+      } else if (src === "http://14.188.201.4:8000/assets/P2.png") {
         player2Image = image;
-      } else if (src === "http://localhost:8000/assets/fog.png") {
+      } else if (src === "http://14.188.201.4:8000/assets/fog.png") {
         fogImage = image;
-      } else if (src === "http://localhost:8000/assets/possibleMove.png") {
+      } else if (src === "http://14.188.201.4:8000/assets/possibleMove.png") {
         possibleImage = image;
       }
 
