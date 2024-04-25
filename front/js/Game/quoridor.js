@@ -358,7 +358,7 @@ function drawBoard() {
   const isMobile = window.innerWidth <= window.innerHeight;
   wallItems.forEach((item) => {
     if (isMobile && TouchEvent.prototype.available) { // Vérifier si le code est exécuté sur un téléphone
-      item.addEventListener("touchmove", highlightWall); // Changement de l'événement de survol à clic
+      item.addEventListener("touchstart", highlightWall); // Changement de l'événement de survol à clic
     } else {
       item.addEventListener("mouseenter", highlightWall);
     }
@@ -366,7 +366,7 @@ function drawBoard() {
 
   wallItems.forEach((item) => {
     if(isMobile && TouchEvent.prototype.available){
-      item.addEventListener("touchend", handleClickWall);
+      item.addEventListener("touchstart", handleClickWall);
     }
     else{
       item.addEventListener("click", handleClickWall);
@@ -404,6 +404,8 @@ function removeEventListeners() {
   wallItems.forEach((item) => {
     item.removeEventListener("mouseenter", highlightWall);
     item.removeEventListener("click", handleClickWall);
+    item.removeEventListener("touchstart", highlightWall);
+    item.removeEventListener("touchstart", handleClickWall);
   });
 
   const playerChoicesE = document.querySelectorAll(".piece");
@@ -877,14 +879,17 @@ function handleClickWall(event) {
     col = 1 + 2 * col;
     row = 2 * row;
     // Convert grid position to canvas position
-    gameNamespace.emit(
-        "newWall",
-        TestGame.id,
-        "vertical",
-        row,
-        col,
-        playerNumber
-    );
+    const isMobile = window.innerWidth <= window.innerHeight;
+    if(!isMobile || (isMobile&&(lastpiece==[col + wallShort / 2, row + wallLong / 2, 90]))){
+      gameNamespace.emit(
+          "newWall",
+          TestGame.id,
+          "vertical",
+          row,
+          col,
+          playerNumber
+      );
+    }
   } else if (target.classList.contains("horizontal")) {
     const horizontals = document.querySelectorAll(".horizontal");
     // Find the index of the target wall
@@ -909,14 +914,16 @@ function handleClickWall(event) {
 
     // Convert grid position to canvas
 
-    gameNamespace.emit(
-        "newWall",
-        TestGame.id,
-        "horizontal",
-        row,
-        col,
-        playerNumber
-    );
+    if(!isMobile || (isMobile&&(lastpiece==[col + wallShort / 2, row + wallLong / 2, 90]))) {
+      gameNamespace.emit(
+          "newWall",
+          TestGame.id,
+          "horizontal",
+          row,
+          col,
+          playerNumber
+      );
+    }
   }
   setTimeout(() => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);

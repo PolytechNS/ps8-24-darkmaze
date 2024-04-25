@@ -21,13 +21,14 @@ function authMiddleware(req, res, next) {
         res.writeHead(302, { 'Location': '../html/Auth/Login.html' }); 
         return res.end();
     }
+
     try {
         // Verify the token using the secret key from .env file
         const decoded = jwt.verify(token, process.env.jwt_secret);
         
         // Attach the decoded token to the request object
         req.user = decoded;
-        
+        console.log("Mobile Debugging: ",decoded);
         console.log("insiiiiide MW"); 
         // Call the next middleware or route handler
         next(req,res);
@@ -39,3 +40,5 @@ function authMiddleware(req, res, next) {
 }
 
 module.exports = authMiddleware;
+
+

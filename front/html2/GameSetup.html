@@ -11,6 +11,26 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/assets/css/style.css">
   <script src="http://15.188.201.4:8000/js/Game/GameSetupSerCom.js"></script>
+  <script>
+    const cookies = document.cookie;
+
+let themeValue = null;
+if (cookies) {
+  const cookieArray = cookies.split(';');
+  for (const cookie of cookieArray) {
+    const [key, value] = cookie.trim().split('=');
+    if (key === 'theme') {
+      themeValue = decodeURIComponent(value);
+      break; 
+    }
+  }
+}
+
+console.log(themeValue);
+if (themeValue === 'theme1') {
+  window.location.href = '../html/GameSetup.html';
+}
+  </script>
 
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>DarkeMaze</title>
@@ -48,7 +68,7 @@
 </head>
 
 <body class="img js-fullheight" style="background-image: url('/assets2/images/slider/slider-01.jpg'); height: 716px;">
-    <div class="main-wrapper"><div class="body-overlay"></div>
+    
   <header class="header-area position-relative bg-main">
                 <div class="header-large-device">
                     <div class="header-middle section-padding-2">
@@ -57,52 +77,19 @@
                                 <div class="row align-items-center">
                                     <div class="col-xl-2 col-lg-2 col-md-4 col-4">
                                         <div class="logo logo-res-lg">
-                                            <a href="Welcome.html">
+                                            <a href="index.html">
                                               <img src="/assets2/images/logo/logo.png" alt="logo"  style="width: 80px;">
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="col-xl-8 col-lg-8 col-md-8 col-8">
-                                        <div class="main-menu menu-lh-1 main-menu-padding-1 menu-text-white d-flex align-items-center justify-content-center">                                  
-                                            <nav class="navbar navbar-expand-lg navbar-light bg-main main-menu menu-text-white ">                                                                                       
-                                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                                    <span class="navbar-toggler-icon"></span>
-                                                </button>
-                                                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                                                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                                        <li class="nav-item">
-                                                            <a class="nav-link" aria-current="page" href="Profile.html">Profile</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link" href="#about">Challenge friend</a>
-                                                        </li>    
-                                                        <li class="nav-item">
-                                                            <a class="nav-link" href="#booking">Online Game</a>
-                                                        </li>   
-                                                        <li class="nav-item">
-                                                            <a class="nav-link" href="#booking1">Saved game </a>
-                                                        </li>   
-                                                     
-                                                          
-                                                    </ul>                                                       
-                                                </div>                                          
-                                            </nav>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-2 col-lg-2 col-md-4">
-                                        <div class="header-right-wrap header-right-flex button-ticket">
-                                            <div class="btn-style-3 btn-hover-2">
-                                                <script src="../js/themeSwitcher.js"></script>
-                                                <a class="animated bs3-black-text bs3-btn-bg bs3-ptb bs3-ptb bs3-border-radius ptb-2-white-hover" onclick="switchTheme()">Switch </a>
-                                            </div>
-                                        </div>
-                                    </div>
+                            
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>          
-            </header>
+  </header>
   
 
  <section class="ftco-section">
@@ -158,9 +145,12 @@
                     <div class="cms-details">
                         <h2>Challenge Friends</h2>>
                         <p>Experience the thrill of multiplayer gaming with our online platform. Challenge friends or match up with random opponents from around the world. Get ready to test your skills and strategy in intense battles!</p>
+                       
+
                         <div class="form-group" style="display: flex; align-items: center; justify-content: center;">
-                            <button type="button" style="background-color: white; color: orange; border: 2px solid orange; padding: 10px 20px; border-radius: 5px; cursor: pointer;" onclick="PickFriend()">Let's Start </button>
+                            <a href="ChallengeAFriend.html" style="background-color: white; color: orange; border: 2px solid orange; padding: 10px 20px; border-radius: 5px; cursor: pointer; text-decoration: none;">Let's Start</a>
                         </div>
+                        
                         
                     
                     </div>
