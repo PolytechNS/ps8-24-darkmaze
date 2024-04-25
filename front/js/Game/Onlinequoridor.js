@@ -96,7 +96,8 @@ gameNamespace.on(
 
       if (newGame) {
         TestGame = new GameState(id, board, playerPostion, wallsPositions);
-        drawBoard(0);
+
+        drawBoard(0,newGame);
       } else {
 
         let OldRow = TestGame.playersPosition[playerNumber][0];
@@ -120,9 +121,10 @@ gameNamespace.on(
           removeMoveChoices(OldRow, OldCol);
           removeMoveChoices(OldOpponentRow, OldOpponentCol);
         }else{
+        //   removeMoveChoices(OldRow, OldCol);
+        // removeMoveChoices(OldOpponentRow, OldOpponentCol);
           addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
-          changeVisibility(playerNumber);
-          drawBoard();
+
 
         }
 
@@ -143,7 +145,7 @@ gameNamespace.on(
 
         console.log("########## player Number ",playerNumber);
         changeVisibility(playerNumber);
-        drawBoard(0);
+        drawBoard(0,false);
         
 
 
@@ -176,8 +178,7 @@ gameNamespace.on(
         removeMoveChoices(OldRow, OldCol);
         removeMoveChoices(OldOpponentRow, OldOpponentCol);
         addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
-        changeVisibility(playerNumber);
-        drawBoard();
+
       }
 
       console.log("big dump ",        playerNumber,
@@ -194,7 +195,7 @@ gameNamespace.on(
       );
       //this code should be on the update
       changeVisibility(playerNumber);
-      drawBoard(1);
+      drawBoard(1,false);
 
 
     }
@@ -349,7 +350,7 @@ function changeVisibility(playerNumber) {
   }
 }
 
-function drawBoard(PlayerNumber) {
+function drawBoard(PlayerNumber,newGame) {
   const quoridorBoard = document.getElementById("quoridor-board");
   //pour l'animation :
   window.lastpiece = null;
@@ -403,6 +404,7 @@ function drawBoard(PlayerNumber) {
     }
     is_piece_box = is_piece_box ? false : true;
   }
+  if(newGame==true)
   addMoveChoices(
       TestGame.playersPosition[PlayerNumber==0?1:0][0],
       TestGame.playersPosition[PlayerNumber==0?1:0][1],
