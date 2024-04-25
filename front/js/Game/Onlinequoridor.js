@@ -466,15 +466,15 @@ function loadImage(src) {
     image.src = src;
 
     image.onload = function () {
-      if (src === "http://14.188.201.4:8000/assets/Grid.png") {
+      if (src === "../../assets/Grid.png") {
         gridImage = image;
-      } else if (src === "http://14.188.201.4:8000/assets/P1.png") {
+      } else if (src === "../../assets/P1.png") {
         player1Image = image;
-      } else if (src === "http://14.188.201.4:8000/assets/P2.png") {
+      } else if (src === "../../assets/P2.png") {
         player2Image = image;
-      } else if (src === "http://14.188.201.4:8000/assets/fog.png") {
+      } else if (src === "../../assets/fog.png") {
         fogImage = image;
-      } else if (src === "http://14.188.201.4:8000/assets/possibleMove.png") {
+      } else if (src === "../../assets/possibleMove.png") {
         possibleImage = image;
       }
 
