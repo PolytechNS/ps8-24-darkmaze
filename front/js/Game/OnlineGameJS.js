@@ -36,6 +36,8 @@ const gameNamespace = io("/api/OnlineGame", {
     if(Mute==false){
       console.log("hhhhh0",Mute);
       window.alert(username+" : "+message)
+  var audio = document.getElementById("audio");
+        audio.play();
 
     }
     });
