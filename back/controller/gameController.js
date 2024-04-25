@@ -203,16 +203,19 @@ function setIo(io){
               }
 
               const gameResults = await updateUsersState(decoded.username,loserUsername,io);
-              socket.emit(
-                "GameOver",
-                "YOU WIN !!! your new elo is : "+gameResults.winner
-              );
-              io.of('/api/OnlineGame')
-              .to(userSockets[getOpponentUserName(decoded.username)])
-              .emit(
-                "GameOver",
-                "YOU LOST !!! your new elo is : "+gameResults.loser
-              );
+              if(gameResults!=null){
+                socket.emit(
+                  "GameOver",
+                  "YOU WIN !!! your new elo is : "+gameResults.winner
+                );
+                io.of('/api/OnlineGame')
+                .to(userSockets[getOpponentUserName(decoded.username)])
+                .emit(
+                  "GameOver",
+                  "YOU LOST !!! your new elo is : "+gameResults.loser
+                );
+              
+              }
               GamesTable = GamesTable.filter((game) => game.id !== id);
               
             }
@@ -344,22 +347,25 @@ function startCountDown(io,decoded,id){
  
 
     const gameResults = await updateUsersState(decoded.username,loserUsername,io);
-    console.log("executed ",decoded.username);
-    io.of('/api/OnlineGame')
-    .to(userSockets[decoded.username])
-    .emit(
-        "GameOver",
-        "YOU WIN !!! your new elo is : "+gameResults.winner
+    if(gameResults!=null){
 
-        
-      );
+      console.log("executed ",decoded.username);
       io.of('/api/OnlineGame')
-      .to(userSockets[getOpponentUserName(decoded.username)])
+      .to(userSockets[decoded.username])
       .emit(
-        "GameOver",
-        "YOU LOST !!! your new elo is : "+gameResults.loser
-       
-      );
+          "GameOver",
+          "YOU WIN !!! your new elo is : "+gameResults.winner
+  
+          
+        );
+        io.of('/api/OnlineGame')
+        .to(userSockets[getOpponentUserName(decoded.username)])
+        .emit(
+          "GameOver",
+          "YOU LOST !!! your new elo is : "+gameResults.loser
+         
+        );
+    }
       GamesTable = GamesTable.filter((game) => game.id !== id);
   },90000)
 }
@@ -406,7 +412,7 @@ async function updateUsersState(winnerUsername, loserUsername,io) {
       let loser = await user.findOne({ username: loserUsername }); 
       
       if (!winner || !loser) {
-          return;
+          return null;
       }
       // Assuming updateElo is defined elsewhere
       const updatedEloValues = updateElo(winner.eloRanking, loser.eloRanking);
