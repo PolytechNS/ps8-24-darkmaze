@@ -49,7 +49,6 @@ setTimeout(() => {
 
 gameNamespace.on("ErrorPlaying", (msg) => window.alert(msg));
 gameNamespace.on("GameOver", (msg) => {
-  removeEventListeners();
   window.alert(msg);    
   var url = 'http://15.188.201.4:8000/api/game';
   window.location.href = url;
@@ -444,8 +443,9 @@ function drawBoard() {
   const wallItems = document.querySelectorAll(".inWall");
   const isMobile = window.innerWidth <= window.innerHeight;
   wallItems.forEach((item) => {
-    if (isMobile && TouchEvent.prototype.available) { // Vérifier si le code est exécuté sur un téléphone
-      item.addEventListener("touchstart", highlightWall); // Changement de l'événement de survol à clic
+    if (isMobile && TouchEvent.prototype.available) {
+      console.log("on est sur telephone");
+      item.addEventListener("touchstart", highlightWall);
     } else {
       item.addEventListener("mouseenter", highlightWall);
     }
@@ -463,7 +463,7 @@ function drawBoard() {
   const playerChoicesE = document.querySelectorAll(".piece");
   document.querySelectorAll(".piece");
   playerChoicesE.forEach((item) => {
-    if (isMobile && TouchEvent.prototype.available) { // Vérifier si le code est exécuté sur un téléphone
+    if (isMobile && TouchEvent.prototype.available) {
       item.addEventListener("touchstart", playChoiceHover);
       item.addEventListener("touchend", handleClick);
     } else {
@@ -711,6 +711,9 @@ function highlightWall(event) {
 }
 
 function playChoiceHover(event) {
+  console.log("Les infos du hover player:");
+  console.log(playerNumber);
+  console.log(grid);
   const hoveredElement = event.target;
   if (hoveredElement.classList.contains("playerChoice")) {
     const playerChoices = document.querySelectorAll(".piece");
