@@ -376,21 +376,9 @@ function drawBoard() {
   const playerChoicesE = document.querySelectorAll(".piece");
   document.querySelectorAll(".piece");
   playerChoicesE.forEach((item) => {
-    if (isMobile) { // Vérifier si le code est exécuté sur un téléphone
-      let clickCount = 0;
-      let timer;
-      item.addEventListener("click", function() {
-        clickCount++;
-        if (clickCount === 1) {
-          timer = setTimeout(function() {
-            clickCount = 0;
-          }, 300); // Définir le délai pour le double clic ici (par exemple 300 ms)
-        } else if (clickCount === 2) {
-          clearTimeout(timer);
-          clickCount = 0;
-          // Gérer le double clic ici, par exemple appeler une fonction handleClickDouble()
-        }
-      });
+    if (isMobile && TouchEvent.prototype.available) { // Vérifier si le code est exécuté sur un téléphone
+      item.addEventListener("touchmove", playChoiceHover);
+      item.addEventListener("touchend", handleClick);
     } else {
       item.addEventListener("mouseenter", playChoiceHover);
       item.addEventListener("click", handleClick);
@@ -830,7 +818,7 @@ function handleClick(row, col) {
   setTimeout(() => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid(); // Redessiner votre grille après avoir effacé le message
-  }, 100);
+  }, 200);
 
 }
 
