@@ -406,7 +406,7 @@ async function updateUsersState(winnerUsername, loserUsername,io) {
       let loser = await user.findOne({ username: loserUsername }); 
       
       if (!winner || !loser) {
-          throw new Error("Player not found");
+          return;
       }
       // Assuming updateElo is defined elsewhere
       const updatedEloValues = updateElo(winner.eloRanking, loser.eloRanking);
