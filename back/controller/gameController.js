@@ -281,7 +281,8 @@ function setIo(io){
     });
 
     socket.on("sendMessage",(message)=>{
-      io.of('/api/OnlineGame').to(onlineGames[decoded.username].toString()).emit("recieveMessage", decoded.username,message);
+	console.log("SENDIIIING",decoded.username,onlineGames,onlineGames[decoded.username])    
+      if(onlineGames[decoded.username]!=null)io.of('/api/OnlineGame').to(onlineGames[decoded.username]).emit("recieveMessage", decoded.username,message);
     })
     
     socket.on('disconnect', () => {

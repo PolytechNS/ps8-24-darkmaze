@@ -34,8 +34,7 @@ const gameNamespace = io("/api/OnlineGame", {
 })
   gameNamespace.on("recieveMessage",(username,message)=>{
     if(Mute==false){
-      var audio = document.getElementById("audio");
-        audio.play();
+      
 	    console.log("hhhhh0",Mute);
       window.alert(username+" : "+message)
   

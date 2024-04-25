@@ -50,7 +50,7 @@ setTimeout(() => {
 gameNamespace.on("ErrorPlaying", (msg) => window.alert(msg));
 gameNamespace.on("GameOver", (msg) => {
   window.alert(msg);    
-  var url = 'http://localhost:8000/api/game';
+  var url = '/api/game';
   window.location.href = url;
 });
 gameNamespace.on("player2Setup",(id, board, playerPostion, wallsPositions) => {
