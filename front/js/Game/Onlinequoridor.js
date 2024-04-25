@@ -124,8 +124,7 @@ gameNamespace.on(
         //   removeMoveChoices(OldRow, OldCol);
         // removeMoveChoices(OldOpponentRow, OldOpponentCol);
           addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
-          changeVisibility(playerNumber);
-          drawBoard();
+
 
         }
 
@@ -179,8 +178,7 @@ gameNamespace.on(
         removeMoveChoices(OldRow, OldCol);
         removeMoveChoices(OldOpponentRow, OldOpponentCol);
         addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
-        changeVisibility(playerNumber);
-        drawBoard();
+
       }
 
       console.log("big dump ",        playerNumber,
