@@ -214,6 +214,7 @@ gameNamespace.on("UpdateWalls",
     if(switchOverlayFlag==true)
       switchOverlay();
 
+    changeVisibility(playerNumber)
     drawBoard();
   }
 );
@@ -847,7 +848,8 @@ function updateGame(playerNumber, row, col) {
   playerNumber = playerNumber === 1 ? 0 : 1;
 
   // Assuming removeMoveChoices, addMoveChoices, changeVisibility functions are defined elsewhere
-  removeMoveChoices(oldRow, oldCol);
+  removeMoveChoices(oldRow, oldCol)
+  removeMoveChoices(oldOpponentRow, oldOpponentCol);
   addMoveChoices(row, col, oldOpponentRow, oldOpponentCol);
 
   // Assuming changeVisibility function takes a playerNumber as an argument
