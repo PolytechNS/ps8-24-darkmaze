@@ -369,10 +369,10 @@ function drawBoard() {
         grid[row][col] = "P2";
         // Add click event listener to each cell
       }
-      if (col % 2 == 0 && row % 2 == 0)
-        cell.addEventListener("click", function () {
-          handleClick(row, col);
-        });
+      //if (col % 2 == 0 && row % 2 == 0)
+      //  cell.addEventListener("click", function () {
+      //    handleClick(row, col);
+      //  });
       if (col % 2 == 1 && row % 2 == 0) {
         cell.classList.remove("piece");
         cell.classList.add("wall");
