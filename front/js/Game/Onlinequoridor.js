@@ -20,7 +20,7 @@ for (let i = 0; i < rows; i++) {
   }
 }
 
-  
+
 //socket communications
 var urlParams = new URLSearchParams(window.location.search);
 var playAgainstFriend= urlParams.get("roomId");
@@ -49,110 +49,106 @@ setTimeout(() => {
 
 gameNamespace.on("ErrorPlaying", (msg) => window.alert(msg));
 gameNamespace.on("GameOver", (msg) => {
-  window.alert(msg);    
-  var url = 'http://15.188.201.4:8000/api/game';
+  window.alert(msg);
+  var url = 'http://localhost:8000/api/game';
   window.location.href = url;
 });
 gameNamespace.on("player2Setup",(id, board, playerPostion, wallsPositions) => {
 
 
-    let OldRow = TestGame.playersPosition[playerNumber][0];
-    let OldCol = TestGame.playersPosition[playerNumber][1];
-    let Opponent = playerNumber == 1 ? 0 : 1;
-    let OldOpponentRow = TestGame.playersPosition[Opponent][0];
-    let OldOpponentCol = TestGame.playersPosition[Opponent][1];
-    TestGame = new GameState(id, board, playerPostion, wallsPositions,);
-    let PlayerRow = TestGame.playersPosition[playerNumber][0];
-    let PlayerCol = TestGame.playersPosition[playerNumber][1];
+  let OldRow = TestGame.playersPosition[playerNumber][0];
+  let OldCol = TestGame.playersPosition[playerNumber][1];
+  let Opponent = playerNumber == 1 ? 0 : 1;
+  let OldOpponentRow = TestGame.playersPosition[Opponent][0];
+  let OldOpponentCol = TestGame.playersPosition[Opponent][1];
+  TestGame = new GameState(id, board, playerPostion, wallsPositions,);
+  let PlayerRow = TestGame.playersPosition[playerNumber][0];
+  let PlayerCol = TestGame.playersPosition[playerNumber][1];
 
-    playerNumber ? (playerNumber = 0) : (playerNumber = 1);
+  playerNumber ? (playerNumber = 0) : (playerNumber = 1);
 
 
-      console.log("Switching Overlayyyy");
-      switchOverlay();
-      removeMoveChoices(OldRow, OldCol);
+  console.log("Switching Overlayyyy");
+  switchOverlay();
+  removeMoveChoices(OldRow, OldCol);
 
-      addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
-    
-    UpdatePiecePositionOnBoard(
+  addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
+
+  UpdatePiecePositionOnBoard(
       playerNumber,
       OldRow,
       OldCol,
       PlayerRow,
       PlayerCol
-    );
-    //this code should be on the update
-    changeVisibility(playerNumber);
+  );
+  //this code should be on the update
+  changeVisibility(playerNumber);
 
 
 
-  
+
 })
 gameNamespace.on(
-  "updatedBoard",
-  (id, board, playerPostion, wallsPositions, newGame,switchOverlayFlag,playerTurn) => {
-
-      
-    if (newGame) {
-      TestGame = new GameState(id, board, playerPostion, wallsPositions);
-      drawBoard();
-    } else {
-
-      let OldRow = TestGame.playersPosition[playerNumber][0];
-      let OldCol = TestGame.playersPosition[playerNumber][1];
+    "updatedBoard",
+    (id, board, playerPostion, wallsPositions, newGame,switchOverlayFlag,playerTurn) => {
 
 
+      if (newGame) {
+        TestGame = new GameState(id, board, playerPostion, wallsPositions);
+        drawBoard();
+      } else {
 
-      ///// dont touch 
-      let Opponent = playerNumber == 1 ? 0 : 1;
-      let OldOpponentRow = TestGame.playersPosition[Opponent][0];
-      let OldOpponentCol = TestGame.playersPosition[Opponent][1];
-      TestGame = new GameState(id, board, playerPostion, wallsPositions);
-      ////////
+        let OldRow = TestGame.playersPosition[playerNumber][0];
+        let OldCol = TestGame.playersPosition[playerNumber][1];
 
-      let PlayerRow = TestGame.playersPosition[playerNumber][0];
-      let PlayerCol = TestGame.playersPosition[playerNumber][1];
 
-      playerNumber ? (playerNumber = 0) : (playerNumber = 1);
-      if(switchOverlayFlag==true){
-        switchOverlay();
-        removeMoveChoices(OldRow, OldCol);
-      }else{
-        addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
+
+        ///// dont touch
+        let Opponent = playerNumber == 1 ? 0 : 1;
+        let OldOpponentRow = TestGame.playersPosition[Opponent][0];
+        let OldOpponentCol = TestGame.playersPosition[Opponent][1];
+        TestGame = new GameState(id, board, playerPostion, wallsPositions);
+        ////////
+
+        let PlayerRow = TestGame.playersPosition[playerNumber][0];
+        let PlayerCol = TestGame.playersPosition[playerNumber][1];
+
+        playerNumber ? (playerNumber = 0) : (playerNumber = 1);
+        if(switchOverlayFlag==true){
+          switchOverlay();
+          removeMoveChoices(OldRow, OldCol);
+        }else{
+          addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
+        }
+
+        console.log("big dump ",        playerNumber,
+            OldRow,
+            OldCol,
+            PlayerRow,
+            PlayerCol)
+        UpdatePiecePositionOnBoard(
+            playerNumber,
+            OldRow,
+            OldCol,
+            PlayerRow,
+            PlayerCol
+        );
+        //this code should be on the update
+        console.log("players Position ",playerPostion);
+
+        changeVisibility(playerNumber);
+
       }
-      
-      console.log("big dump ",        playerNumber,
-      OldRow,
-      OldCol,
-      PlayerRow,
-      PlayerCol)
-      UpdatePiecePositionOnBoard(
-        playerNumber,
-        OldRow,
-        OldCol,
-        PlayerRow,
-        PlayerCol
-      );
-      //this code should be on the update
-      console.log("players Position ",playerPostion);
-
-      drawBoard();
-      removeMoveChoices(OldRow, OldCol);
-      removeMoveChoices(OldOpponentRow, OldOpponentCol);
-      addMoveChoices(OldOpponentRow, OldOpponentCol, OldRow, OldCol);
-      changeVisibility(playerNumber);
-
     }
-  }
 );
 gameNamespace.on(
-  "specialUpdatedBoard",
-  (id, board, playerPostion, wallsPositions,specialRow,specialCol,switchOverlayFlag) => {
+    "specialUpdatedBoard",
+    (id, board, playerPostion, wallsPositions,specialRow,specialCol,switchOverlayFlag) => {
 
       let OldRow = TestGame.playersPosition[playerNumber][0];
       let OldCol = TestGame.playersPosition[playerNumber][1];
 
-      ///// dont touch 
+      ///// dont touch
       let Opponent = playerNumber == 1 ? 0 : 1;
       let OldOpponentRow = TestGame.playersPosition[Opponent][0];
       let OldOpponentCol = TestGame.playersPosition[Opponent][1];
@@ -169,109 +165,105 @@ gameNamespace.on(
       }else{
         addMoveChoices(PlayerRow, PlayerCol, OldOpponentRow, OldOpponentCol);
       }
-      
+
       console.log("big dump ",        playerNumber,
-      OldRow,
-      OldCol,
-      PlayerRow,
-      PlayerCol)
+          OldRow,
+          OldCol,
+          PlayerRow,
+          PlayerCol)
       UpdatePiecePositionOnBoard(
-        playerNumber,
-        specialRow,
-        specialCol,
-        PlayerRow,
-        PlayerCol
+          playerNumber,
+          specialRow,
+          specialCol,
+          PlayerRow,
+          PlayerCol
       );
       //this code should be on the update
       changeVisibility(playerNumber);
-      drawBoard();
 
-    
-  }
+
+    }
 );
 
 gameNamespace.on("UpdateWalls",
-  (id, board, playerPostion, wallsPositions, direction, row, col,switchOverlayFlag) => {
-    TestGame = new GameState(id, board, playerPostion, wallsPositions);
-    if (row!=null && col!=null && direction != null) {
-      updateGame(playerNumber, row, col);
-      if (direction == "vertical")
-      grid[row + 1][col] = "P" + (playerNumber + 1) + "v";
-    else if (direction == "horizontal") {
-      grid[row][col + 1] = "P" + (playerNumber + 1) + "h";
-    }
-    playerNumber = playerNumber === 1 ? 0 : 1;
-      
-    } else {
-      wallsPositions.forEach(wall => {
-        if(wall.wallIndex==1){
-          if (wall.direction == "vertical")
-          grid[wall.wallRow + 1][wall.wallCol] = "P" + (wall.numplayer + 1) + "v";
-          else if (wall.direction == "horizontal") {
-            grid[wall.wallRow][wall.wallCol + 1] = "P" + (wall.numplayer  + 1) + "h";
-          }
+    (id, board, playerPostion, wallsPositions, direction, row, col,switchOverlayFlag) => {
+      TestGame = new GameState(id, board, playerPostion, wallsPositions);
+      if (row!=null && col!=null && direction != null) {
+        updateGame(playerNumber, row, col);
+        if (direction == "vertical")
+          grid[row + 1][col] = "P" + (playerNumber + 1) + "v";
+        else if (direction == "horizontal") {
+          grid[row][col + 1] = "P" + (playerNumber + 1) + "h";
         }
-      });
-    }
-    if(switchOverlayFlag==true)
-      switchOverlay();
+        playerNumber = playerNumber === 1 ? 0 : 1;
 
-    changeVisibility(playerNumber)
-    drawBoard();
-  }
+      } else {
+        wallsPositions.forEach(wall => {
+          if(wall.wallIndex==1){
+            if (wall.direction == "vertical")
+              grid[wall.wallRow + 1][wall.wallCol] = "P" + (wall.numplayer + 1) + "v";
+            else if (wall.direction == "horizontal") {
+              grid[wall.wallRow][wall.wallCol + 1] = "P" + (wall.numplayer  + 1) + "h";
+            }
+          }
+        });
+      }
+      if(switchOverlayFlag==true)
+        switchOverlay();
+    }
 );
 
 // functions
 function UpdatePiecePositionOnBoard(
-  NumberOfPlayer,
-  oldRow,
-  oldCol,
-  newRow,
-  newCol
+    NumberOfPlayer,
+    oldRow,
+    oldCol,
+    newRow,
+    newCol
 ) {
   const OldCell = document.getElementById("cell-" + oldRow + "-" + oldCol);
   const NewCell = document.getElementById("cell-" + newRow + "-" + newCol);
   NumberOfPlayer == 0
-    ? OldCell.classList.remove("player2Cell")
-    : OldCell.classList.remove("player1Cell");
+      ? OldCell.classList.remove("player2Cell")
+      : OldCell.classList.remove("player1Cell");
   grid[oldRow][oldCol] = "emptyCell";
   NumberOfPlayer == 0
-    ? NewCell.classList.add("player2Cell")
-    : NewCell.classList.add("player1Cell");
+      ? NewCell.classList.add("player2Cell")
+      : NewCell.classList.add("player1Cell");
   grid[newRow][newCol] = NumberOfPlayer === 0 ? "P2" : "P1";
 }
 
 function addMoveChoices(opponentRow, opponentCol, row, col) {
-  console.log("ADD MOVE CHOICE"+row+"-"+col);
+  //console.log("ADD MOVE CHOICE"+row+"-"+col);
   if (row + 2 <= 16 && (row + 2 !== opponentRow || col !== opponentCol)&&(!(grid[row+1][Math.abs((col+1)%17)].endsWith('h'))&&!(grid[row+1][Math.abs((col-1)%17)].endsWith('h')))) {
-    console.log("Adding playerChoice to cell-" + (row + 2) + "-" + col);
+    //console.log("Adding playerChoice to cell-" + (row + 2) + "-" + col);
     document
-      .getElementById("cell-" + (row + 2) + "-" + col)
-      .classList.add("playerChoice");
+        .getElementById("cell-" + (row + 2) + "-" + col)
+        .classList.add("playerChoice");
     grid[row + 2][col] = "PChoice";
   }
 
   if (row - 2 >= 0 && (row - 2 !== opponentRow || col !== opponentCol)&&(!(grid[row-1][Math.abs((col-1)%17)].endsWith('h'))&&!(grid[row-1][Math.abs((col+1)%17)].endsWith('h')))) {
-    console.log("Adding playerChoice to cell-" + (row - 2) + "-" + col);
+    //console.log("Adding playerChoice to cell-" + (row - 2) + "-" + col);
     document
-      .getElementById("cell-" + (row - 2) + "-" + col)
-      .classList.add("playerChoice");
+        .getElementById("cell-" + (row - 2) + "-" + col)
+        .classList.add("playerChoice");
     grid[row - 2][col] = "PChoice";
   }
 
   if (col + 2 <= 16 && (row !== opponentRow || col + 2 !== opponentCol)&&(!(grid[Math.abs((row+1)%17)][col+1].endsWith('v'))&&!(grid[Math.abs((row-1)%17)][col+1].endsWith('v')))) {
-    console.log("Adding playerChoice to cell-" + row + "-" + (col + 2));
+    //console.log("Adding playerChoice to cell-" + row + "-" + (col + 2));
     document
-      .getElementById("cell-" + row + "-" + (col + 2))
-      .classList.add("playerChoice");
+        .getElementById("cell-" + row + "-" + (col + 2))
+        .classList.add("playerChoice");
     grid[row][col + 2] = "PChoice";
   }
 
   if (col - 2 >= 0 && (row !== opponentRow || col - 2 !== opponentCol)&&(!(grid[Math.abs((row-1)%17)][col-1].endsWith('v'))&&!(grid[Math.abs((row+1)%17)][col-1].endsWith('v')))) {
-    console.log("Adding playerChoice to cell-" + row + "-" + (col - 2));
+    //console.log("Adding playerChoice to cell-" + row + "-" + (col - 2));
     document
-      .getElementById("cell-" + row + "-" + (col - 2))
-      .classList.add("playerChoice");
+        .getElementById("cell-" + row + "-" + (col - 2))
+        .classList.add("playerChoice");
     grid[row][col - 2] = "PChoice";
   }
 }
@@ -279,32 +271,32 @@ function removeMoveChoices(row, col) {
   if (row + 2 <= 16) {
     //console.log("Removing playerChoice from cell-" + (row + 2) + "-" + col);
     document
-      .getElementById("cell-" + (row + 2) + "-" + col)
-      .classList.remove("playerChoice");
+        .getElementById("cell-" + (row + 2) + "-" + col)
+        .classList.remove("playerChoice");
     if (grid[row + 2][col] == "PChoice") grid[row + 2][col] = "emptyCell";
   }
 
   if (row - 2 >= 0) {
     //console.log("Removing playerChoice from cell-" + (row - 2) + "-" + col);
     document
-      .getElementById("cell-" + (row - 2) + "-" + col)
-      .classList.remove("playerChoice");
+        .getElementById("cell-" + (row - 2) + "-" + col)
+        .classList.remove("playerChoice");
     if (grid[row - 2][col] == "PChoice") grid[row - 2][col] = "emptyCell";
   }
 
   if (col + 2 <= 16) {
     //console.log("Removing playerChoice from cell-" + row + "-" + (col + 2));
     document
-      .getElementById("cell-" + row + "-" + (col + 2))
-      .classList.remove("playerChoice");
+        .getElementById("cell-" + row + "-" + (col + 2))
+        .classList.remove("playerChoice");
     if (grid[row][col + 2] == "PChoice") grid[row][col + 2] = "emptyCell";
   }
 
   if (col - 2 >= 0) {
     //console.log("Removing playerChoice from cell-" + row + "-" + (col - 2));
     document
-      .getElementById("cell-" + row + "-" + (col - 2))
-      .classList.remove("playerChoice");
+        .getElementById("cell-" + row + "-" + (col - 2))
+        .classList.remove("playerChoice");
     if (grid[row][col - 2] == "PChoice") grid[row][col - 2] = "emptyCell";
   }
 }
@@ -313,29 +305,29 @@ function changeVisibility(playerNumber) {
     for (let j = 0; j < 17; j++) {
       if (playerNumber == 0 && TestGame.board[i][j] > 0) {
         document
-          .getElementById("cell-" + i + "-" + j)
-          .classList.add("hidedCell");
+            .getElementById("cell-" + i + "-" + j)
+            .classList.add("hidedCell");
         fogGrid[i][j] = 0;
       }
 
       if (playerNumber == 0 && TestGame.board[i][j] <= 0) {
         document
-          .getElementById("cell-" + i + "-" + j)
-          .classList.remove("hidedCell");
+            .getElementById("cell-" + i + "-" + j)
+            .classList.remove("hidedCell");
         fogGrid[i][j] = 1;
       }
 
       if (playerNumber == 1 && TestGame.board[i][j] < 0) {
         document
-          .getElementById("cell-" + i + "-" + j)
-          .classList.add("hidedCell");
+            .getElementById("cell-" + i + "-" + j)
+            .classList.add("hidedCell");
         fogGrid[i][j] = 0;
       }
 
       if (playerNumber == 1 && TestGame.board[i][j] >= 0) {
         document
-          .getElementById("cell-" + i + "-" + j)
-          .classList.remove("hidedCell");
+            .getElementById("cell-" + i + "-" + j)
+            .classList.remove("hidedCell");
         fogGrid[i][j] = 1;
       }
     }
@@ -356,8 +348,8 @@ function drawBoard() {
       is_piece_box ? cell.classList.add("piece") : cell.classList.add("wall");
       cell.id = "cell-" + row + "-" + col;
       if (
-        row == TestGame.playersPosition[0][0] &&
-        col == TestGame.playersPosition[0][1]
+          row == TestGame.playersPosition[0][0] &&
+          col == TestGame.playersPosition[0][1]
       ) {
         cell.classList.add("player1Cell");
         grid[row][col] = "P1";
@@ -365,8 +357,8 @@ function drawBoard() {
       }
 
       if (
-        row == TestGame.playersPosition[1][0] &&
-        col == TestGame.playersPosition[1][1]
+          row == TestGame.playersPosition[1][0] &&
+          col == TestGame.playersPosition[1][1]
       ) {
         cell.classList.add("player2Cell");
         grid[row][col] = "P2";
@@ -397,10 +389,10 @@ function drawBoard() {
     is_piece_box = is_piece_box ? false : true;
   }
   addMoveChoices(
-    TestGame.playersPosition[1][0],
-    TestGame.playersPosition[1][1],
-    TestGame.playersPosition[0][0],
-    TestGame.playersPosition[0][1]
+      TestGame.playersPosition[1][0],
+      TestGame.playersPosition[1][1],
+      TestGame.playersPosition[0][0],
+      TestGame.playersPosition[0][1]
   );
   changeVisibility(0);
   // Function to handle cell click
@@ -435,70 +427,35 @@ function drawBoard() {
 
   // Appeler la fonction pour charger l'image au démarrage
   loadImages()
-    .then(() => {
-      // L'image est chargée, vous pouvez maintenant appeler drawGrid à tout moment
-      drawGrid();
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+      .then(() => {
+        // L'image est chargée, vous pouvez maintenant appeler drawGrid à tout moment
+        drawGrid();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
   const wallItems = document.querySelectorAll(".inWall");
-  const isMobile = window.innerWidth <= window.innerHeight;
   wallItems.forEach((item) => {
-    if (isMobile && TouchEvent.prototype.available) {
-      console.log("on est sur telephone");
-      item.addEventListener("touchstart", highlightWall);
-    } else {
-      item.addEventListener("mouseenter", highlightWall);
-    }
+    item.addEventListener("mouseenter", highlightWall);
   });
-
   wallItems.forEach((item) => {
-    if(isMobile && TouchEvent.prototype.available){
-      item.addEventListener("touchend", handleClickWall);
-    }
-    else{
-      item.addEventListener("click", handleClickWall);
-    }
-  });
-
-  const playerChoicesE = document.querySelectorAll(".piece");
-  document.querySelectorAll(".piece");
-  playerChoicesE.forEach((item) => {
-    if (isMobile && TouchEvent.prototype.available) {
-      item.addEventListener("touchstart", playChoiceHover);
-      item.addEventListener("touchend", handleClick);
-    } else {
-      item.addEventListener("mouseenter", playChoiceHover);
-      item.addEventListener("click", handleClick);
-    }
-  });
-}
-
-// Fonction pour retirer tous les event listeners ajoutés
-function removeEventListeners() {
-  const wallItems = document.querySelectorAll(".inWall");
-  wallItems.forEach((item) => {
-    item.removeEventListener("mouseenter", highlightWall);
-    item.removeEventListener("click", handleClickWall);
+    item.addEventListener("click", handleClickWall);
   });
 
   const playerChoicesE = document.querySelectorAll(".piece");
   playerChoicesE.forEach((item) => {
-    item.removeEventListener("mouseenter", playChoiceHover);
-    item.removeEventListener("click", handleClick);
+    item.addEventListener("mouseenter", playChoiceHover);
   });
 }
-
 // ===================================FONCTIONS UTILES =======================================================================
 function loadImages() {
   return Promise.all([
-    loadImage("../../assets/Grid.png"),
-    loadImage("../../assets/P1.png"),
-    loadImage("../../assets/P2.png"),
-    loadImage("../../assets/fog.png"),
-    loadImage("../../assets/possibleMove.png"),
+    loadImage("http://localhost:8000/assets/Grid.png"),
+    loadImage("http://localhost:8000/assets/P1.png"),
+    loadImage("http://localhost:8000/assets/P2.png"),
+    loadImage("http://localhost:8000/assets/fog.png"),
+    loadImage("http://localhost:8000/assets/possibleMove.png"),
   ]);
 }
 
@@ -509,15 +466,15 @@ function loadImage(src) {
     image.src = src;
 
     image.onload = function () {
-      if (src === "../../assets/Grid.png") {
+      if (src === "http://localhost:8000/assets/Grid.png") {
         gridImage = image;
-      } else if (src === "../../assets/P1.png") {
+      } else if (src === "http://localhost:8000/assets/P1.png") {
         player1Image = image;
-      } else if (src === "../../assets/P2.png") {
+      } else if (src === "http://localhost:8000/assets/P2.png") {
         player2Image = image;
-      } else if (src === "../../assets/fog.png") {
+      } else if (src === "http://localhost:8000/assets/fog.png") {
         fogImage = image;
-      } else if (src === "../../assets/possibleMove.png") {
+      } else if (src === "http://localhost:8000/assets/possibleMove.png") {
         possibleImage = image;
       }
 
@@ -565,48 +522,48 @@ function drawGrid(player1 = true, player2 = true) {
         if (grid[x][y] == "P1v") {
           ctx.fillStyle = "#fa861f";
           drawRotatedRectangle(
-            ctx,
-            y * 80 + 64,
-            x * 80 + 64,
-            wallLong,
-            wallShort,
-            90
+              ctx,
+              y * 80 + 64,
+              x * 80 + 64,
+              wallLong,
+              wallShort,
+              90
           );
         }
         if (grid[x][y] == "P2v") {
           ctx.fillStyle = "#07f9fa";
 
           drawRotatedRectangle(
-            ctx,
-            y * 80 + 64,
-            x * 80 + 64,
-            wallLong,
-            wallShort,
-            90
+              ctx,
+              y * 80 + 64,
+              x * 80 + 64,
+              wallLong,
+              wallShort,
+              90
           );
         }
         if (grid[x][y] == "P1h") {
           ctx.fillStyle = "#fa861f";
 
           drawRotatedRectangle(
-            ctx,
-            y * 80 + 64,
-            x * 80 + 64,
-            wallLong,
-            wallShort,
-            0
+              ctx,
+              y * 80 + 64,
+              x * 80 + 64,
+              wallLong,
+              wallShort,
+              0
           );
         }
         if (grid[x][y] == "P2h") {
           ctx.fillStyle = "#07f9fa";
 
           drawRotatedRectangle(
-            ctx,
-            y * 80 + 64,
-            x * 80 + 64,
-            wallLong,
-            wallShort,
-            0
+              ctx,
+              y * 80 + 64,
+              x * 80 + 64,
+              wallLong,
+              wallShort,
+              0
           );
         }
       }
@@ -648,16 +605,16 @@ function highlightWall(event) {
 
     if (lastpiece != null) {
       animateRectangle(
-        ctx,
-        lastpiece[0],
-        lastpiece[1],
-        nextLastPiece[0],
-        nextLastPiece[1],
-        lastpiece[2],
-        nextLastPiece[2],
-        100,
-        wallLong,
-        wallShort
+          ctx,
+          lastpiece[0],
+          lastpiece[1],
+          nextLastPiece[0],
+          nextLastPiece[1],
+          lastpiece[2],
+          nextLastPiece[2],
+          100,
+          wallLong,
+          wallShort
       );
     } else {
       ctx.fillStyle = "red";
@@ -693,16 +650,16 @@ function highlightWall(event) {
 
     if (lastpiece != null) {
       animateRectangle(
-        ctx,
-        lastpiece[0],
-        lastpiece[1],
-        nextLastPiece[0],
-        nextLastPiece[1],
-        lastpiece[2],
-        nextLastPiece[2],
-        100,
-        wallLong,
-        wallShort
+          ctx,
+          lastpiece[0],
+          lastpiece[1],
+          nextLastPiece[0],
+          nextLastPiece[1],
+          lastpiece[2],
+          nextLastPiece[2],
+          100,
+          wallLong,
+          wallShort
       );
     } else {
       ctx.fillStyle = "red";
@@ -714,9 +671,6 @@ function highlightWall(event) {
 }
 
 function playChoiceHover(event) {
-  console.log("Les infos du hover player:");
-  console.log(playerNumber);
-  console.log(grid);
   const hoveredElement = event.target;
   if (hoveredElement.classList.contains("playerChoice")) {
     const playerChoices = document.querySelectorAll(".piece");
@@ -728,22 +682,22 @@ function playChoiceHover(event) {
     var row = Math.floor(index / 9);
     if (playerNumber == 0) {
       animateImage(
-        player1Image,
-        TestGame.playersPosition[0][1] * 80,
-        TestGame.playersPosition[0][0] * 80,
-        col * 160,
-        row * 160,
-        100
+          player1Image,
+          TestGame.playersPosition[0][1] * 80,
+          TestGame.playersPosition[0][0] * 80,
+          col * 160,
+          row * 160,
+          100
       );
     }
     if (playerNumber == 1) {
       animateImage(
-        player2Image,
-        TestGame.playersPosition[1][1] * 80,
-        TestGame.playersPosition[1][0] * 80,
-        col * 160,
-        row * 160,
-        100
+          player2Image,
+          TestGame.playersPosition[1][1] * 80,
+          TestGame.playersPosition[1][0] * 80,
+          col * 160,
+          row * 160,
+          100
       );
     }
   }
@@ -769,16 +723,16 @@ function drawRotatedRectangle(ctx, x, y, width, height, rotation) {
 }
 
 function animateRectangle(
-  ctx,
-  startX,
-  startY,
-  endX,
-  endY,
-  startAngle,
-  endAngle,
-  duration,
-  width,
-  height
+    ctx,
+    startX,
+    startY,
+    endX,
+    endY,
+    startAngle,
+    endAngle,
+    duration,
+    width,
+    height
 ) {
   var startTime = null;
 
@@ -836,11 +790,7 @@ function handleClick(row, col) {
   //we should check if the move is possible or not
   gameNamespace.emit("newMove", TestGame.id, playerNumber, row, col);
   console.log(grid)
-  setTimeout(() => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    changeVisibility();
-    drawGrid(); // Redessiner votre grille après avoir effacé le message
-  }, 200);
+
   // Add your logic for handling the click event
 }
 
@@ -855,8 +805,7 @@ function updateGame(playerNumber, row, col) {
   playerNumber = playerNumber === 1 ? 0 : 1;
 
   // Assuming removeMoveChoices, addMoveChoices, changeVisibility functions are defined elsewhere
-  removeMoveChoices(oldRow, oldCol)
-  removeMoveChoices(oldOpponentRow, oldOpponentCol);
+  removeMoveChoices(oldRow, oldCol);
   addMoveChoices(row, col, oldOpponentRow, oldOpponentCol);
 
   // Assuming changeVisibility function takes a playerNumber as an argument
@@ -865,7 +814,6 @@ function updateGame(playerNumber, row, col) {
 }
 
 function handleClickWall(event) {
-  console.log("CLIIIQUE");
   const target = event.target;
   ctx.fillStyle = playerNumber === 0 ? "#fa861f" : "#07f9fa";
 
@@ -891,12 +839,12 @@ function handleClickWall(event) {
     row = 2 * row;
     // Convert grid position to canvas position
     gameNamespace.emit(
-      "newWall",
-      TestGame.id,
-      "vertical",
-      row,
-      col,
-      playerNumber
+        "newWall",
+        TestGame.id,
+        "vertical",
+        row,
+        col,
+        playerNumber
     );
   } else if (target.classList.contains("horizontal")) {
     const horizontals = document.querySelectorAll(".horizontal");
@@ -923,18 +871,12 @@ function handleClickWall(event) {
     // Convert grid position to canvas
 
     gameNamespace.emit(
-      "newWall",
-      TestGame.id,
-      "horizontal",
-      row,
-      col,
-      playerNumber
+        "newWall",
+        TestGame.id,
+        "horizontal",
+        row,
+        col,
+        playerNumber
     );
-
   }
-  setTimeout(() => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    changeVisibility();
-    drawGrid(); // Redessiner votre grille après avoir effacé le message
-  }, 200);
 }
