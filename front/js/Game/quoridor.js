@@ -358,7 +358,7 @@ function drawBoard() {
   const isMobile = window.innerWidth <= window.innerHeight;
   wallItems.forEach((item) => {
     if (isMobile && TouchEvent.prototype.available) { // Vérifier si le code est exécuté sur un téléphone
-      item.addEventListener("touchmove", highlightWall); // Changement de l'événement de survol à clic
+      item.addEventListener("touchstart", highlightWall); // Changement de l'événement de survol à clic
     } else {
       item.addEventListener("mouseenter", highlightWall);
     }
@@ -377,7 +377,7 @@ function drawBoard() {
   document.querySelectorAll(".piece");
   playerChoicesE.forEach((item) => {
     if (isMobile && TouchEvent.prototype.available) { // Vérifier si le code est exécuté sur un téléphone
-      item.addEventListener("touchmove", playChoiceHover);
+      item.addEventListener("touchstart", playChoiceHover);
       item.addEventListener("touchend", handleClick);
     } else {
       item.addEventListener("mouseenter", playChoiceHover);

@@ -49,6 +49,7 @@ setTimeout(() => {
 
 gameNamespace.on("ErrorPlaying", (msg) => window.alert(msg));
 gameNamespace.on("GameOver", (msg) => {
+  removeEventListeners();
   window.alert(msg);    
   var url = 'http://15.188.201.4:8000/api/game';
   window.location.href = url;
@@ -137,6 +138,7 @@ gameNamespace.on(
       console.log("players Position ",playerPostion);
 
       changeVisibility(playerNumber);
+      drawBoard();
 
     }
   }
@@ -180,6 +182,7 @@ gameNamespace.on(
       );
       //this code should be on the update
       changeVisibility(playerNumber);
+      drawBoard();
 
     
   }
@@ -210,6 +213,8 @@ gameNamespace.on("UpdateWalls",
     }
     if(switchOverlayFlag==true)
       switchOverlay();
+
+    drawBoard();
   }
 );
 
@@ -436,18 +441,52 @@ function drawBoard() {
     });
 
   const wallItems = document.querySelectorAll(".inWall");
+  const isMobile = window.innerWidth <= window.innerHeight;
   wallItems.forEach((item) => {
-    item.addEventListener("mouseenter", highlightWall);
+    if (isMobile && TouchEvent.prototype.available) { // Vérifier si le code est exécuté sur un téléphone
+      item.addEventListener("touchstart", highlightWall); // Changement de l'événement de survol à clic
+    } else {
+      item.addEventListener("mouseenter", highlightWall);
+    }
   });
+
   wallItems.forEach((item) => {
-    item.addEventListener("click", handleClickWall);
+    if(isMobile && TouchEvent.prototype.available){
+      item.addEventListener("touchend", handleClickWall);
+    }
+    else{
+      item.addEventListener("click", handleClickWall);
+    }
+  });
+
+  const playerChoicesE = document.querySelectorAll(".piece");
+  document.querySelectorAll(".piece");
+  playerChoicesE.forEach((item) => {
+    if (isMobile && TouchEvent.prototype.available) { // Vérifier si le code est exécuté sur un téléphone
+      item.addEventListener("touchstart", playChoiceHover);
+      item.addEventListener("touchend", handleClick);
+    } else {
+      item.addEventListener("mouseenter", playChoiceHover);
+      item.addEventListener("click", handleClick);
+    }
+  });
+}
+
+// Fonction pour retirer tous les event listeners ajoutés
+function removeEventListeners() {
+  const wallItems = document.querySelectorAll(".inWall");
+  wallItems.forEach((item) => {
+    item.removeEventListener("mouseenter", highlightWall);
+    item.removeEventListener("click", handleClickWall);
   });
 
   const playerChoicesE = document.querySelectorAll(".piece");
   playerChoicesE.forEach((item) => {
-    item.addEventListener("mouseenter", playChoiceHover);
+    item.removeEventListener("mouseenter", playChoiceHover);
+    item.removeEventListener("click", handleClick);
   });
 }
+
 // ===================================FONCTIONS UTILES =======================================================================
 function loadImages() {
   return Promise.all([
