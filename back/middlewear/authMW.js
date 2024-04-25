@@ -21,6 +21,7 @@ function authMiddleware(req, res, next) {
         res.writeHead(302, { 'Location': '../html/Auth/Login.html' }); 
         return res.end();
     }
+
     try {
         // Verify the token using the secret key from .env file
         const decoded = jwt.verify(token, process.env.jwt_secret);
@@ -39,3 +40,5 @@ function authMiddleware(req, res, next) {
 }
 
 module.exports = authMiddleware;
+
+
