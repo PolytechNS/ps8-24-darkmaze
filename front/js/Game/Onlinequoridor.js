@@ -137,6 +137,7 @@ gameNamespace.on(
         console.log("players Position ",playerPostion);
 
         changeVisibility(playerNumber);
+        drawBoard();
 
       }
     }
