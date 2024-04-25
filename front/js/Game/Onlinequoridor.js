@@ -832,6 +832,7 @@ function handleClick(row, col) {
   console.log(grid)
   setTimeout(() => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    changeVisibility();
     drawGrid(); // Redessiner votre grille après avoir effacé le message
   }, 200);
   // Add your logic for handling the click event
@@ -922,5 +923,11 @@ function handleClickWall(event) {
       col,
       playerNumber
     );
+
   }
+  setTimeout(() => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    changeVisibility();
+    drawGrid(); // Redessiner votre grille après avoir effacé le message
+  }, 200);
 }
