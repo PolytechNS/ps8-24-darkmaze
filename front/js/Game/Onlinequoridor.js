@@ -369,10 +369,10 @@ function drawBoard() {
         grid[row][col] = "P2";
         // Add click event listener to each cell
       }
-      //if (col % 2 == 0 && row % 2 == 0)
-      //  cell.addEventListener("click", function () {
-      //    handleClick(row, col);
-      //  });
+      if (col % 2 == 0 && row % 2 == 0)
+        cell.addEventListener("click", function () {
+          handleClick(row, col);
+        });
       if (col % 2 == 1 && row % 2 == 0) {
         cell.classList.remove("piece");
         cell.classList.add("wall");
@@ -862,6 +862,7 @@ function updateGame(playerNumber, row, col) {
 }
 
 function handleClickWall(event) {
+  console.log("CLIIIQUE");
   const target = event.target;
   ctx.fillStyle = playerNumber === 0 ? "#fa861f" : "#07f9fa";
 
