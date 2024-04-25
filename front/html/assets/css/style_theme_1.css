@@ -475,14 +475,14 @@ h1 {
 
 }
 
-<<<<<<< HEAD
+
 #buttonnns{
   display: flex;
   justify-content: center; 
   align-items: center; 
 }
 
-=======
+
 .notif-text {
   position: relative;
   background-color: #810101;
@@ -880,4 +880,4 @@ font-size: medium;
 
 }
 }
->>>>>>> origin/responsive-version-1
+

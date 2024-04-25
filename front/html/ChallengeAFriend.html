@@ -25,7 +25,8 @@
 
 <div class="box" id="listcontainer">
   <h2>Chanllenge a friend</h2>  
-  <h3>Friends List</h3>    
+  <h3>Friends List</h3>
+      <audio id="audio" src="../assets/notif.mp3"></audio>
 
 
 <div class="better_scrollbar" id="friendsList">
@@ -158,8 +159,8 @@ zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz*/
         io_instance.on("challengeRecieved",(roomId)=>{
             window.alert("reciveeddd A chanllenge");
             
-var audio = new Audio("../sounds/notif.mp3");
-  audio.play();
+		        var audio = document.getElementById("audio");
+        audio.play();
 		const confirmation = window.confirm("You have received a challenge from "+roomId +". Do you want to accept it?");
             if (confirmation==true) {
                 console.log("Challenge accepted");
