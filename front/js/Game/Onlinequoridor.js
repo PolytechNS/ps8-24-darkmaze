@@ -136,8 +136,11 @@ gameNamespace.on(
       //this code should be on the update
       console.log("players Position ",playerPostion);
 
-      changeVisibility(playerNumber);
       drawBoard();
+      removeMoveChoices(OldRow, OldCol);
+      removeMoveChoices(OldOpponentRow, OldOpponentCol);
+      addMoveChoices(OldOpponentRow, OldOpponentCol, OldRow, OldCol);
+      changeVisibility(playerNumber);
 
     }
   }
