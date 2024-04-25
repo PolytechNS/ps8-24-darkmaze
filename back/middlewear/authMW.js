@@ -5,19 +5,20 @@ require('dotenv').config(); // Load environment variables from .env file
 function authMiddleware(req, res, next) {
     // Get the token from the request headers
     let token;
+    console.log("insiiiiide MW"); 
     if (req.headers.cookie) {
         const cookies = parseCookies(req.headers.cookie);
         token = cookies.jwt;
     } else {
-        res.writeHead(302, {
-            Location: "../html/Auth/Login.html",
-        });
-        return res.end();
+      res.writeHead(302, {
+        Location: "../html/Auth/Login.html",
+      });
+      return res.end();
     }
     if (!token) {
         // Redirect to the login page if token is missing
-        
-        res.writeHead(302, { 'Location': '../html/Auth/Login.html' });
+
+        res.writeHead(302, { 'Location': '../html/Auth/Login.html' }); 
         return res.end();
     }
 
@@ -33,11 +34,11 @@ function authMiddleware(req, res, next) {
         next(req,res);
     } catch (error) {
         // Redirect to the login page if token is invalid
-        res.writeHead(302, { 'Location': '../html/Auth/Login.html' });
+        res.writeHead(302, { 'Location': '../html/Auth/Login.html' }); 
         return res.end();
     }
 }
 
-
-
 module.exports = authMiddleware;
+
+

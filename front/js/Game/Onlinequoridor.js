@@ -451,11 +451,11 @@ function drawBoard() {
 // ===================================FONCTIONS UTILES =======================================================================
 function loadImages() {
   return Promise.all([
-    loadImage("http://localhost:8000/assets/Grid.png"),
-    loadImage("http://localhost:8000/assets/P1.png"),
-    loadImage("http://localhost:8000/assets/P2.png"),
-    loadImage("http://localhost:8000/assets/fog.png"),
-    loadImage("http://localhost:8000/assets/possibleMove.png"),
+    loadImage("../../assets/Grid.png"),
+    loadImage("../../assets/P1.png"),
+    loadImage("../../assets/P2.png"),
+    loadImage("../../assets/fog.png"),
+    loadImage("../../assets/possibleMove.png"),
   ]);
 }
 
@@ -466,15 +466,15 @@ function loadImage(src) {
     image.src = src;
 
     image.onload = function () {
-      if (src === "http://localhost:8000/assets/Grid.png") {
+      if (src === "../../assets/Grid.png") {
         gridImage = image;
-      } else if (src === "http://localhost:8000/assets/P1.png") {
+      } else if (src === "../../assets/P1.png") {
         player1Image = image;
-      } else if (src === "http://localhost:8000/assets/P2.png") {
+      } else if (src === "../../assets/P2.png") {
         player2Image = image;
-      } else if (src === "http://localhost:8000/assets/fog.png") {
+      } else if (src === "../../assets/fog.png") {
         fogImage = image;
-      } else if (src === "http://localhost:8000/assets/possibleMove.png") {
+      } else if (src === "../../assets/possibleMove.png") {
         possibleImage = image;
       }
 
